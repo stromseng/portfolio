@@ -1,4 +1,6 @@
-export default {
+import { defineType, defineField, defineArrayMember } from "sanity";
+
+export const project = defineType({
     name: "project",
     title: "Project",
     type: "document",
@@ -18,6 +20,7 @@ export default {
                 source: "title",
                 maxLength: 96,
             },
+            validation: (rule) => rule.required(),
         },
         {
             name: "newIndicator",
@@ -31,8 +34,7 @@ export default {
             type: "string",
             description:
                 "Text to display on the new indicator. A small colored badge will appear on the project card.",
-            hidden: ({ document }: { document: { newIndicator?: boolean } }) =>
-                !document?.newIndicator,
+            hidden: ({ document }) => !document?.newIndicator,
         },
         {
             name: "shortDescription",
@@ -126,4 +128,4 @@ export default {
             by: [{ field: "sortOrder", direction: "asc" }],
         },
     ],
-};
+});

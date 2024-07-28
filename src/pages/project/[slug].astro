@@ -1,0 +1,20 @@
+---
+import type { GetStaticPaths } from "astro";
+import { sanityClient } from "sanity:client";
+import groq from "groq";
+import { allProjectsQuery } from "@queries";
+import type { AllProjectsQueryResult } from "sanity.types";
+
+export async function getStaticPaths() {
+    const projects: AllProjectsQueryResult =
+        await sanityClient.fetch(allProjectsQuery);
+    return projects.map((project) => ({
+        params: { slug: project.slug.current },
+    }));
+}
+
+const project = Astro.params;
+console.log(project);
+---
+
+{project}
