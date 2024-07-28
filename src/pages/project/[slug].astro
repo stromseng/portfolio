@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import type { GetStaticPaths } from "astro";
 import { sanityClient } from "sanity:client";
 import groq from "groq";
@@ -10,11 +11,14 @@ export async function getStaticPaths() {
         await sanityClient.fetch(allProjectsQuery);
     return projects.map((project) => ({
         params: { slug: project.slug.current },
+        props: { project },
     }));
 }
 
-const project = Astro.params;
-console.log(project);
+const params = Astro.params;
+const props = Astro.props;
+console.log(params);
+console.log(props);
 ---
 
-{project}
+{params}
