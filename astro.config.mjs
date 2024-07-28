@@ -7,13 +7,17 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server",
-  adapter: vercel(),
-  integrations: [sanity({
-    projectId: "xxc5ksdw",
-    dataset: "production",
-    // Set useCdn to false if you're building statically.
-    useCdn: false,
-    studioBasePath: "/admin"
-  }), react(), tailwind()]
+    output: "server",
+    adapter: vercel(),
+    integrations: [
+        sanity({
+            projectId: "xxc5ksdw",
+            dataset: "production",
+            // Set useCdn to false if you're building statically.
+            useCdn: false,
+            studioBasePath: "/admin",
+        }),
+        react(),
+        tailwind({ applyBaseStyles: false }),
+    ],
 });

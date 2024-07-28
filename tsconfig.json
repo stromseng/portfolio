@@ -4,7 +4,9 @@
         "baseUrl": ".",
         "paths": {
             "@queries": ["src/sanity.queries.ts"],
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@components/*": ["src/components/*"],
+            "@layouts/*": ["src/layouts/*"]
         },
         "jsx": "react-jsx",
         "jsxImportSource": "react"
