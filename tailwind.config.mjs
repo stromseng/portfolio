@@ -47,6 +47,22 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "p-blue": {
+          DEFAULT: "hsl(var(--p-blue))",
+          foreground: "hsl(var(--foreground))",
+        },
+        "p-green": {
+          DEFAULT: "hsl(var(--p-green))",
+          foreground: "hsl(var(--foreground))",
+        },
+        "p-red": {
+          DEFAULT: "hsl(var(--p-red))",
+          foreground: "hsl(var(--foreground))",
+        },
+        "p-orange": {
+          DEFAULT: "hsl(var(--p-orange))",
+          foreground: "hsl(var(--foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
