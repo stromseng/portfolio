@@ -1,0 +1,28 @@
+---
+import GithubLogo from "@images/github.svg";
+import LinkedInLogo from "@images/linkedin.svg";
+
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
+---
+
+<header class="flex grow justify-between p-2">
+  <div class="grow basis-full"></div>
+  <!-- Centered Links -->
+  <div
+    class={"ShantellSans flex grow basis-full items-center justify-center gap-4 space-x-4 text-2xl font-semibold"}
+  >
+    <a href="/" class={currentPath === "" ? "underline" : "" + "decoration-white hover:underline hover:decoration-black hover:duration-500"}>Home</a>
+    <a
+      href="/blog"
+      class={currentPath === "blog" ? "underline" : "" + "decoration-white hover:underline hover:decoration-black hover:duration-500"}
+      >Blog</a
+    >
+  </div>
+  <!-- Socials -->
+  <div class="flex grow basis-full justify-end gap-4">
+    <img src={GithubLogo.src} alt="Github Logo" />
+    <img src={LinkedInLogo.src} alt="LinkedIn Logo" />
+  </div>
+</header>
+<!-- Nav links -->

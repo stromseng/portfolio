@@ -67,3 +67,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "ShantellSans";
+  src: url("/fonts/ShantellSans-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "Shantell Sans Variable", system-ui;
+}

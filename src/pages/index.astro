@@ -3,11 +3,63 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import "@/styles/globals.css";
 import { Content as Readme } from "@/../README.md";
+import Content from "@/layouts/Content.astro";
+import SelfTypingCode from "@/components/SelfTypingCode.svelte";
+import SelfDrawingLogoSVG from "@/components/SelfDrawingLogoSVG.svelte";
+import SelfTypingText from "@/components/SelfTypingText.svelte";
 ---
 
 <Layout title="Magnus A. Strømseng">
-    <Readme />
-    <Readme />
-    <Readme />
-    <Readme />
+  <Content>
+    <div class="sm:flex-col-2 mb-24 mt-12 sm:flex md:mb-48">
+      <div class="w-full">
+        <div class="">
+          <div class="prose"><p class="">Hi there 👋 I'm</p></div>
+          <h1 class="h1 text-6xl sm:text-7xl">
+            Magnus <br /> Alexander <br /> Strømseng
+          </h1>
+        </div>
+        <SelfTypingText
+        
+          client:load
+          text={[
+            "Full Stack Developer",
+            "Informatics Student",
+            "Tech Enthusiast",
+            "E-Sports Player",
+          ]}
+        />
+        <div class="">
+          <p class="my-2 max-w-xs text-xl">
+            A Fullstack Developer and Informatics Student from Norway.
+          </p>
+        </div>
+        <a href="mailto: magnus.stromseng+work@gmail.com">
+          <button type="button" class="btn btn-success">Hire me </button>
+        </a>
+      </div>
+
+      <div class="hidden w-[400px] content-normal justify-normal md:flex">
+        <SelfDrawingLogoSVG client:load />
+      </div>
+    </div>
+
+    <!-- SVG Logo -->
+    <div class="mb-24 flex w-full content-normal justify-normal md:hidden">
+      <SelfDrawingLogoSVG client:load />
+    </div>
+
+    <!-- About Me -->
+    <div class="prose mb-16 w-full gap-2">
+      <h2 class="">About Me</h2>
+      <p class="text-l">
+        I'm a 21 year old Informatics student from Oslo, Norway. I'm currently
+        in my 3rd year of my bachelor's degree at the Norwegian University of
+        Technology and Science. I'm passionate about technology and I love to
+        learn new things. I'm also a big fan of open source software and I try
+        to contribute to open source projects whenever I can. You can read more
+        about me <a href="/about">here</a>
+      </p>
+    </div>
+  </Content>
 </Layout>
