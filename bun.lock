@@ -12,6 +12,7 @@
         "@fontsource-variable/shantell-sans": "^5.2.7",
         "@radix-ui/react-avatar": "^1.1.10",
         "@radix-ui/react-navigation-menu": "^1.2.14",
+        "@radix-ui/react-slot": "^1.2.3",
         "@sanity/astro": "^3.2.10",
         "@sanity/client": "^6.29.1",
         "@sanity/visual-editing": "^2.15.4",
