@@ -16,6 +16,7 @@ import ProjectTop from "@images/project-top.svg";
 import SeaBot from "@images/sea-bot.svg";
 import SeaTopBoat from "@images/sea-top-boat.svg";
 import Smiley from "@images/smiley.svg";
+import CleaningMan from "@images/cleaning-man.svg";
 import UniDot from "@images/uni-dot.svg";
 import WorkDot from "@images/work-dot.svg";
 import { sanityClient } from "sanity:client";
@@ -51,238 +52,250 @@ const projectEntries: ProjectEntry[] = projects
 ---
 
 <Layout title="Magnus A. Strømseng">
-  <div class="flex w-full flex-col items-center">
-    <div
-      class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 md:mb-24 md:px-5 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
-    >
+  <div class="flex max-w-lvw flex-col overflow-x-hidden">
+    <div class="flex w-full flex-col items-center">
       <div
-        class="xs:p-12 inline-block w-full max-w-sm bg-contain bg-no-repeat p-4 sm:max-w-md sm:p-16 lg:max-w-xl lg:p-24"
-        style={`background-image: url(${DoodleBackground.src});`}
+        class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 md:mb-24 md:px-5 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
       >
-        <div class="">
-          <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
-          <h1 class="h1 text-6xl sm:text-7xl">
-            <span class="bg-p-blue rounded-lg">Magnus</span>
-            <br />
-            <span class="|">Alexander</span>
-            <br /> Strømseng
-          </h1>
-        </div>
-        <SelfTypingText
-          client:load
-          text={[
-            "Full Stack Developer",
-            "Informatics Student",
-            "Tech Enthusiast",
-            "E-Sports Player",
-            "Keyboard builder",
-            "Animal lover",
-            "I use Nix btw",
-            "Can bench press 100kg",
-            "Can not do a backflip",
-            "Can debug in my sleep (sometimes)",
-            "My code works... on my machine",
-            "Ctrl+C, Ctrl+V specialist",
-            "Waiting for AI to write this bio",
-            "Occasionally touches grass",
-            "World's fastest ALT+TABber",
-            "Tabs AND spaces, just to cause trouble",
-            "Caffeine-driven development",
-            "My code reviews need code reviews",
-            "Accidentally opened Vim, send help",
-            "Types fast, thinks faster, googles fastest",
-          ]}
-        />
-        <div class="">
-          <p class="my-2 max-w-xs text-xl">
-            A Fullstack Developer and Informatics Student from Norway.
-          </p>
-        </div>
-        <a
-          href="mailto: magnus.stromseng+work@gmail.com"
-          class="relative inline-flex h-[54px] w-[127px] shrink items-center justify-center"
+        <div
+          class="xs:p-12 inline-block w-full max-w-sm bg-contain bg-no-repeat p-4 sm:max-w-md sm:p-16 lg:max-w-xl lg:p-24"
+          style={`background-image: url(${DoodleBackground.src});`}
         >
-          <img
-            src={HireButton.src}
-            class="absolute inset-0 h-full w-full"
-            alt=""
+          <div class="">
+            <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
+            <h1 class="h1 text-6xl sm:text-7xl">
+              <span class="bg-p-blue rounded-lg">Magnus</span>
+              <br />
+              <span class="|">Alexander</span>
+              <br /> Strømseng
+            </h1>
+          </div>
+          <SelfTypingText
+            client:load
+            text={[
+              "Full Stack Developer",
+              "Informatics Student",
+              "Tech Enthusiast",
+              "E-Sports Player",
+              "Keyboard builder",
+              "Animal lover",
+              "I use Nix btw",
+              "Can bench press 100kg",
+              "Can not do a backflip",
+              "Can debug in my sleep (sometimes)",
+              "My code works... on my machine",
+              "Ctrl+C, Ctrl+V specialist",
+              "Waiting for AI to write this bio",
+              "Occasionally touches grass",
+              "World's fastest ALT+TABber",
+              "Tabs AND spaces, just to cause trouble",
+              "Caffeine-driven development",
+              "My code reviews need code reviews",
+              "Accidentally opened Vim, send help",
+              "Types fast, thinks faster, googles fastest",
+            ]}
           />
-          <span class="relative z-10">Hire me</span>
-        </a>
-      </div>
-      <div
-        class="w-full max-w-xs content-normal justify-normal sm:max-w-sm md:max-w-md lg:max-w-[440px]"
-      >
-        <img src={LogoClimber.src} alt="" class="h-auto w-full" />
-      </div>
-    </div>
-  </div>
-
-  <!-- About me section -->
-  <div>
-    <img src={SeaTopBoat.src} class="w-full object-cover" alt="" />
-    <div
-      class="bg-p-blue flex flex-col items-center justify-center gap-8 px-6 py-12 text-center md:h-[500px] md:flex-row md:flex-nowrap md:justify-evenly md:gap-0 md:px-12 md:text-left"
-    >
-      <div class="prose gap-2 md:max-w-lg">
-        <h2 class="text-4xl">About Me</h2>
-        <p class="text-l">
-          I'm a 23 year old Informatics student from Oslo, Norway. I'm currently
-          in the first year of my master's degree at the Norwegian University of
-          Technology and Science. I'm passionate about technology and I love to
-          learn new things. I'm also a big fan of open source software and I try
-          to contribute to open source projects whenever I can. You can read
-          more about me <a href="/about">here</a>
-        </p>
-      </div>
-      <div class="flex justify-center">
-        <img src={Smiley.src} alt="" class="h-32 w-32 md:h-auto md:w-auto" />
-      </div>
-    </div>
-    <img src={SeaBot.src} class="w-full object-cover" alt="" />
-  </div>
-
-  <!-- Work and Education -->
-  <div>
-    <img src={GrassTop.src} class="w-full object-cover" alt="" />
-    <div class="bg-p-green flex w-full justify-center">
-      <div
-        class="flex w-full max-w-6xl flex-row flex-wrap items-start justify-between gap-12 px-6 py-16"
-      >
-        <div class="flex min-w-[260px] grow flex-col gap-6">
-          <h2 class="text-4xl font-bold">Education</h2>
-          <div class="flex flex-col gap-6">
-            <div class="flex items-start gap-4">
-              <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
-              <div class="flex flex-col">
-                <span class="text-lg font-semibold">2024-2026</span>
-                <span class="text-xl font-bold">
-                  Norwegian Institute of Technology and Science
-                </span>
-                <span class="text-base">Master in Informatics</span>
-              </div>
-            </div>
-            <div class="flex items-start gap-4">
-              <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
-              <div class="flex flex-col">
-                <span class="text-lg font-semibold">2021-2024</span>
-                <span class="text-xl font-bold">
-                  Norwegian Institute of Technology and Science
-                </span>
-                <span class="text-base">Bachelor in Informatics</span>
-              </div>
-            </div>
-            <div class="flex items-start gap-4">
-              <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
-              <div class="flex flex-col">
-                <span class="text-lg font-semibold">2017-2020</span>
-                <span class="text-xl font-bold">Nydalen VGS</span>
-                <span class="text-base">Studiespesialiserende</span>
-              </div>
-            </div>
+          <div class="">
+            <p class="my-2 max-w-xs text-xl">
+              A Fullstack Developer and Informatics Student from Norway.
+            </p>
           </div>
+          <a
+            href="mailto: magnus.stromseng+work@gmail.com"
+            class="relative inline-flex h-[54px] w-[127px] shrink items-center justify-center"
+          >
+            <img
+              src={HireButton.src}
+              class="absolute inset-0 h-full w-full"
+              alt=""
+            />
+            <span class="relative z-10">Hire me</span>
+          </a>
         </div>
-        <div class="flex min-w-[260px] grow flex-col gap-6">
-          <h2 class="text-4xl font-bold">Work</h2>
-          <div class="flex flex-col gap-6">
-            <div class="flex items-start gap-4">
-              <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
-              <div class="flex flex-col">
-                <span class="text-lg font-semibold">2024</span>
-                <span class="text-xl font-bold">Thales Norway</span>
-                <span class="text-base">Summer Intern</span>
-              </div>
-            </div>
-            <div class="flex items-start gap-4">
-              <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
-              <div class="flex flex-col">
-                <span class="text-lg font-semibold">2021-2023</span>
-                <span class="text-xl font-bold">Linderud IL, Camp Linderud</span
-                >
-                <span class="text-base">Team Leader</span>
-              </div>
-            </div>
-            <div class="flex items-start gap-4">
-              <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
-              <div class="flex flex-col">
-                <span class="text-lg font-semibold">2017-2020</span>
-                <span class="text-xl font-bold">Linderud IL, Camp Linderud</span
-                >
-                <span class="text-base">Camp Staff</span>
-              </div>
-            </div>
-          </div>
+        <div
+          class="w-full max-w-xs content-normal justify-normal sm:max-w-sm md:max-w-md lg:max-w-[440px]"
+        >
+          <img src={LogoClimber.src} alt="" class="h-auto w-full" />
         </div>
       </div>
     </div>
-    <img src={GrassBot.src} class="w-full object-cover" alt="" />
-  </div>
-  <!-- Projects section -->
-  <div>
-    <img src={ProjectTop.src} class="w-full object-cover" alt="" />
-    <div class="bg-p-red flex w-full justify-center">
+    <!-- About me section -->
+    <div>
+      <img src={SeaTopBoat.src} class="w-full object-cover" alt="" />
       <div
-        class="flex w-full max-w-6xl flex-col items-center gap-12 px-6 py-24 text-center"
+        class="bg-p-blue flex flex-col items-center justify-center gap-8 px-6 py-12 text-center md:h-[500px] md:flex-row md:flex-nowrap md:justify-evenly md:gap-0 md:px-12 md:text-left"
       >
-        <div class="flex flex-col items-center gap-4">
-          <h2 class="text-4xl font-bold">Projects</h2>
-          <p class="max-w-3xl text-lg">
-            A snapshot of the products and experiments I have built along the
-            way. Each project links to a dedicated page with more details,
-            context, and takeaways.
+        <div class="prose gap-2 md:max-w-lg">
+          <h2 class="text-4xl">About Me</h2>
+          <p class="text-l">
+            I'm a 23 year old Informatics student from Oslo, Norway. I'm
+            currently in the first year of my master's degree at the Norwegian
+            University of Technology and Science. I'm passionate about
+            technology and I love to learn new things. I'm also a big fan of
+            open source software and I try to contribute to open source projects
+            whenever I can. You can read more about me <a href="/about">here</a>
           </p>
         </div>
-        {
-          projectEntries.length ? (
-            <div
-              class="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3"
-              role="list"
-            >
-              {projectEntries.map((project) => {
-                const tags = project.tags?.filter((tag): tag is string =>
-                  Boolean(tag?.trim()),
-                );
-                return (
-                  <a
-                    role="listitem"
-                    href={`/project/${project.slug.current}`}
-                    class="group flex h-full flex-col rounded-3xl bg-white/80 p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    <div class="flex items-start justify-between gap-3">
-                      <h3 class="text-2xl font-semibold text-gray-900">
-                        {project.title}
-                      </h3>
-                      {project.badgeText && (
-                        <span class="bg-p-orange rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase">
-                          {project.badgeText}
-                        </span>
-                      )}
-                    </div>
-                    <p class="mt-3 text-base text-gray-700">
-                      {project.shortDescription ??
-                        "Dive in to explore what went into this project."}
-                    </p>
-                    {tags?.length ? (
-                      <ul class="mt-6 flex flex-wrap gap-2">
-                        {tags.map((tag) => (
-                          <li class="bg-p-blue rounded-full px-3 py-1 text-xs font-medium tracking-wide text-gray-900 uppercase">
-                            {tag}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </a>
-                );
-              })}
-            </div>
-          ) : (
-            <p class="text-lg text-gray-800">
-              I'm polishing the write-ups—check back soon for fresh projects!
-            </p>
-          )
-        }
+        <div class="flex justify-center">
+          <img src={Smiley.src} alt="" class="h-32 w-32 md:h-auto md:w-auto" />
+        </div>
       </div>
+      <img src={SeaBot.src} class="w-full object-cover" alt="" />
     </div>
-    <img src={ProjectBot.src} class="w-full object-cover" alt="" />
+    <!-- Work and Education -->
+    <div>
+      <img src={GrassTop.src} class="w-full object-cover" alt="" />
+      <div class="bg-p-green flex w-full justify-center">
+        <div
+          class="flex w-full max-w-6xl flex-row flex-wrap items-start justify-between gap-12 px-6 py-16"
+        >
+          <div class="flex min-w-[260px] grow flex-col gap-6">
+            <h2 class="text-4xl font-bold">Education</h2>
+            <div class="flex flex-col gap-6">
+              <div class="flex items-start gap-4">
+                <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold">2024-2026</span>
+                  <span class="text-xl font-bold">
+                    Norwegian Institute of Technology and Science
+                  </span>
+                  <span class="text-base">Master in Informatics</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold">2021-2024</span>
+                  <span class="text-xl font-bold">
+                    Norwegian Institute of Technology and Science
+                  </span>
+                  <span class="text-base">Bachelor in Informatics</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold">2017-2020</span>
+                  <span class="text-xl font-bold">Nydalen VGS</span>
+                  <span class="text-base">Studiespesialiserende</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex min-w-[260px] grow flex-col gap-6">
+            <h2 class="text-4xl font-bold">Work</h2>
+            <div class="flex flex-col gap-6">
+              <div class="flex items-start gap-4">
+                <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold">2024</span>
+                  <span class="text-xl font-bold">Thales Norway</span>
+                  <span class="text-base">Summer Intern</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold">2021-2023</span>
+                  <span class="text-xl font-bold"
+                    >Linderud IL, Camp Linderud</span
+                  >
+                  <span class="text-base">Team Leader</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold">2017-2020</span>
+                  <span class="text-xl font-bold"
+                    >Linderud IL, Camp Linderud</span
+                  >
+                  <span class="text-base">Camp Staff</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <img src={GrassBot.src} class="w-full object-cover" alt="" />
+    </div>
+    <!-- Projects section -->
+    <div>
+      <img src={ProjectTop.src} class="w-full object-cover" alt="" />
+      <div class="bg-p-red flex w-full justify-center">
+        <div
+          class="flex w-full max-w-6xl flex-col items-center gap-12 px-6 py-24 text-center"
+        >
+          <div class="flex flex-col items-center gap-4">
+            <h2 class="text-4xl font-bold">Projects</h2>
+            <p class="max-w-3xl text-lg">
+              A snapshot of the products and experiments I have built along the
+              way. Each project links to a dedicated page with more details,
+              context, and takeaways.
+            </p>
+          </div>
+          {
+            projectEntries.length ? (
+              <div
+                class="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                role="list"
+              >
+                {projectEntries.map((project) => {
+                  const tags = project.tags?.filter((tag): tag is string =>
+                    Boolean(tag?.trim()),
+                  );
+                  return (
+                    <a
+                      role="listitem"
+                      href={`/project/${project.slug.current}`}
+                      class="group flex h-full flex-col rounded-3xl bg-white/80 p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    >
+                      <div class="flex items-start justify-between gap-3">
+                        <h3 class="text-2xl font-semibold text-gray-900">
+                          {project.title}
+                        </h3>
+                        {project.badgeText && (
+                          <span class="bg-p-orange rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase">
+                            {project.badgeText}
+                          </span>
+                        )}
+                      </div>
+                      <p class="mt-3 text-base text-gray-700">
+                        {project.shortDescription ??
+                          "Dive in to explore what went into this project."}
+                      </p>
+                      {tags?.length ? (
+                        <ul class="mt-6 flex flex-wrap gap-2">
+                          {tags.map((tag) => (
+                            <li class="bg-p-blue rounded-full px-3 py-1 text-xs font-medium tracking-wide text-gray-900 uppercase">
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </a>
+                  );
+                })}
+              </div>
+            ) : (
+              <p class="text-lg text-gray-800">
+                I'm polishing the write-ups—check back soon for fresh projects!
+              </p>
+            )
+          }
+        </div>
+      </div>
+      <img src={ProjectBot.src} class="w-full object-cover" alt="" />
+    </div>
+    <div class="my-24 flex min-h-96 flex-col items-center justify-center">
+      <CleaningMan height={300} />
+      <span class="text-lg text-wrap">
+        Nothing more to see here...<br />
+        Check out my <a
+          href="/blog"
+          class="font-bold underline transition-colors">blog</a
+        > instead
+      </span>
+    </div>
   </div>
 </Layout>
