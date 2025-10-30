@@ -1,27 +1,38 @@
 ---
 import GithubLogo from "@images/github.svg";
 import LinkedInLogo from "@images/linkedin.svg";
+import { cn } from "@/lib/utils";
 
-const pathname = new URL(Astro.request.url).pathname;
-const currentPath = pathname.slice(1); // remove the first "/"
+const pathname = Astro.url.pathname;
+const isHome = pathname === "/";
+const isBlog = pathname === "/blog";
+const linkClass = (isActive: boolean) =>
+  cn(
+    "decoration-black hover:underline hover:decoration-black hover:duration-500",
+    { underline: isActive },
+  );
 ---
 
-<header class="flex grow justify-between p-2">
-  <div class="grow basis-full"></div>
+<header
+  class="flex w-full items-center justify-evenly gap-4 p-2 md:justify-between md:gap-0"
+>
+  <div class="hidden md:block md:flex-1"></div>
   <!-- Centered Links -->
   <div
-    class={"ShantellSans flex grow basis-full items-center justify-center gap-4 space-x-4 text-2xl font-semibold"}
+    class={`ShantellSans flex flex-1 items-center justify-evenly gap-4 text-2xl font-semibold md:flex-1 md:justify-center`}
   >
-    <a href="/" class={currentPath === "" ? "underline" : "" + "decoration-white hover:underline hover:decoration-black hover:duration-500"}>Home</a>
-    <a
-      href="/blog"
-      class={currentPath === "blog" ? "underline" : "" + "decoration-white hover:underline hover:decoration-black hover:duration-500"}
-      >Blog</a
-    >
+    <a href="/" class={linkClass(isHome)}>Home</a>
+    <a href="/blog" class={linkClass(isBlog)}>Blog</a>
   </div>
   <!-- Socials -->
-  <div class="flex grow basis-full items-center justify-end gap-4">
-    <a href="https://github.com/stromseng"><img src={GithubLogo.src} alt="Github Logo" class="size-12"/></a>
-    <a href="https://www.linkedin.com/in/stromseng/"><img src={LinkedInLogo.src} alt="LinkedIn Logo" class="size-12"/></a>
+  <div
+    class="flex flex-1 items-center justify-evenly gap-4 md:flex-1 md:justify-end"
+  >
+    <a href="https://github.com/stromseng"
+      ><img src={GithubLogo.src} alt="Github Logo" class="size-12" /></a
+    >
+    <a href="https://www.linkedin.com/in/stromseng/"
+      ><img src={LinkedInLogo.src} alt="LinkedIn Logo" class="size-12" /></a
+    >
   </div>
 </header>

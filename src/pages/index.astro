@@ -53,10 +53,10 @@ const projectEntries: ProjectEntry[] = projects
 <Layout title="Magnus A. Strømseng">
   <div class="flex w-full flex-col items-center">
     <div
-      class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 px-5 md:mb-24 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
+      class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 md:mb-24 md:px-5 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
     >
       <div
-        class="inline-block bg-contain bg-no-repeat p-24"
+        class="xs:p-12 inline-block w-full max-w-sm bg-contain bg-no-repeat p-4 sm:max-w-md sm:p-16 lg:max-w-xl lg:p-24"
         style={`background-image: url(${DoodleBackground.src});`}
       >
         <div class="">
@@ -95,8 +95,10 @@ const projectEntries: ProjectEntry[] = projects
           <span class="relative z-10">Hire me</span>
         </a>
       </div>
-      <div class="w-[440px] content-normal justify-normal">
-        <img src={LogoClimber.src} alt="" />
+      <div
+        class="w-full max-w-xs content-normal justify-normal sm:max-w-sm md:max-w-md lg:max-w-[440px]"
+      >
+        <img src={LogoClimber.src} alt="" class="h-auto w-full" />
       </div>
     </div>
   </div>
@@ -105,9 +107,9 @@ const projectEntries: ProjectEntry[] = projects
   <div>
     <img src={SeaTopBoat.src} class="w-full object-cover" alt="" />
     <div
-      class="bg-p-blue flex h-[500px] flex-row flex-nowrap items-center justify-evenly"
+      class="bg-p-blue flex flex-col items-center justify-center gap-8 px-6 py-12 text-center md:h-[500px] md:flex-row md:flex-nowrap md:justify-evenly md:gap-0 md:px-12 md:text-left"
     >
-      <div class="prose gap-2">
+      <div class="prose gap-2 md:max-w-lg">
         <h2 class="text-4xl">About Me</h2>
         <p class="text-l">
           I'm a 23 year old Informatics student from Oslo, Norway. I'm currently
@@ -118,7 +120,9 @@ const projectEntries: ProjectEntry[] = projects
           more about me <a href="/about">here</a>
         </p>
       </div>
-      <div><img src={Smiley.src} alt="" /></div>
+      <div class="flex justify-center">
+        <img src={Smiley.src} alt="" class="h-32 w-32 md:h-auto md:w-auto" />
+      </div>
     </div>
     <img src={SeaBot.src} class="w-full object-cover" alt="" />
   </div>
