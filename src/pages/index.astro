@@ -7,6 +7,36 @@ import SelfTypingCode from "@/components/SelfTypingCode.svelte";
 import SelfDrawingLogoSVG from "@/components/SelfDrawingLogoSVG.svelte";
 import SelfTypingText from "@/components/SelfTypingText.svelte";
 import DoodleBackground from "@images/DoodleBackground.svg";
+import { sanityClient } from "sanity:client";
+import { allProjectsQuery } from "@queries";
+import type { AllProjectsQueryResult } from "sanity.types";
+
+type ProjectWithSlug = AllProjectsQueryResult[number] & {
+  slug: { current: string };
+};
+
+type ProjectEntry = ProjectWithSlug & {
+  badgeText: string | null;
+};
+
+const projects =
+  await sanityClient.fetch<AllProjectsQueryResult>(allProjectsQuery);
+
+const projectEntries: ProjectEntry[] = projects
+  .filter((project): project is ProjectWithSlug =>
+    Boolean(project.slug?.current),
+  )
+  .map((project) => ({
+    ...project,
+    badgeText: project.newIndicator
+      ? project.newIndicatorText?.trim() || "New"
+      : null,
+  }))
+  .sort(
+    (a, b) =>
+      (a.sortOrder ?? Number.MAX_SAFE_INTEGER) -
+      (b.sortOrder ?? Number.MAX_SAFE_INTEGER),
+  );
 ---
 
 <Layout title="Magnus A. Strømseng">
@@ -76,6 +106,7 @@ import DoodleBackground from "@images/DoodleBackground.svg";
     </div>
     <img src="/sea-bot.svg" class="w-full object-cover" />
   </div>
+
   <!-- Work and Education -->
   <div>
     <img src="/grass-top.svg" class="w-full object-cover" />
@@ -120,11 +151,7 @@ import DoodleBackground from "@images/DoodleBackground.svg";
           <h2 class="text-4xl font-bold">Work</h2>
           <div class="flex flex-col gap-6">
             <div class="flex items-start gap-4">
-              <img
-                src="/work-dot.svg"
-                alt=""
-                class="mt-1 h-12 w-12 flex-shrink-0"
-              />
+              <img src="/work-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2024</span>
                 <span class="text-xl font-bold">Thales Norway</span>
@@ -132,11 +159,7 @@ import DoodleBackground from "@images/DoodleBackground.svg";
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <img
-                src="/work-dot.svg"
-                alt=""
-                class="mt-1 h-12 w-12 flex-shrink-0"
-              />
+              <img src="/work-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2021-2023</span>
                 <span class="text-xl font-bold">Linderud IL, Camp Linderud</span
@@ -145,11 +168,7 @@ import DoodleBackground from "@images/DoodleBackground.svg";
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <img
-                src="/work-dot.svg"
-                alt=""
-                class="mt-1 h-12 w-12 flex-shrink-0"
-              />
+              <img src="/work-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2017-2020</span>
                 <span class="text-xl font-bold">Linderud IL, Camp Linderud</span
@@ -162,5 +181,73 @@ import DoodleBackground from "@images/DoodleBackground.svg";
       </div>
     </div>
     <img src="/grass-bot.svg" class="w-full object-cover" />
+  </div>
+  <!-- Projects section -->
+  <div>
+    <img src="/project-top.svg" class="w-full object-cover" />
+    <div class="bg-p-red flex w-full justify-center">
+      <div
+        class="flex w-full max-w-6xl flex-col items-center gap-12 px-6 py-24 text-center"
+      >
+        <div class="flex flex-col items-center gap-4">
+          <h2 class="text-4xl font-bold">Projects</h2>
+          <p class="max-w-3xl text-lg">
+            A snapshot of the products and experiments I have built along the
+            way. Each project links to a dedicated page with more details,
+            context, and takeaways.
+          </p>
+        </div>
+        {
+          projectEntries.length ? (
+            <div
+              class="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              role="list"
+            >
+              {projectEntries.map((project) => {
+                const tags = project.tags?.filter((tag): tag is string =>
+                  Boolean(tag?.trim()),
+                );
+                return (
+                  <a
+                    role="listitem"
+                    href={`/project/${project.slug.current}`}
+                    class="group flex h-full flex-col rounded-3xl bg-white/80 p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <div class="flex items-start justify-between gap-3">
+                      <h3 class="text-2xl font-semibold text-gray-900">
+                        {project.title}
+                      </h3>
+                      {project.badgeText && (
+                        <span class="bg-p-orange rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase">
+                          {project.badgeText}
+                        </span>
+                      )}
+                    </div>
+                    <p class="mt-3 text-base text-gray-700">
+                      {project.shortDescription ??
+                        "Dive in to explore what went into this project."}
+                    </p>
+                    {tags?.length ? (
+                      <ul class="mt-6 flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <li class="bg-p-blue rounded-full px-3 py-1 text-xs font-medium tracking-wide text-gray-900 uppercase">
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </a>
+                );
+              })}
+            </div>
+          ) : (
+            <p class="text-lg text-gray-800">
+              I'm polishing the write-ups—check back soon for fresh projects!
+            </p>
+          )
+        }
+      </div>
+    </div>
+    <img src="/project-bot.svg" class="w-full object-cover" />
   </div>
 </Layout>
