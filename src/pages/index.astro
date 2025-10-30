@@ -17,6 +17,7 @@ import ProjectBot from "@images/project-bot.svg";
 import ProjectTop from "@images/project-top.svg";
 import SeaBot from "@images/sea-bot.svg";
 import SeaTopBoat from "@images/sea-top-boat.svg";
+import Star from "@images/star.svg";
 import BusDot from "@images/bus-dot.svg";
 import Smiley from "@images/smiley.svg";
 import CleaningMan from "@images/cleaning-man.svg";
@@ -251,17 +252,19 @@ const workItems: TimelineItemProps[] = [
                     <a
                       role="listitem"
                       href={`/project/${project.slug.current}`}
-                      class="group flex h-full flex-col rounded-3xl bg-white/80 p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                      class="group relative flex h-full flex-col rounded-3xl bg-white/80 p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                     >
+                      {project.badgeText && (
+                        <img
+                          src={Star.src}
+                          alt="New project"
+                          class="absolute right-4 top-4 h-16 w-16"
+                        />
+                      )}
                       <div class="flex items-start justify-between gap-3">
                         <h3 class="text-2xl font-semibold text-gray-900">
                           {project.title}
                         </h3>
-                        {project.badgeText && (
-                          <span class="bg-p-orange rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase">
-                            {project.badgeText}
-                          </span>
-                        )}
                       </div>
                       <p class="mt-3 text-base text-gray-700">
                         {project.shortDescription ??
