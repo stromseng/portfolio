@@ -10,46 +10,48 @@ import DoodleBackground from "@images/DoodleBackground.svg";
 ---
 
 <Layout title="Magnus A. Strømseng">
-  <div
-    class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 px-5 md:mb-24 lg:flex-row"
-  >
+  <div class="flex w-full flex-col items-center">
     <div
-      class="inline-block bg-[url('/DoodleBackground.svg')] bg-contain bg-no-repeat p-24"
+      class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 px-5 md:mb-24 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
     >
-      <div class="">
-        <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
-        <h1 class="h1 text-6xl sm:text-7xl">
-          <span class="bg-p-blue rounded-lg">Magnus</span>
-          <br />
-          <span class="|">Alexander</span>
-          <br /> Strømseng
-        </h1>
-      </div>
-      <SelfTypingText
-        client:load
-        text={[
-          "Full Stack Developer",
-          "Informatics Student",
-          "Tech Enthusiast",
-          "E-Sports Player",
-          "I use Nix btw",
-        ]}
-      />
-      <div class="">
-        <p class="my-2 max-w-xs text-xl">
-          A Fullstack Developer and Informatics Student from Norway.
-        </p>
-      </div>
-      <a
-        href="mailto: magnus.stromseng+work@gmail.com"
-        class="relative inline-flex h-[54px] w-[127px] shrink items-center justify-center"
+      <div
+        class="inline-block bg-[url('/DoodleBackground.svg')] bg-contain bg-no-repeat p-24"
       >
-        <img src="/hire-button.svg" class="absolute inset-0 h-full w-full" />
-        <span class="relative z-10">Hire me</span>
-      </a>
-    </div>
-    <div class="w-[440px] content-normal justify-normal">
-      <img src="/logo-climber.svg" />
+        <div class="">
+          <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
+          <h1 class="h1 text-6xl sm:text-7xl">
+            <span class="bg-p-blue rounded-lg">Magnus</span>
+            <br />
+            <span class="|">Alexander</span>
+            <br /> Strømseng
+          </h1>
+        </div>
+        <SelfTypingText
+          client:load
+          text={[
+            "Full Stack Developer",
+            "Informatics Student",
+            "Tech Enthusiast",
+            "E-Sports Player",
+            "I use Nix btw",
+          ]}
+        />
+        <div class="">
+          <p class="my-2 max-w-xs text-xl">
+            A Fullstack Developer and Informatics Student from Norway.
+          </p>
+        </div>
+        <a
+          href="mailto: magnus.stromseng+work@gmail.com"
+          class="relative inline-flex h-[54px] w-[127px] shrink items-center justify-center"
+        >
+          <img src="/hire-button.svg" class="absolute inset-0 h-full w-full" />
+          <span class="relative z-10">Hire me</span>
+        </a>
+      </div>
+      <div class="w-[440px] content-normal justify-normal">
+        <img src="/logo-climber.svg" />
+      </div>
     </div>
   </div>
 
@@ -58,7 +60,9 @@ import DoodleBackground from "@images/DoodleBackground.svg";
     <SelfDrawingLogoSVG client:load />
   </div> -->
   <img src="/sea-top-boat.svg" class="w-full object-cover" />
-  <div class="bg-p-blue flex flex-row flex-nowrap">
+  <div
+    class="bg-p-blue flex h-[500px] flex-row flex-nowrap items-center justify-evenly"
+  >
     <!-- About Me -->
     <div class="prose gap-2">
       <h2 class="">About Me</h2>
