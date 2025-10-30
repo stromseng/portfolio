@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel/serverless";
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 
 import svelte from "@astrojs/svelte";
 
@@ -19,9 +19,7 @@ export default defineConfig({
       studioBasePath: "/admin",
     }),
     react(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
     svelte(),
   ],
+  vite: { plugins: [tailwindcss()] },
 });

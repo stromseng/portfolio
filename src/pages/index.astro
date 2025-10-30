@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.astro";
 import "@/styles/globals.css";
 import { Content as Readme } from "@/../README.md";
 import Content from "@/layouts/Content.astro";
@@ -12,7 +11,7 @@ import DoodleBackground from "@images/DoodleBackground.svg";
 
 <Layout title="Magnus A. Strømseng">
   <Content>
-    <div class="sm:flex-col-2 mb-24 mt-24 sm:flex md:mb-48">
+    <div class="sm:flex-col-2 mt-24 mb-24 sm:flex md:mb-48">
       <div class="w-full">
         <div
           class="inline-block bg-[url('/DoodleBackground.svg')] bg-contain bg-no-repeat p-24"
@@ -20,7 +19,7 @@ import DoodleBackground from "@images/DoodleBackground.svg";
           <div class="">
             <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
             <h1 class="h1 text-6xl sm:text-7xl">
-              <span class="rounded-lg bg-p-blue">Magnus</span>
+              <span class="bg-p-blue rounded-lg">Magnus</span>
               <br />
               <span class="|">Alexander</span>
               <br /> Strømseng
