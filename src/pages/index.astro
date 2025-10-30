@@ -15,10 +15,13 @@ import ProjectBot from "@images/project-bot.svg";
 import ProjectTop from "@images/project-top.svg";
 import SeaBot from "@images/sea-bot.svg";
 import SeaTopBoat from "@images/sea-top-boat.svg";
+import BusDot from "@images/bus-dot.svg";
 import Smiley from "@images/smiley.svg";
 import CleaningMan from "@images/cleaning-man.svg";
 import UniDot from "@images/uni-dot.svg";
 import WorkDot from "@images/work-dot.svg";
+import StandingDot from "@images/standing-dot.svg";
+import RunningDot from "@images/running-dot.svg";
 import { sanityClient } from "sanity:client";
 import { allProjectsQuery } from "@queries";
 import type { AllProjectsQueryResult } from "sanity.types";
@@ -173,7 +176,7 @@ const projectEntries: ProjectEntry[] = projects
                 </div>
               </div>
               <div class="flex items-start gap-4">
-                <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <img src={BusDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
                 <div class="flex flex-col">
                   <span class="text-lg font-semibold">2017-2020</span>
                   <span class="text-xl font-bold">Nydalen VGS</span>
@@ -194,7 +197,11 @@ const projectEntries: ProjectEntry[] = projects
                 </div>
               </div>
               <div class="flex items-start gap-4">
-                <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <img
+                  src={StandingDot.src}
+                  alt=""
+                  class="mt-1 h-12 w-12 shrink-0"
+                />
                 <div class="flex flex-col">
                   <span class="text-lg font-semibold">2021-2023</span>
                   <span class="text-xl font-bold"
@@ -204,7 +211,11 @@ const projectEntries: ProjectEntry[] = projects
                 </div>
               </div>
               <div class="flex items-start gap-4">
-                <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
+                <img
+                  src={RunningDot.src}
+                  alt=""
+                  class="mt-1 h-12 w-12 shrink-0"
+                />
                 <div class="flex flex-col">
                   <span class="text-lg font-semibold">2017-2020</span>
                   <span class="text-xl font-bold"
