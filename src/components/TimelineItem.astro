@@ -1,0 +1,46 @@
+---
+import type { ImageMetadata } from "astro";
+
+export interface TimelineItemProps {
+  icon: string | ImageMetadata;
+  alt?: string;
+  period: string;
+  title: string;
+  text: string;
+  iconClass?: string;
+}
+
+const {
+  icon,
+  alt = "",
+  period,
+  title,
+  text,
+  iconClass = "mt-1 h-18 w-18 shrink-0",
+} = Astro.props as TimelineItemProps;
+
+const iconMetadata = typeof icon === "string" ? undefined : icon;
+const iconSrc =
+  typeof icon === "string"
+    ? icon
+    : iconMetadata?.src ?? "";
+const iconWidth = iconMetadata?.width;
+const iconHeight = iconMetadata?.height;
+---
+<div class="flex items-start gap-4">
+  {iconSrc && (
+    <img
+      src={iconSrc}
+      alt={alt}
+      class={iconClass}
+      width={iconWidth}
+      height={iconHeight}
+      loading="lazy"
+    />
+  )}
+  <div class="flex flex-col">
+    <span class="text-lg font-semibold">{period}</span>
+    <span class="text-xl font-bold">{title}</span>
+    <span class="text-base">{text}</span>
+  </div>
+</div>
