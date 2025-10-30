@@ -7,6 +7,17 @@ import SelfTypingCode from "@/components/SelfTypingCode.svelte";
 import SelfDrawingLogoSVG from "@/components/SelfDrawingLogoSVG.svelte";
 import SelfTypingText from "@/components/SelfTypingText.svelte";
 import DoodleBackground from "@images/DoodleBackground.svg";
+import GrassBot from "@images/grass-bot.svg";
+import GrassTop from "@images/grass-top.svg";
+import HireButton from "@images/hire-button.svg";
+import LogoClimber from "@images/logo-climber.svg";
+import ProjectBot from "@images/project-bot.svg";
+import ProjectTop from "@images/project-top.svg";
+import SeaBot from "@images/sea-bot.svg";
+import SeaTopBoat from "@images/sea-top-boat.svg";
+import Smiley from "@images/smiley.svg";
+import UniDot from "@images/uni-dot.svg";
+import WorkDot from "@images/work-dot.svg";
 import { sanityClient } from "sanity:client";
 import { allProjectsQuery } from "@queries";
 import type { AllProjectsQueryResult } from "sanity.types";
@@ -45,7 +56,8 @@ const projectEntries: ProjectEntry[] = projects
       class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 px-5 md:mb-24 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
     >
       <div
-        class="inline-block bg-[url('/DoodleBackground.svg')] bg-contain bg-no-repeat p-24"
+        class="inline-block bg-contain bg-no-repeat p-24"
+        style={`background-image: url(${DoodleBackground.src});`}
       >
         <div class="">
           <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
@@ -75,24 +87,28 @@ const projectEntries: ProjectEntry[] = projects
           href="mailto: magnus.stromseng+work@gmail.com"
           class="relative inline-flex h-[54px] w-[127px] shrink items-center justify-center"
         >
-          <img src="/hire-button.svg" class="absolute inset-0 h-full w-full" />
+          <img
+            src={HireButton.src}
+            class="absolute inset-0 h-full w-full"
+            alt=""
+          />
           <span class="relative z-10">Hire me</span>
         </a>
       </div>
       <div class="w-[440px] content-normal justify-normal">
-        <img src="/logo-climber.svg" />
+        <img src={LogoClimber.src} alt="" />
       </div>
     </div>
   </div>
 
   <!-- About me section -->
   <div>
-    <img src="/sea-top-boat.svg" class="w-full object-cover" />
+    <img src={SeaTopBoat.src} class="w-full object-cover" alt="" />
     <div
       class="bg-p-blue flex h-[500px] flex-row flex-nowrap items-center justify-evenly"
     >
       <div class="prose gap-2">
-        <h2 class="">About Me</h2>
+        <h2 class="text-4xl">About Me</h2>
         <p class="text-l">
           I'm a 23 year old Informatics student from Oslo, Norway. I'm currently
           in the first year of my master's degree at the Norwegian University of
@@ -102,14 +118,14 @@ const projectEntries: ProjectEntry[] = projects
           more about me <a href="/about">here</a>
         </p>
       </div>
-      <div><img src="/smiley.svg" /></div>
+      <div><img src={Smiley.src} alt="" /></div>
     </div>
-    <img src="/sea-bot.svg" class="w-full object-cover" />
+    <img src={SeaBot.src} class="w-full object-cover" alt="" />
   </div>
 
   <!-- Work and Education -->
   <div>
-    <img src="/grass-top.svg" class="w-full object-cover" />
+    <img src={GrassTop.src} class="w-full object-cover" alt="" />
     <div class="bg-p-green flex w-full justify-center">
       <div
         class="flex w-full max-w-6xl flex-row flex-wrap items-start justify-between gap-12 px-6 py-16"
@@ -118,7 +134,7 @@ const projectEntries: ProjectEntry[] = projects
           <h2 class="text-4xl font-bold">Education</h2>
           <div class="flex flex-col gap-6">
             <div class="flex items-start gap-4">
-              <img src="/uni-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
+              <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2024-2026</span>
                 <span class="text-xl font-bold">
@@ -128,7 +144,7 @@ const projectEntries: ProjectEntry[] = projects
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <img src="/uni-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
+              <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2021-2024</span>
                 <span class="text-xl font-bold">
@@ -138,7 +154,7 @@ const projectEntries: ProjectEntry[] = projects
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <img src="/uni-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
+              <img src={UniDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2017-2020</span>
                 <span class="text-xl font-bold">Nydalen VGS</span>
@@ -151,7 +167,7 @@ const projectEntries: ProjectEntry[] = projects
           <h2 class="text-4xl font-bold">Work</h2>
           <div class="flex flex-col gap-6">
             <div class="flex items-start gap-4">
-              <img src="/work-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
+              <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2024</span>
                 <span class="text-xl font-bold">Thales Norway</span>
@@ -159,7 +175,7 @@ const projectEntries: ProjectEntry[] = projects
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <img src="/work-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
+              <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2021-2023</span>
                 <span class="text-xl font-bold">Linderud IL, Camp Linderud</span
@@ -168,7 +184,7 @@ const projectEntries: ProjectEntry[] = projects
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <img src="/work-dot.svg" alt="" class="mt-1 h-12 w-12 shrink-0" />
+              <img src={WorkDot.src} alt="" class="mt-1 h-12 w-12 shrink-0" />
               <div class="flex flex-col">
                 <span class="text-lg font-semibold">2017-2020</span>
                 <span class="text-xl font-bold">Linderud IL, Camp Linderud</span
@@ -180,11 +196,11 @@ const projectEntries: ProjectEntry[] = projects
         </div>
       </div>
     </div>
-    <img src="/grass-bot.svg" class="w-full object-cover" />
+    <img src={GrassBot.src} class="w-full object-cover" alt="" />
   </div>
   <!-- Projects section -->
   <div>
-    <img src="/project-top.svg" class="w-full object-cover" />
+    <img src={ProjectTop.src} class="w-full object-cover" alt="" />
     <div class="bg-p-red flex w-full justify-center">
       <div
         class="flex w-full max-w-6xl flex-col items-center gap-12 px-6 py-24 text-center"
@@ -248,6 +264,6 @@ const projectEntries: ProjectEntry[] = projects
         }
       </div>
     </div>
-    <img src="/project-bot.svg" class="w-full object-cover" />
+    <img src={ProjectBot.src} class="w-full object-cover" alt="" />
   </div>
 </Layout>
