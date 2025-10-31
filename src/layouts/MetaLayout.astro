@@ -4,6 +4,7 @@ import SpeedInsights from "@vercel/speed-insights/astro";
 // Supports weights 300-800
 import "@fontsource-variable/shantell-sans";
 import "@/styles/globals.css";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title: string;
@@ -22,6 +23,7 @@ const { title, bodyClass = "" } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <ClientRouter />
   </head>
   <body class={bodyClass}>
     <slot />
