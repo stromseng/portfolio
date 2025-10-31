@@ -1,0 +1,12 @@
+---
+import Header from "@/components/Header.astro";
+
+interface Props {
+  headerClass?: string;
+}
+
+const { headerClass } = Astro.props;
+---
+
+<Header class={headerClass} />
+<slot />

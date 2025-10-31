@@ -3,6 +3,12 @@ import GithubLogo from "@images/github.svg";
 import LinkedInLogo from "@images/linkedin.svg";
 import { cn } from "@/lib/utils";
 
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
 const pathname = Astro.url.pathname;
 const isHome = pathname === "/";
 const isBlog = pathname === "/blog";
@@ -14,7 +20,10 @@ const linkClass = (isActive: boolean) =>
 ---
 
 <header
-  class="flex w-full items-center justify-evenly gap-4 p-2 md:justify-between md:gap-0"
+  class={cn(
+    "flex w-full items-center justify-evenly gap-4 p-2 md:justify-between md:gap-0",
+    className,
+  )}
 >
   <div class="hidden md:block md:flex-1"></div>
   <!-- Centered Links -->

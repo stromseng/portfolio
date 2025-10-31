@@ -1,12 +1,15 @@
 ---
-import Layout from "@/layouts/Layout.astro";
 import Construction from "@images/construction.svg";
 import "@/styles/globals.css";
+import MetaLayout from "@/layouts/MetaLayout.astro";
+import HeaderFooter from "@/layouts/HeaderFooter.astro";
 ---
 
-<Layout title="Blog">
-  <div class="my-24 flex min-h-96 flex-col items-center justify-center">
-    <Construction height={300} />
-    <span class="text-lg text-wrap"> Under construction... </span>
-  </div>
-</Layout>
+<MetaLayout title="Blog">
+  <HeaderFooter>
+    <div class="my-24 flex min-h-96 flex-col items-center justify-center">
+      <Construction height={300} />
+      <span class="text-lg text-wrap"> Under construction... </span>
+    </div>
+  </HeaderFooter>
+</MetaLayout>

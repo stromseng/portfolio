@@ -1,24 +1,356 @@
 ---
 export const prerender = true;
+import MetaLayout from "@/layouts/MetaLayout.astro";
+import Content from "@/layouts/Content.astro";
+import Star from "@images/star.svg";
 import type { GetStaticPaths } from "astro";
+import imageUrlBuilder from "@sanity/image-url";
 import { sanityClient } from "sanity:client";
-import groq from "groq";
 import { allProjectsQuery } from "@queries";
 import type { AllProjectsQueryResult } from "sanity.types";
+import HeaderFooter from "@/layouts/HeaderFooter.astro";
+import PaperPanel from "@/components/PaperPanel.astro";
 
-export async function getStaticPaths() {
+type ProjectWithSlug = AllProjectsQueryResult[number] & {
+  slug: { current: string };
+};
+
+type ProjectImage = NonNullable<ProjectWithSlug["images"]>[number];
+type PortableTextBlock = NonNullable<ProjectWithSlug["body"]>[number];
+
+const builder = imageUrlBuilder({
+  projectId: "xxc5ksdw",
+  dataset: "production",
+});
+
+export const getStaticPaths: GetStaticPaths = async () => {
   const projects: AllProjectsQueryResult =
     await sanityClient.fetch(allProjectsQuery);
-  return projects.map((project) => ({
+
+  const validProjects = projects.filter((project): project is ProjectWithSlug =>
+    Boolean(project.slug?.current),
+  );
+
+  return validProjects.map((project) => ({
     params: { slug: project.slug.current },
     props: { project },
   }));
+};
+
+const project = (Astro.props as { project: ProjectWithSlug }).project;
+
+const projectTypeLabel = {
+  personal: "Personal Project",
+  client: "Client Project",
+  school: "School Project",
+};
+
+const tags = project.tags?.filter((tag): tag is string => Boolean(tag?.trim()));
+
+const newBadgeText = project.newIndicator
+  ? project.newIndicatorText?.trim() || "New"
+  : null;
+
+const mainImageUrl =
+  project.mainImage?.asset?._ref &&
+  builder.image(project.mainImage).width(960).height(720).fit("max").url();
+
+const mainImageAlt =
+  project.mainImage?.alt || `${project.title ?? "Project"} hero image`;
+
+const galleryImages: Array<{
+  url: string;
+  alt: string;
+  id: string | undefined;
+}> =
+  project.images
+    ?.filter((image): image is ProjectImage => Boolean(image?.asset?._ref))
+    .map((image) => ({
+      url: builder.image(image).width(1200).height(800).fit("max").url(),
+      alt: image.alt || `${project.title ?? "Project"} supporting image`,
+      id: image._key ?? image.asset?._ref,
+    })) ?? [];
+
+const processedBodyBlocks =
+  project.body?.filter(
+    (block): block is PortableTextBlock =>
+      block._type === "block" && Boolean(block.children?.length),
+  ) ?? [];
+
+type BodyBlock =
+  | {
+      type: "block";
+      block: (typeof processedBodyBlocks)[number];
+    }
+  | {
+      type: "list";
+      listType: "bullet" | "number";
+      items: Array<(typeof processedBodyBlocks)[number]>;
+    };
+
+const bodyStructure: BodyBlock[] = [];
+
+for (const block of processedBodyBlocks) {
+  if (block.listItem === "bullet" || block.listItem === "number") {
+    const previous = bodyStructure[bodyStructure.length - 1];
+    if (previous?.type === "list" && previous.listType === block.listItem) {
+      previous.items.push(block);
+    } else {
+      bodyStructure.push({
+        type: "list",
+        listType: block.listItem,
+        items: [block],
+      });
+    }
+  } else {
+    bodyStructure.push({ type: "block", block });
+  }
 }
 
-const params = Astro.params;
-const props = Astro.props;
-console.log(params);
-console.log(props);
+const externalLinkClass =
+  "inline-flex items-center gap-3 rounded-[9999px] border-[3px] border-black bg-white px-5 py-2 text-sm font-semibold text-black shadow-[6px_6px_0_rgba(0,0,0,0.4)] transition hover:-translate-y-0.5 hover:shadow-[10px_10px_0_rgba(0,0,0,0.4)]";
 ---
 
-{params}
+<MetaLayout
+  title={`${project.title ?? "Project"} • Magnus A. Strømseng`}
+  bodyClass="bg-paper"
+>
+  <HeaderFooter headerClass="bg-paper">
+    <div
+      class="bg-paper flex min-h-screen w-full flex-col items-center py-10 text-black sm:py-16"
+    >
+      <a
+        href="/#projects"
+        class="fixed top-32 left-0 z-50 flex items-center gap-2 border-[3px] border-l-0 border-black bg-white px-6 py-4 text-xs font-bold tracking-[0.3em] uppercase shadow-[4px_4px_0_rgba(0,0,0,0.3)] transition hover:translate-x-1 hover:shadow-[6px_6px_0_rgba(0,0,0,0.4)]"
+        style="clip-path: polygon(0 0, 100% 0, 100% 30%, 110% 35%, 100% 40%, 100% 60%, 110% 65%, 100% 70%, 100% 100%, 0 100%);"
+      >
+        ← Back
+      </a>
+      <Content
+        class="relative flex w-full flex-col items-center gap-12 px-4 md:flex-row md:items-start md:justify-center md:gap-14"
+      >
+        <PaperPanel
+          class="relative mx-auto w-full max-w-2xl space-y-8 px-8 py-10 md:max-w-xl md:px-12"
+        >
+          <div
+            class="pointer-events-none absolute -top-6 left-8 h-12 w-20 border-2 border-black/70"
+          >
+          </div>
+          <div
+            class="pointer-events-none absolute right-6 -bottom-8 h-12 w-12 rotate-[12deg] border-2 border-dashed border-black/30"
+          >
+          </div>
+          {
+            newBadgeText && (
+              <span class="inline-flex w-fit items-center gap-2 rounded-[9999px] border-[3px] border-black bg-[#fffbcc] px-4 py-1.5 text-sm font-semibold tracking-[0.2em] uppercase">
+                <img src={Star.src} alt="" class="h-6 w-6" />
+                {newBadgeText}
+              </span>
+            )
+          }
+          <div class="space-y-4">
+            <h1
+              class="text-4xl leading-tight font-semibold text-black md:text-5xl"
+            >
+              {project.title}
+            </h1>
+            {
+              project.shortDescription && (
+                <p class="text-lg leading-relaxed text-black">
+                  {project.shortDescription}
+                </p>
+              )
+            }
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            {
+              project.projectType && (
+                <span class="inline-flex items-center rounded-[9999px] border-[3px] border-black bg-white px-4 py-1.5 text-xs font-semibold tracking-[0.3em] uppercase">
+                  {projectTypeLabel[project.projectType] ?? project.projectType}
+                </span>
+              )
+            }
+            {
+              tags?.map((tag) => (
+                <span class="inline-flex items-center rounded-[9999px] border-[3px] border-black bg-[#e6f0ff] px-4 py-1.5 text-xs font-semibold tracking-[0.3em] uppercase">
+                  {tag}
+                </span>
+              ))
+            }
+          </div>
+          <div class="flex flex-wrap gap-4">
+            {
+              project.hostedLink && (
+                <a
+                  href={project.hostedLink}
+                  class={externalLinkClass}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visit Live Site
+                </a>
+              )
+            }
+            {
+              project.githubLink && (
+                <a
+                  href={project.githubLink}
+                  class={externalLinkClass}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Source
+                </a>
+              )
+            }
+          </div>
+        </PaperPanel>
+        {
+          mainImageUrl ? (
+            <PaperPanel class="relative mx-auto flex w-full max-w-2xl justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
+              <div class="pointer-events-none absolute inset-4 border-2 border-dashed border-black/40" />
+              <img
+                src={mainImageUrl}
+                alt={mainImageAlt}
+                loading="lazy"
+                class="relative h-full w-full rounded-[24px] border-[3px] border-black object-cover"
+              />
+            </PaperPanel>
+          ) : (
+            <PaperPanel
+              class={`mx-auto flex w-full max-w-md items-center justify-center px-8 py-10 md:w-auto`}
+            >
+              <span class="text-center text-base font-medium tracking-[0.2em] uppercase">
+                Image coming soon
+              </span>
+            </PaperPanel>
+          )
+        }
+      </Content>
+      <Content class="my-16 flex w-full flex-col gap-16 px-4">
+        {
+          bodyStructure.length ? (
+            <PaperPanel class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black max-w-none px-10 py-12 text-black">
+              {bodyStructure.map((entry) => {
+                if (entry.type === "list") {
+                  const ListTag = entry.listType === "number" ? "ol" : "ul";
+                  return (
+                    <ListTag class="ml-8 list-inside space-y-2 marker:text-black">
+                      {entry.items.map((item) => (
+                        <li class="text-base text-black">
+                          {item.children?.map((child) => {
+                            if (!child?.text) return null;
+                            const markKey = child.marks?.find((mark) =>
+                              item.markDefs?.some(
+                                (def) =>
+                                  def._key === mark &&
+                                  def._type === "link" &&
+                                  def.href,
+                              ),
+                            );
+                            const href = markKey
+                              ? item.markDefs?.find(
+                                  (def) =>
+                                    def._key === markKey &&
+                                    def._type === "link",
+                                )?.href
+                              : undefined;
+                            return href ? (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="rounded-md border-b-[3px] border-black px-1 pb-0.5 transition hover:-translate-y-0.5 hover:bg-black/5 hover:shadow-[4px_4px_0_rgba(0,0,0,0.35)]"
+                              >
+                                {child.text}
+                              </a>
+                            ) : (
+                              <span>{child.text}</span>
+                            );
+                          })}
+                        </li>
+                      ))}
+                    </ListTag>
+                  );
+                }
+                const Tag =
+                  entry.block.style === "h2"
+                    ? "h2"
+                    : entry.block.style === "h3"
+                      ? "h3"
+                      : entry.block.style === "h4"
+                        ? "h4"
+                        : "p";
+                return (
+                  <Tag>
+                    {entry.block.children?.map((child) => {
+                      if (!child?.text) return null;
+                      const markKey = child.marks?.find((mark) =>
+                        entry.block.markDefs?.some(
+                          (def) =>
+                            def._key === mark &&
+                            def._type === "link" &&
+                            def.href,
+                        ),
+                      );
+                      const href = markKey
+                        ? entry.block.markDefs?.find(
+                            (def) =>
+                              def._key === markKey && def._type === "link",
+                          )?.href
+                        : undefined;
+                      return href ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="rounded-md border-b-[3px] border-black px-1 pb-0.5 transition hover:-translate-y-0.5 hover:bg-black/5 hover:shadow-[4px_4px_0_rgba(0,0,0,0.35)]"
+                        >
+                          {child.text}
+                        </a>
+                      ) : (
+                        <span>{child.text}</span>
+                      );
+                    })}
+                  </Tag>
+                );
+              })}
+            </PaperPanel>
+          ) : (
+            <PaperPanel class="px-10 py-12 text-center">
+              <h2 class="text-2xl font-semibold tracking-[0.2em] uppercase">
+                Project write-up incoming
+              </h2>
+              <p class="mt-4 text-base">
+                I'm still polishing the case study for this project—check back
+                soon for more insights.
+              </p>
+            </PaperPanel>
+          )
+        }
+        {
+          galleryImages.length ? (
+            <section class="flex flex-col gap-6">
+              <h2 class="text-3xl font-semibold tracking-[0.3em] uppercase">
+                Gallery
+              </h2>
+              <div class="grid gap-8 md:grid-cols-2">
+                {galleryImages.map((image) => (
+                  <PaperPanel class="relative overflow-hidden">
+                    <div class="pointer-events-none absolute inset-4 border-2 border-dashed border-black/40" />
+                    <img
+                      src={image.url}
+                      alt={image.alt}
+                      loading="lazy"
+                      class="relative h-full w-full rounded-[24px] border-[3px] border-black object-cover transition duration-500 hover:-translate-y-1 hover:rotate-1"
+                    />
+                  </PaperPanel>
+                ))}
+              </div>
+            </section>
+          ) : null
+        }
+      </Content>
+    </div>
+  </HeaderFooter>
+</MetaLayout>

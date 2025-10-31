@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-@plugin 'tailwindcss-animate';
-@plugin '@tailwindcss/typography';
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -57,6 +57,9 @@
 
   --color-p-orange: hsl(var(--p-orange));
   --color-p-orange-foreground: hsl(var(--foreground));
+
+  --color-paper: hsl(var(--paper));
+  --color-paper-foreground: hsl(var(--foreground));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -133,6 +136,8 @@
     --p-green: 126 89% 85;
     --p-red: 0 100% 84;
     --p-orange: 33 100% 82: ;
+    /* Paper color */
+    --paper: 44 38% 92%;
   }
 
   .dark {
