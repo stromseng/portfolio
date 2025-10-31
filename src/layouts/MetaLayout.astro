@@ -1,5 +1,6 @@
 ---
 import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 // Supports weights 300-800
 import "@fontsource-variable/shantell-sans";
 import "@/styles/globals.css";
@@ -25,5 +26,6 @@ const { title, bodyClass = "" } = Astro.props;
   <body class={bodyClass}>
     <slot />
     <Analytics />
+    <SpeedInsights />
   </body>
 </html>
