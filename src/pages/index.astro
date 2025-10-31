@@ -117,6 +117,18 @@ const workItems: TimelineItemProps[] = [
     text: "Camp Staff",
   },
 ];
+
+// Calculate age based on birthdate (April 19, 2002)
+const birthDate = new Date(2002, 3, 19); // Month is 0-indexed (3 = April)
+const today = new Date();
+let age = today.getFullYear() - birthDate.getFullYear();
+const monthDiff = today.getMonth() - birthDate.getMonth();
+if (
+  monthDiff < 0 ||
+  (monthDiff === 0 && today.getDate() < birthDate.getDate())
+) {
+  age--;
+}
 ---
 
 <MetaLayout title="Magnus A. Strømseng">
@@ -197,14 +209,10 @@ const workItems: TimelineItemProps[] = [
           <div class="prose gap-2 md:max-w-lg">
             <h2 class="text-4xl">About Me</h2>
             <p class="text-l">
-              I'm a 23 year old Informatics student from Oslo, Norway. I'm
-              currently in the first year of my master's degree at the Norwegian
-              University of Technology and Science. I'm passionate about
-              technology and I love to learn new things. I'm also a big fan of
-              open source software and I try to contribute to open source
-              projects whenever I can. You can read more about me <a
-                href="/about">here</a
-              >
+              I'm a {age} year old Informatics student from Oslo, Norway. I'm currently
+              in the first year of my master's degree at the Norwegian University
+              of Technology and Science. I'm passionate about technology and I love
+              to learn new things. I'm also a big fan of open source software.
             </p>
           </div>
           <div class="flex justify-center">
