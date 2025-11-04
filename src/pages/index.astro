@@ -202,24 +202,26 @@ if (
       <!-- About me section -->
       <div>
         <img src={SeaTopBoat.src} class="w-full object-cover" alt="" />
-        <div
-          class="bg-p-blue flex flex-col items-center justify-center gap-8 px-6 py-12 text-center md:h-[500px] md:flex-row md:flex-nowrap md:justify-evenly md:gap-0 md:px-12 md:text-left"
-        >
-          <div class="prose gap-2 md:max-w-lg">
-            <h2 class="text-4xl">About Me</h2>
-            <p class="text-l">
-              I'm a {age} year old Informatics student from Oslo, Norway. I'm currently
-              in the first year of my master's degree at the Norwegian University
-              of Technology and Science. I'm passionate about technology and I love
-              to learn new things. I'm also a big fan of open source software.
-            </p>
-          </div>
-          <div class="flex justify-center">
-            <img
-              src={Smiley.src}
-              alt=""
-              class="h-32 w-32 md:h-auto md:w-auto"
-            />
+        <div class="bg-p-blue flex w-full justify-center">
+          <div
+            class="flex flex-col items-center justify-center gap-24 px-6 py-12 text-center md:h-[500px] md:flex-row md:flex-nowrap md:justify-evenly md:gap-32 md:px-12 md:text-left lg:gap-64"
+          >
+            <div class="prose gap-2 md:max-w-lg">
+              <h2 class="text-4xl">About Me</h2>
+              <p class="text-l">
+                I'm a {age} year old Informatics student from Oslo, Norway. I'm currently
+                in the first year of my master's degree at the Norwegian University
+                of Technology and Science. I'm passionate about technology and I
+                love to learn new things. I'm also a big fan of open source software.
+              </p>
+            </div>
+            <div class="flex shrink-0 justify-center">
+              <img
+                src={Smiley.src}
+                alt=""
+                class="h-32 w-32 md:h-auto md:w-auto"
+              />
+            </div>
           </div>
         </div>
         <img src={SeaBot.src} class="w-full object-cover" alt="" />
