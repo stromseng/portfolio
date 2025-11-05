@@ -3,13 +3,30 @@ import Construction from "@images/construction.svg";
 import "@/styles/globals.css";
 import MetaLayout from "@/layouts/MetaLayout.astro";
 import HeaderFooter from "@/layouts/HeaderFooter.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 ---
 
 <MetaLayout title="Blog">
   <HeaderFooter>
-    <div class="my-24 flex min-h-96 flex-col items-center justify-center">
-      <Construction height={300} />
-      <span class="text-lg text-wrap"> Under construction... </span>
-    </div>
+    {
+      posts.length ? (
+        <div class="flex flex-col items-center gap-4">
+          {posts.map((post) => (
+            <a href={`/blog/${post.id}`}>
+              <h2>{post.data.title}</h2>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="my-24 flex min-h-96 flex-col items-center justify-center">
+          <Construction height={300} />
+          <span class="text-lg text-wrap"> Under construction... </span>
+        </div>
+      )
+    }
   </HeaderFooter>
 </MetaLayout>

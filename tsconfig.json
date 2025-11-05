@@ -1,6 +1,8 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
+    "strictNullChecks": true, // astro: add if using `base` template
+    "allowJs": true, // astro: required, and included with all Astro templates
     "baseUrl": ".",
     "paths": {
       "@queries": ["src/sanity.queries.ts"],

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
+    "@astrojs/mdx": "^4.3.9",
     "@astrojs/react": "^4.4.1",
     "@astrojs/svelte": "^7.2.1",
     "@astrojs/tailwind": "^6.0.2",
@@ -19,6 +20,7 @@
     "@fontsource-variable/shantell-sans": "^5.2.7",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.3",
     "@sanity/astro": "^3.2.10",
     "@sanity/client": "^7.12.0",

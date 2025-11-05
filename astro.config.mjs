@@ -6,6 +6,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 import svelte from "@astrojs/svelte";
 
+import mdx from "@astrojs/mdx";
+
 // https://astro.build/config
 export default defineConfig({
   output: "server",
@@ -14,16 +16,12 @@ export default defineConfig({
       enabled: true,
     },
   }),
-  integrations: [
-    sanity({
-      projectId: "xxc5ksdw",
-      dataset: "production",
-      // Set useCdn to false if you're building statically.
-      useCdn: false,
-      studioBasePath: "/admin",
-    }),
-    react(),
-    svelte(),
-  ],
+  integrations: [sanity({
+    projectId: "xxc5ksdw",
+    dataset: "production",
+    // Set useCdn to false if you're building statically.
+    useCdn: false,
+    studioBasePath: "/admin",
+  }), react(), svelte(), mdx()],
   vite: { plugins: [tailwindcss()] },
 });

@@ -1,0 +1,15 @@
+---
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+
+<a
+  href={href}
+  class="mb-12 flex w-fit -translate-x-1 items-center gap-2 border-[3px] border-l-0 border-black bg-white px-6 py-4 text-xs font-bold tracking-[0.3em] uppercase shadow-[4px_4px_0_rgba(0,0,0,0.3)] transition hover:translate-x-0 hover:shadow-[6px_6px_0_rgba(0,0,0,0.4)]"
+  style="clip-path: polygon(0 0, 100% 0, 100% 30%, 110% 35%, 100% 40%, 100% 60%, 110% 65%, 100% 70%, 100% 100%, 0 100%);"
+>
+  ← Back
+</a>
