@@ -206,12 +206,10 @@ const externalLinkClass =
         {
           mainImageUrl ? (
             <PaperPanel class="relative mx-auto flex w-full max-w-2xl justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
-              <InsetBorderAccent class="inset-4" variant="dashed" />
               <img
                 src={mainImageUrl}
                 alt={mainImageAlt}
-                loading="lazy"
-                class="relative h-full w-full rounded-[24px] border-[3px] border-black object-cover"
+                class="relative h-full w-full rounded-[24px] border-[3px] border-dashed object-cover"
               />
             </PaperPanel>
           ) : (
