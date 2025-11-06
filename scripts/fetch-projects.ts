@@ -1,7 +1,6 @@
 #!/usr/bin/env bun
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import type { Dirent } from "node:fs";
-import { Buffer } from "node:buffer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@sanity/client";
@@ -142,14 +141,16 @@ async function downloadProjectImage(
 
   const response = await fetch(url);
   if (!response.ok) {
-    console.warn(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+    console.warn(
+      `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
+    );
     return undefined;
   }
 
   const arrayBuffer = await response.arrayBuffer();
   const fileName = `${basename}.${extension}`;
   const filePath = path.join(PUBLIC_PROJECTS_DIR, slug, fileName);
-  await writeFile(filePath, Buffer.from(arrayBuffer));
+  await writeFile(filePath, new Uint8Array(arrayBuffer));
 
   return {
     src: `/projects/${slug}/${fileName}`,
