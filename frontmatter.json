@@ -60,11 +60,7 @@
         {
           "name": "projectType",
           "type": "choice",
-          "choices": [
-            "personal",
-            "client",
-            "school"
-          ]
+          "choices": ["personal", "client", "school"]
         },
         {
           "name": "tags",
@@ -95,19 +91,16 @@
           "type": "number"
         },
         {
+          "title": "Main Image",
           "name": "mainImage",
           "type": "image",
           "isPreviewImage": true
         },
         {
+          "title": "Gallery Images",
           "name": "images",
           "type": "image",
-          "default": []
-        },
-        {
-          "name": "bodyPortableText",
-          "type": "list",
-          "default": []
+          "multiple": true
         }
       ]
     }
