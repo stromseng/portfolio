@@ -57,7 +57,7 @@ const newBadgeText = project.newIndicator
 
 const mainImageUrl =
   project.mainImage?.asset?._ref &&
-  builder.image(project.mainImage).width(960).height(720).fit("max").url();
+  builder.image(project.mainImage).fit("max").url();
 
 const mainImageAlt =
   project.mainImage?.alt || `${project.title ?? "Project"} hero image`;
@@ -70,7 +70,7 @@ const galleryImages: Array<{
   project.images
     ?.filter((image): image is ProjectImage => Boolean(image?.asset?._ref))
     .map((image) => ({
-      url: builder.image(image).width(1200).height(800).fit("max").url(),
+      url: builder.image(image).fit("max").url(),
       alt: image.alt || `${project.title ?? "Project"} supporting image`,
       id: image._key ?? image.asset?._ref,
     })) ?? [];
@@ -121,15 +121,11 @@ const externalLinkClass =
 >
   <HeaderFooter headerClass="bg-paper">
     <BackLink href="/#projects" />
-    <div
-      class="bg-paper flex min-h-screen w-full flex-col items-center text-black"
-    >
-      <Content
-        class="relative flex w-full flex-col items-center gap-12 px-4 md:flex-row md:items-start md:justify-center md:gap-14"
+    <Content class="mx-auto flex min-h-screen flex-col items-center">
+      <div
+        class="flex w-full flex-col items-center gap-12 md:flex-row md:items-start md:justify-center md:gap-14"
       >
-        <PaperPanel
-          class="relative mx-auto w-full max-w-2xl space-y-8 px-8 py-10 md:max-w-xl md:px-12"
-        >
+        <PaperPanel class="relative w-full space-y-8 px-8 py-10 md:px-12">
           <TapeStrip class="-top-6 left-8 h-12 w-28 rotate-2" />
           {
             newBadgeText && (
@@ -205,11 +201,11 @@ const externalLinkClass =
         </PaperPanel>
         {
           mainImageUrl ? (
-            <PaperPanel class="relative mx-auto flex w-full max-w-2xl justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
+            <PaperPanel class="flex w-full max-w-2xl items-center justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
               <img
                 src={mainImageUrl}
                 alt={mainImageAlt}
-                class="relative h-full w-full rounded-[24px] border-[3px] border-dashed object-cover"
+                class="h-auto w-full rounded-[24px] border-[3px] border-dashed object-scale-down"
               />
             </PaperPanel>
           ) : (
@@ -222,8 +218,8 @@ const externalLinkClass =
             </PaperPanel>
           )
         }
-      </Content>
-      <Content class="my-16 flex w-full flex-col gap-16 px-4">
+      </div>
+      <div class="my-16 flex w-full flex-col gap-16">
         {
           bodyStructure.length ? (
             <PaperPanel class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black max-w-none px-10 py-12 text-black">
@@ -332,13 +328,13 @@ const externalLinkClass =
               </h2>
               <div class="grid gap-8 md:grid-cols-2">
                 {galleryImages.map((image) => (
-                  <PaperPanel class="relative overflow-hidden">
+                  <PaperPanel class="relative flex items-center justify-center overflow-hidden">
                     <InsetBorderAccent class="inset-4" variant="dashed" />
                     <img
                       src={image.url}
                       alt={image.alt}
                       loading="lazy"
-                      class="relative h-full w-full rounded-[24px] border-[3px] border-black object-cover transition duration-500 hover:-translate-y-1 hover:rotate-1"
+                      class="relative h-auto w-full rounded-[24px] border-[3px] border-black object-contain transition duration-500 hover:-translate-y-1 hover:rotate-1"
                     />
                   </PaperPanel>
                 ))}
@@ -346,7 +342,7 @@ const externalLinkClass =
             </section>
           ) : null
         }
-      </Content>
-    </div>
+      </div>
+    </Content>
   </HeaderFooter>
 </MetaLayout>
