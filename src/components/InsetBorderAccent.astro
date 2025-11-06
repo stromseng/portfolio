@@ -1,0 +1,41 @@
+---
+interface Props {
+  /**
+   * Which element to render (defaults to div).
+   */
+  as?: keyof HTMLElementTagNameMap;
+  /**
+   * Additional absolute positioning classes.
+   */
+  class?: string;
+  /**
+   * Predefined border variant.
+   */
+  variant?: "solid" | "dashed";
+  /**
+   * Optional custom border classes (overrides variant styles).
+   */
+  borderClass?: string;
+}
+
+const {
+  as = "div",
+  class: className,
+  variant = "solid",
+  borderClass,
+  ...rest
+} = Astro.props as Props & Record<string, unknown>;
+
+const baseClasses = "pointer-events-none absolute border-2";
+const variantClasses =
+  variant === "dashed" ? "border-dashed border-black/40" : "border-black/70";
+const Tag = as;
+---
+
+<Tag
+  aria-hidden="true"
+  class:list={[baseClasses, borderClass ?? variantClasses, className]}
+  {...rest}
+>
+  <slot />
+</Tag>

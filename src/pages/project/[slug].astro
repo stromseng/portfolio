@@ -11,6 +11,8 @@ import type { AllProjectsQueryResult } from "sanity.types";
 import HeaderFooter from "@/layouts/HeaderFooter.astro";
 import PaperPanel from "@/components/PaperPanel.astro";
 import BackLink from "@/components/backlink.astro";
+import PillBadge from "@/components/PillBadge";
+import InsetBorderAccent from "@/components/InsetBorderAccent.astro";
 
 type ProjectWithSlug = AllProjectsQueryResult[number] & {
   slug: { current: string };
@@ -127,20 +129,20 @@ const externalLinkClass =
         <PaperPanel
           class="relative mx-auto w-full max-w-2xl space-y-8 px-8 py-10 md:max-w-xl md:px-12"
         >
-          <div
-            class="pointer-events-none absolute -top-6 left-8 h-12 w-20 border-2 border-black/70"
-          >
-          </div>
-          <div
-            class="pointer-events-none absolute right-6 -bottom-8 h-12 w-12 rotate-[12deg] border-2 border-dashed border-black/30"
-          >
-          </div>
+          <InsetBorderAccent class="-top-6 left-8 h-12 w-20" />
+          <InsetBorderAccent
+            class="right-6 -bottom-8 h-12 w-12 rotate-[12deg]"
+            borderClass="border-dashed border-black/30"
+          />
           {
             newBadgeText && (
-              <span class="inline-flex w-fit items-center gap-2 rounded-[9999px] border-[3px] border-black bg-[#fffbcc] px-4 py-1.5 text-sm font-semibold tracking-[0.2em] uppercase">
+              <PillBadge
+                background="bg-[#fffbcc]"
+                class="gap-2 px-4 py-1.5 text-sm tracking-[0.2em]"
+              >
                 <img src={Star.src} alt="" class="h-6 w-6" />
                 {newBadgeText}
-              </span>
+              </PillBadge>
             )
           }
           <div class="space-y-4">
@@ -160,16 +162,19 @@ const externalLinkClass =
           <div class="flex flex-wrap items-center gap-3">
             {
               project.projectType && (
-                <span class="inline-flex items-center rounded-[9999px] border-[3px] border-black bg-white px-4 py-1.5 text-xs font-semibold tracking-[0.3em] uppercase">
+                <PillBadge background="bg-white" class="px-4 py-1.5 text-xs">
                   {projectTypeLabel[project.projectType] ?? project.projectType}
-                </span>
+                </PillBadge>
               )
             }
             {
               tags?.map((tag) => (
-                <span class="inline-flex items-center rounded-[9999px] border-[3px] border-black bg-[#e6f0ff] px-4 py-1.5 text-xs font-semibold tracking-[0.3em] uppercase">
+                <PillBadge
+                  background="bg-[#e6f0ff]"
+                  class="px-4 py-1.5 text-xs"
+                >
                   {tag}
-                </span>
+                </PillBadge>
               ))
             }
           </div>
@@ -203,7 +208,7 @@ const externalLinkClass =
         {
           mainImageUrl ? (
             <PaperPanel class="relative mx-auto flex w-full max-w-2xl justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
-              <div class="pointer-events-none absolute inset-4 border-2 border-dashed border-black/40" />
+              <InsetBorderAccent class="inset-4" variant="dashed" />
               <img
                 src={mainImageUrl}
                 alt={mainImageAlt}
@@ -332,7 +337,7 @@ const externalLinkClass =
               <div class="grid gap-8 md:grid-cols-2">
                 {galleryImages.map((image) => (
                   <PaperPanel class="relative overflow-hidden">
-                    <div class="pointer-events-none absolute inset-4 border-2 border-dashed border-black/40" />
+                    <InsetBorderAccent class="inset-4" variant="dashed" />
                     <img
                       src={image.url}
                       alt={image.alt}

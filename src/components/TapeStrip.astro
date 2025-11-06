@@ -1,0 +1,37 @@
+---
+interface Props {
+  /**
+   * Which element to render (defaults to span).
+   */
+  as?: keyof HTMLElementTagNameMap;
+  /**
+   * Background utility class for the tape.
+   */
+  colorClass?: string;
+  /**
+   * Additional classes appended to the tape element.
+   */
+  class?: string;
+  /**
+   * Shadow utility override. Defaults to the skewed tape shadow.
+   */
+  shadowClass?: string;
+}
+
+const {
+  as = "span",
+  colorClass = "bg-[#ffd84d]",
+  class: className,
+  shadowClass = "shadow-[3px_3px_0_rgba(0,0,0,0.2)]",
+  ...rest
+} = Astro.props as Props & Record<string, unknown>;
+
+const baseClasses = "pointer-events-none absolute opacity-90";
+const Tag = as;
+---
+
+<Tag
+  aria-hidden="true"
+  class:list={[baseClasses, colorClass, shadowClass, className]}
+  {...rest}
+/>

@@ -4,6 +4,8 @@ import "@/styles/globals.css";
 import MetaLayout from "@/layouts/MetaLayout.astro";
 import HeaderFooter from "@/layouts/HeaderFooter.astro";
 import PaperPanel from "@/components/PaperPanel.astro";
+import PillBadge from "@/components/PillBadge";
+import TapeStrip from "@/components/TapeStrip.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("blog")).sort(
@@ -48,7 +50,7 @@ const decoratedPosts = posts.map((post, index) => ({
               <header class="relative z-10 flex flex-col items-center gap-6 text-center md:items-start md:text-left">
                 <div class="space-y-4">
                   <h1 class="text-4xl leading-tight font-semibold md:text-5xl">
-                    Magnus's Blog
+                    Magnus' Blog
                   </h1>
                   <p class="text-lg leading-relaxed text-black/80 md:text-xl">
                     My thoughts and experiences from the things I've done. It's
@@ -66,15 +68,16 @@ const decoratedPosts = posts.map((post, index) => ({
                     <PaperPanel
                       class={`relative flex h-full flex-col border-dashed border-black/70 bg-white px-8 py-9 transition-all duration-200 ${rotation} group-hover:-translate-y-2 group-hover:rotate-0 group-hover:shadow-[18px_18px_0_rgba(0,0,0,0.35)]`}
                     >
-                      <span
-                        class={`pointer-events-none absolute -top-6 left-1/2 h-8 w-28 -translate-x-1/2 ${tapeRotation} bg-[#ffd84d] opacity-90 shadow-[3px_3px_0_rgba(0,0,0,0.2)]`}
+                      <TapeStrip
+                        class={`-top-6 left-1/2 h-8 w-28 -translate-x-1/2 ${tapeRotation}`}
                       />
-                      <time
-                        datetime={post.data.pubDate.toISOString()}
-                        class="inline-flex w-fit items-center rounded-[9999px] border-[3px] border-black bg-[#e6f0ff] px-4 py-1 text-[11px] font-semibold tracking-[0.3em] uppercase"
+                      <PillBadge
+                        as="time"
+                        dateTime={post.data.pubDate.toISOString()}
+                        background="bg-[#e6f0ff]"
                       >
                         {formatDate(post.data.pubDate)}
-                      </time>
+                      </PillBadge>
                       <h2 class="mt-5 text-2xl leading-snug font-semibold text-black">
                         {post.data.title}
                       </h2>
@@ -84,9 +87,12 @@ const decoratedPosts = posts.map((post, index) => ({
                       {post.data.tags?.length ? (
                         <div class="mt-6 flex flex-wrap gap-2">
                           {post.data.tags.map((tag) => (
-                            <span class="inline-flex items-center rounded-[9999px] border-[3px] border-black bg-[#fff0f0] px-3 py-1 text-[11px] font-semibold tracking-[0.35em] uppercase">
+                            <PillBadge
+                              background="bg-[#fff0f0]"
+                              className="px-3 py-1 text-[11px] tracking-[0.35em]"
+                            >
                               #{tag}
-                            </span>
+                            </PillBadge>
                           ))}
                         </div>
                       ) : null}
@@ -103,7 +109,10 @@ const decoratedPosts = posts.map((post, index) => ({
         ) : (
           <div class="my-24 flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
             <PaperPanel class="relative max-w-xl border-dashed border-black/70 bg-white px-10 py-12 text-black shadow-[16px_16px_0_rgba(0,0,0,0.25)]">
-              <span class="pointer-events-none absolute -top-6 left-12 h-8 w-24 rotate-[-8deg] bg-[#ffe28a] opacity-90 shadow-[3px_3px_0_rgba(0,0,0,0.2)]" />
+              <TapeStrip
+                class="-top-6 left-12 h-8 w-24 rotate-[-8deg]"
+                colorClass="bg-[#ffe28a]"
+              />
               <Construction class="mx-auto mb-6 h-auto w-60" />
               <h2 class="text-3xl font-semibold">Still sketching…</h2>
             </PaperPanel>
