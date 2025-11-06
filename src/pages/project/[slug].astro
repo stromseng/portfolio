@@ -13,6 +13,7 @@ import PaperPanel from "@/components/PaperPanel.astro";
 import BackLink from "@/components/backlink.astro";
 import PillBadge from "@/components/PillBadge";
 import InsetBorderAccent from "@/components/InsetBorderAccent.astro";
+import TapeStrip from "@/components/TapeStrip.astro";
 
 type ProjectWithSlug = AllProjectsQueryResult[number] & {
   slug: { current: string };
@@ -129,16 +130,13 @@ const externalLinkClass =
         <PaperPanel
           class="relative mx-auto w-full max-w-2xl space-y-8 px-8 py-10 md:max-w-xl md:px-12"
         >
-          <InsetBorderAccent class="-top-6 left-8 h-12 w-20" />
-          <InsetBorderAccent
-            class="right-6 -bottom-8 h-12 w-12 rotate-[12deg]"
-            borderClass="border-dashed border-black/30"
-          />
+          <TapeStrip class="-top-6 left-8 h-12 w-28 rotate-2" />
+
           {
             newBadgeText && (
               <PillBadge
                 background="bg-[#fffbcc]"
-                class="gap-2 px-4 py-1.5 text-sm tracking-[0.2em]"
+                className="gap-2 px-4 py-1.5 text-sm tracking-[0.2em]"
               >
                 <img src={Star.src} alt="" class="h-6 w-6" />
                 {newBadgeText}
