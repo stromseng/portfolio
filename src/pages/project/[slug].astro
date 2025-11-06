@@ -131,19 +131,16 @@ const externalLinkClass =
           class="relative mx-auto w-full max-w-2xl space-y-8 px-8 py-10 md:max-w-xl md:px-12"
         >
           <TapeStrip class="-top-6 left-8 h-12 w-28 rotate-2" />
-
           {
             newBadgeText && (
-              <PillBadge
-                background="bg-[#fffbcc]"
-                className="gap-2 px-4 py-1.5 text-sm tracking-[0.2em]"
-              >
-                <img src={Star.src} alt="" class="h-6 w-6" />
-                {newBadgeText}
-              </PillBadge>
+              <img
+                src={Star.src}
+                alt={newBadgeText}
+                class="absolute top-4 right-4 z-0 h-16 w-16"
+              />
             )
           }
-          <div class="space-y-4">
+          <div class="relative z-10 space-y-4">
             <h1
               class="text-4xl leading-tight font-semibold text-black md:text-5xl"
             >
@@ -157,7 +154,7 @@ const externalLinkClass =
               )
             }
           </div>
-          <div class="flex flex-wrap items-center gap-3">
+          <div class="relative z-10 flex flex-wrap items-center gap-3">
             {
               project.projectType && (
                 <PillBadge
@@ -179,7 +176,7 @@ const externalLinkClass =
               ))
             }
           </div>
-          <div class="flex flex-wrap gap-4">
+          <div class="relative z-10 flex flex-wrap gap-4">
             {
               project.hostedLink && (
                 <a
