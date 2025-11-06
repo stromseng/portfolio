@@ -18,11 +18,10 @@ images:
 fmContentType: projects
 ---
 
-Contributed to multiple features. Including refactoring the engine and UI.
+I contributed to several areas of Bazaar Engine, refactoring both the engine and the UI.
 
-I refactored the ui to use shadcn/ui and tailwindcss.
-I also ended up refactoring the engine to a more modular approach, using an event bus and the command pattern.
-Trying out web workers was also a horrifying experience, if you know you know. 
+For the UI, I migrated to shadcn/ui and Tailwind. Under the hood, I restructured the engine to be more modular, introducing an event bus and the command pattern to make feature development and maintenance much cleaner.
 
-I really enjoyed learning about how you implement a system where multiple cards interact with each other. 
-Reading the json for all the cards, and reverse engineering the engine was quite fun.
+I also experimented (and struggled) with web workers to offload heavy computations and substantially speed up the RNG computations.
+
+One of my favorite aspects of this project was diving deep into how complex card interactions are implemented. Deconstructing the engine’s logic and reading through the raw card JSONs for reverse engineering was both challenging and rewarding.
