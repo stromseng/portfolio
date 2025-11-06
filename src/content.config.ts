@@ -16,11 +16,6 @@ const blog = defineCollection({
   }),
 });
 
-const imageSchema = z.object({
-  src: z.string(),
-  alt: z.string().optional(),
-});
-
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/data/projects" }),
   schema: z.object({
@@ -34,8 +29,8 @@ const projects = defineCollection({
     newIndicator: z.boolean().optional(),
     newIndicatorText: z.string().optional(),
     sortOrder: z.number().optional(),
-    mainImage: imageSchema.optional(),
-    images: z.array(imageSchema).optional(),
+    mainImage: z.string().optional(),
+    images: z.array(z.string()).optional(),
   }),
 });
 
