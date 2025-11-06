@@ -7,8 +7,7 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "sanity:typegen": "sanity schema extract --enforce-required-fields && sanity typegen generate"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
