@@ -160,7 +160,10 @@ const externalLinkClass =
           <div class="flex flex-wrap items-center gap-3">
             {
               project.projectType && (
-                <PillBadge background="bg-white" class="px-4 py-1.5 text-xs">
+                <PillBadge
+                  background="bg-white"
+                  className="px-4 py-1.5 text-xs"
+                >
                   {projectTypeLabel[project.projectType] ?? project.projectType}
                 </PillBadge>
               )
@@ -169,7 +172,7 @@ const externalLinkClass =
               tags?.map((tag) => (
                 <PillBadge
                   background="bg-[#e6f0ff]"
-                  class="px-4 py-1.5 text-xs"
+                  className="px-4 py-1.5 text-xs"
                 >
                   {tag}
                 </PillBadge>
