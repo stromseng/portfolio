@@ -1,47 +1,32 @@
 ---
 export const prerender = true;
 import MetaLayout from "@/layouts/MetaLayout.astro";
-import Content from "@/layouts/Content.astro";
+import PageContent from "@/layouts/Content.astro";
 import Star from "@images/star.svg";
-import type { GetStaticPaths } from "astro";
-import imageUrlBuilder from "@sanity/image-url";
-import { sanityClient } from "sanity:client";
-import { allProjectsQuery } from "@queries";
-import type { AllProjectsQueryResult } from "sanity.types";
 import HeaderFooter from "@/layouts/HeaderFooter.astro";
 import PaperPanel from "@/components/PaperPanel.astro";
 import BackLink from "@/components/backlink.astro";
 import PillBadge from "@/components/PillBadge";
 import InsetBorderAccent from "@/components/InsetBorderAccent.astro";
 import TapeStrip from "@/components/TapeStrip.astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 
-type ProjectWithSlug = AllProjectsQueryResult[number] & {
-  slug: { current: string };
-};
+type ProjectEntry = CollectionEntry<"projects">;
 
-type ProjectImage = NonNullable<ProjectWithSlug["images"]>[number];
-type PortableTextBlock = NonNullable<ProjectWithSlug["body"]>[number];
+export const getStaticPaths = async () => {
+  const projects = await getCollection("projects");
 
-const builder = imageUrlBuilder({
-  projectId: "xxc5ksdw",
-  dataset: "production",
-});
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const projects: AllProjectsQueryResult =
-    await sanityClient.fetch(allProjectsQuery);
-
-  const validProjects = projects.filter((project): project is ProjectWithSlug =>
-    Boolean(project.slug?.current),
-  );
-
-  return validProjects.map((project) => ({
-    params: { slug: project.slug.current },
+  return projects.map((project) => ({
+    params: { slug: project.data.slug },
     props: { project },
   }));
 };
 
-const project = (Astro.props as { project: ProjectWithSlug }).project;
+const project = (Astro.props as { project: ProjectEntry }).project;
+const { Content: ProjectBody } = await render(project);
+const hasBodyContent = Boolean(project.body?.trim());
+
+const projectData = project.data;
 
 const projectTypeLabel = {
   personal: "Personal Project",
@@ -49,79 +34,29 @@ const projectTypeLabel = {
   school: "School Project",
 };
 
-const tags = project.tags?.filter((tag): tag is string => Boolean(tag?.trim()));
+const tags = projectData.tags?.filter((tag): tag is string =>
+  Boolean(tag?.trim()),
+);
 
-const newBadgeText = project.newIndicator
-  ? project.newIndicatorText?.trim() || "New"
+const newBadgeText = projectData.newIndicator
+  ? projectData.newIndicatorText?.trim() || "New"
   : null;
 
-const mainImageUrl =
-  project.mainImage?.asset?._ref &&
-  builder.image(project.mainImage).fit("max").url();
+const mainImageUrl = projectData.mainImage;
 
-const mainImageAlt =
-  project.mainImage?.alt || `${project.title ?? "Project"} hero image`;
-
-const galleryImages: Array<{
-  url: string;
-  alt: string;
-  id: string | undefined;
-}> =
-  project.images
-    ?.filter((image): image is ProjectImage => Boolean(image?.asset?._ref))
-    .map((image) => ({
-      url: builder.image(image).fit("max").url(),
-      alt: image.alt || `${project.title ?? "Project"} supporting image`,
-      id: image._key ?? image.asset?._ref,
-    })) ?? [];
-
-const processedBodyBlocks =
-  project.body?.filter(
-    (block): block is PortableTextBlock =>
-      block._type === "block" && Boolean(block.children?.length),
-  ) ?? [];
-
-type BodyBlock =
-  | {
-      type: "block";
-      block: (typeof processedBodyBlocks)[number];
-    }
-  | {
-      type: "list";
-      listType: "bullet" | "number";
-      items: Array<(typeof processedBodyBlocks)[number]>;
-    };
-
-const bodyStructure: BodyBlock[] = [];
-
-for (const block of processedBodyBlocks) {
-  if (block.listItem === "bullet" || block.listItem === "number") {
-    const previous = bodyStructure[bodyStructure.length - 1];
-    if (previous?.type === "list" && previous.listType === block.listItem) {
-      previous.items.push(block);
-    } else {
-      bodyStructure.push({
-        type: "list",
-        listType: block.listItem,
-        items: [block],
-      });
-    }
-  } else {
-    bodyStructure.push({ type: "block", block });
-  }
-}
+const galleryImages = projectData.images;
 
 const externalLinkClass =
   "inline-flex items-center gap-3 rounded-[9999px] border-[3px] border-black bg-white px-5 py-2 text-sm font-semibold text-black shadow-[6px_6px_0_rgba(0,0,0,0.4)] transition hover:-translate-y-0.5 hover:shadow-[10px_10px_0_rgba(0,0,0,0.4)]";
 ---
 
 <MetaLayout
-  title={`${project.title ?? "Project"} • Magnus A. Strømseng`}
+  title={`${projectData.title ?? "Project"} • Magnus A. Strømseng`}
   bodyClass="bg-paper"
 >
   <HeaderFooter headerClass="bg-paper">
     <BackLink href="/#projects" />
-    <Content class="mx-auto flex min-h-screen flex-col items-center">
+    <PageContent class="mx-auto flex min-h-screen flex-col items-center">
       <div
         class="flex w-full flex-col items-center gap-12 md:flex-row md:items-start md:justify-center md:gap-14"
       >
@@ -140,24 +75,25 @@ const externalLinkClass =
             <h1
               class="text-4xl leading-tight font-semibold text-black md:text-5xl"
             >
-              {project.title}
+              {projectData.title}
             </h1>
             {
-              project.shortDescription && (
+              projectData.shortDescription && (
                 <p class="text-lg leading-relaxed text-black">
-                  {project.shortDescription}
+                  {projectData.shortDescription}
                 </p>
               )
             }
           </div>
           <div class="relative z-10 flex flex-wrap items-center gap-3">
             {
-              project.projectType && (
+              projectData.projectType && (
                 <PillBadge
                   background="bg-white"
                   className="px-4 py-1.5 text-xs"
                 >
-                  {projectTypeLabel[project.projectType] ?? project.projectType}
+                  {projectTypeLabel[projectData.projectType] ??
+                    projectData.projectType}
                 </PillBadge>
               )
             }
@@ -174,9 +110,9 @@ const externalLinkClass =
           </div>
           <div class="relative z-10 flex flex-wrap gap-4">
             {
-              project.hostedLink && (
+              projectData.hostedLink && (
                 <a
-                  href={project.hostedLink}
+                  href={projectData.hostedLink}
                   class={externalLinkClass}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -186,9 +122,9 @@ const externalLinkClass =
               )
             }
             {
-              project.githubLink && (
+              projectData.githubLink && (
                 <a
-                  href={project.githubLink}
+                  href={projectData.githubLink}
                   class={externalLinkClass}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -204,7 +140,6 @@ const externalLinkClass =
             <PaperPanel class="flex w-full max-w-2xl items-center justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
               <img
                 src={mainImageUrl}
-                alt={mainImageAlt}
                 class="h-auto w-full rounded-[24px] border-[3px] border-dashed object-scale-down"
               />
             </PaperPanel>
@@ -221,92 +156,9 @@ const externalLinkClass =
       </div>
       <div class="my-16 flex w-full flex-col gap-16">
         {
-          bodyStructure.length ? (
+          hasBodyContent ? (
             <PaperPanel class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black max-w-none px-10 py-12 text-black">
-              {bodyStructure.map((entry) => {
-                if (entry.type === "list") {
-                  const ListTag = entry.listType === "number" ? "ol" : "ul";
-                  return (
-                    <ListTag class="ml-8 list-inside space-y-2 marker:text-black">
-                      {entry.items.map((item) => (
-                        <li class="text-base text-black">
-                          {item.children?.map((child) => {
-                            if (!child?.text) return null;
-                            const markKey = child.marks?.find((mark) =>
-                              item.markDefs?.some(
-                                (def) =>
-                                  def._key === mark &&
-                                  def._type === "link" &&
-                                  def.href,
-                              ),
-                            );
-                            const href = markKey
-                              ? item.markDefs?.find(
-                                  (def) =>
-                                    def._key === markKey &&
-                                    def._type === "link",
-                                )?.href
-                              : undefined;
-                            return href ? (
-                              <a
-                                href={href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="rounded-md border-b-[3px] border-black px-1 pb-0.5 transition hover:-translate-y-0.5 hover:bg-black/5 hover:shadow-[4px_4px_0_rgba(0,0,0,0.35)]"
-                              >
-                                {child.text}
-                              </a>
-                            ) : (
-                              <span>{child.text}</span>
-                            );
-                          })}
-                        </li>
-                      ))}
-                    </ListTag>
-                  );
-                }
-                const Tag =
-                  entry.block.style === "h2"
-                    ? "h2"
-                    : entry.block.style === "h3"
-                      ? "h3"
-                      : entry.block.style === "h4"
-                        ? "h4"
-                        : "p";
-                return (
-                  <Tag>
-                    {entry.block.children?.map((child) => {
-                      if (!child?.text) return null;
-                      const markKey = child.marks?.find((mark) =>
-                        entry.block.markDefs?.some(
-                          (def) =>
-                            def._key === mark &&
-                            def._type === "link" &&
-                            def.href,
-                        ),
-                      );
-                      const href = markKey
-                        ? entry.block.markDefs?.find(
-                            (def) =>
-                              def._key === markKey && def._type === "link",
-                          )?.href
-                        : undefined;
-                      return href ? (
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="rounded-md border-b-[3px] border-black px-1 pb-0.5 transition hover:-translate-y-0.5 hover:bg-black/5 hover:shadow-[4px_4px_0_rgba(0,0,0,0.35)]"
-                        >
-                          {child.text}
-                        </a>
-                      ) : (
-                        <span>{child.text}</span>
-                      );
-                    })}
-                  </Tag>
-                );
-              })}
+              <ProjectBody />
             </PaperPanel>
           ) : (
             <PaperPanel class="px-10 py-12 text-center">
@@ -321,18 +173,17 @@ const externalLinkClass =
           )
         }
         {
-          galleryImages.length ? (
+          galleryImages && galleryImages.length ? (
             <section class="flex flex-col gap-6">
               <h2 class="text-3xl font-semibold tracking-[0.3em] uppercase">
                 Gallery
               </h2>
               <div class="grid gap-8 md:grid-cols-2">
-                {galleryImages.map((image) => (
+                {galleryImages.map((imageUrl) => (
                   <PaperPanel class="relative flex items-center justify-center overflow-hidden">
                     <InsetBorderAccent class="inset-4" variant="dashed" />
                     <img
-                      src={image.url}
-                      alt={image.alt}
+                      src={imageUrl}
                       loading="lazy"
                       class="relative h-auto w-full rounded-[24px] border-[3px] border-black object-contain transition duration-500 hover:-translate-y-1 hover:rotate-1"
                     />
@@ -343,6 +194,6 @@ const externalLinkClass =
           ) : null
         }
       </div>
-    </Content>
+    </PageContent>
   </HeaderFooter>
 </MetaLayout>
