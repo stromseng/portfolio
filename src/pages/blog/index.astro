@@ -20,13 +20,21 @@ const formatDate = (date: Date) =>
 const rotationClasses = [
   "-rotate-1",
   "rotate-1",
-  "-rotate-2",
   "rotate-2",
+  "-rotate-2",
+] as const;
+
+const tapeRotationClasses = [
+  "rotate-4",
+  "-rotate-4",
+  "-rotate-6",
+  "rotate-6",
 ] as const;
 
 const decoratedPosts = posts.map((post, index) => ({
   post,
   rotation: rotationClasses[index % rotationClasses.length],
+  tapeRotation: tapeRotationClasses[index % tapeRotationClasses.length],
 }));
 ---
 
@@ -49,8 +57,8 @@ const decoratedPosts = posts.map((post, index) => ({
                   </p>
                 </div>
               </header>
-              <div class="relative z-10 mt-12 grid gap-8 sm:grid-cols-2">
-                {decoratedPosts.map(({ post, rotation }) => (
+              <div class="relative z-10 mt-12 grid gap-12 sm:grid-cols-2">
+                {decoratedPosts.map(({ post, rotation, tapeRotation }) => (
                   <a
                     href={`/blog/${post.id}`}
                     class="group relative block text-black no-underline"
@@ -58,7 +66,9 @@ const decoratedPosts = posts.map((post, index) => ({
                     <PaperPanel
                       class={`relative flex h-full flex-col border-dashed border-black/70 bg-white px-8 py-9 transition-all duration-200 ${rotation} group-hover:-translate-y-2 group-hover:rotate-0 group-hover:shadow-[18px_18px_0_rgba(0,0,0,0.35)]`}
                     >
-                      <span class="pointer-events-none absolute -top-6 left-1/2 h-8 w-28 -translate-x-1/2 -rotate-6 bg-[#ffd84d] opacity-90 shadow-[3px_3px_0_rgba(0,0,0,0.2)]" />
+                      <span
+                        class={`pointer-events-none absolute -top-6 left-1/2 h-8 w-28 -translate-x-1/2 ${tapeRotation} bg-[#ffd84d] opacity-90 shadow-[3px_3px_0_rgba(0,0,0,0.2)]`}
+                      />
                       <time
                         datetime={post.data.pubDate.toISOString()}
                         class="inline-flex w-fit items-center rounded-[9999px] border-[3px] border-black bg-[#e6f0ff] px-4 py-1 text-[11px] font-semibold tracking-[0.3em] uppercase"
