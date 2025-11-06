@@ -1,0 +1,146 @@
+{
+  "$schema": "https://frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "blog",
+      "pageBundle": false,
+      "clearEmpty": true,
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "single": true,
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "single": true,
+          "required": true
+        },
+        {
+          "name": "pubDate",
+          "type": "datetime",
+          "default": "{{now}}",
+          "required": true
+        },
+        {
+          "name": "updatedDate",
+          "type": "datetime",
+          "default": "{{now}}"
+        },
+        {
+          "name": "tags",
+          "type": "tags"
+        }
+      ]
+    },
+    {
+      "name": "projects",
+      "pageBundle": false,
+      "clearEmpty": true,
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "single": true,
+          "required": true
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "single": true,
+          "required": true
+        },
+        {
+          "name": "shortDescription",
+          "type": "string",
+          "single": true
+        },
+        {
+          "name": "projectType",
+          "type": "choice",
+          "choices": [
+            "personal",
+            "client",
+            "school"
+          ]
+        },
+        {
+          "name": "tags",
+          "type": "tags",
+          "default": []
+        },
+        {
+          "name": "hostedLink",
+          "type": "string",
+          "single": true
+        },
+        {
+          "name": "githubLink",
+          "type": "string",
+          "single": true
+        },
+        {
+          "name": "newIndicator",
+          "type": "boolean"
+        },
+        {
+          "name": "newIndicatorText",
+          "type": "string",
+          "single": true
+        },
+        {
+          "name": "sortOrder",
+          "type": "number"
+        },
+        {
+          "name": "mainImage",
+          "type": "image",
+          "isPreviewImage": true
+        },
+        {
+          "name": "images",
+          "type": "image",
+          "default": []
+        },
+        {
+          "name": "bodyPortableText",
+          "type": "list",
+          "default": []
+        }
+      ]
+    }
+  ],
+  "frontMatter.framework.id": "astro",
+  "frontMatter.preview.host": "http://localhost:4321",
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "blog",
+      "path": "[[workspace]]/src/data/blog"
+    },
+    {
+      "title": "projects",
+      "path": "[[workspace]]/src/data/projects"
+    }
+  ],
+  "frontMatter.content.publicFolder": "public",
+  "frontMatter.git.enabled": true,
+  "frontMatter.taxonomy.fieldGroups": [
+    {
+      "id": "images_group",
+      "fields": [
+        {
+          "title": "src",
+          "name": "src",
+          "type": "string"
+        },
+        {
+          "title": "alt",
+          "name": "alt",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

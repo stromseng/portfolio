@@ -1,0 +1,32 @@
+---
+title: Minecraft Server Scanner & Scraper
+slug: minecraft-server-scraper
+shortDescription: A minecraft server scanner/scraper using nmap and MongoDB
+projectType: personal
+tags:
+  - MongoDB
+  - nmap
+  - Python
+  - BeautifulSoup
+  - Selenium
+mainImage:
+  src: /projects/minecraft-server-scraper/main.png
+  alt: Command line feedback from the tool
+images:
+  - src: /projects/minecraft-server-scraper/gallery-1.png
+    alt: Command line feedback from the tool
+  - src: /projects/minecraft-server-scraper/gallery-2.png
+    alt: Stats in the mongodb database
+---
+
+This project was mainly done to learn MongoDB and multiprocessing in python. It was also part of a challenge my the YouTuber LiveOverflow who challenged people to find his minecraft server.
+
+Implemented using nmap and MongoDB.
+
+It scans the provided IP ranges for open ports, then attempts to get the server status and information. There is also support for scanning random CIDR \16 blocks of ips.
+
+A different script also uses BeautifulSoup and Selenium to scrape server lists on the web, and transforms the posted server URL's to ip blocks used in scanning.
+
+This information is then stored in a MongoDB database.
+
+Running it for a few hours, i managed to find over 40k minecraft servers.
