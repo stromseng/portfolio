@@ -1,0 +1,24 @@
+---
+import { cn } from "@/lib/utils";
+import PaperPanel from "./PaperPanel.astro";
+
+interface Props {
+  src: string;
+  alt?: string;
+  class?: string;
+  loading?: "lazy" | "eager";
+}
+
+const { src, alt = "", class: className, loading = "lazy" } = Astro.props;
+---
+
+<PaperPanel
+  class={cn("flex items-center justify-center overflow-hidden p-4", className)}
+>
+  <img
+    src={src}
+    alt={alt}
+    loading={loading}
+    class="h-auto w-full rounded-[24px] object-contain"
+  />
+</PaperPanel>

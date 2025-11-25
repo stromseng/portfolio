@@ -7,8 +7,8 @@ import HeaderFooter from "@/layouts/HeaderFooter.astro";
 import PaperPanel from "@/components/PaperPanel.astro";
 import BackLink from "@/components/backlink.astro";
 import PillBadge from "@/components/PillBadge";
-import InsetBorderAccent from "@/components/InsetBorderAccent.astro";
 import TapeStrip from "@/components/TapeStrip.astro";
+import ImagePanel from "@/components/ImagePanel.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
 type ProjectEntry = CollectionEntry<"projects">;
@@ -58,7 +58,7 @@ const externalLinkClass =
     <BackLink href="/#projects" />
     <PageContent class="mx-auto flex min-h-screen flex-col items-center">
       <div
-        class="flex w-full flex-col items-center gap-12 md:flex-row md:items-start md:justify-center md:gap-14"
+        class="flex w-full flex-col items-center gap-12 md:flex-row md:items-stretch md:justify-center md:gap-14"
       >
         <PaperPanel class="relative w-full space-y-8 px-8 py-10 md:px-12">
           <TapeStrip class="-top-6 left-8 h-12 w-28 rotate-2" />
@@ -137,16 +137,14 @@ const externalLinkClass =
         </PaperPanel>
         {
           mainImageUrl ? (
-            <PaperPanel class="flex w-full max-w-2xl items-center justify-center overflow-hidden px-4 py-4 md:w-auto md:max-w-xl">
-              <img
-                src={mainImageUrl}
-                class="h-auto w-full rounded-[24px] border-[3px] border-dashed object-scale-down"
-              />
-            </PaperPanel>
+            <ImagePanel
+              src={mainImageUrl}
+              alt={projectData.title ?? "Project image"}
+              loading="eager"
+              class="w-full md:w-auto md:max-w-xl"
+            />
           ) : (
-            <PaperPanel
-              class={`mx-auto flex w-full max-w-md items-center justify-center px-8 py-10 md:w-auto`}
-            >
+            <PaperPanel class="flex w-full items-center justify-center px-8 py-10 md:w-auto md:max-w-md">
               <span class="text-center text-base font-medium tracking-[0.2em] uppercase">
                 Image coming soon
               </span>
@@ -180,14 +178,7 @@ const externalLinkClass =
               </h2>
               <div class="grid gap-8 md:grid-cols-2">
                 {galleryImages.map((imageUrl) => (
-                  <PaperPanel class="relative flex items-center justify-center overflow-hidden">
-                    <InsetBorderAccent class="inset-4" variant="dashed" />
-                    <img
-                      src={imageUrl}
-                      loading="lazy"
-                      class="relative h-auto w-full rounded-[24px] border-[3px] border-black object-contain"
-                    />
-                  </PaperPanel>
+                  <ImagePanel src={imageUrl} />
                 ))}
               </div>
             </section>
