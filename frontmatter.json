@@ -101,6 +101,11 @@
           "name": "images",
           "type": "image",
           "multiple": true
+        },
+        {
+          "title": "lastmod",
+          "name": "lastmod",
+          "type": "datetime"
         }
       ]
     }
