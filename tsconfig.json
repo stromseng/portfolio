@@ -5,7 +5,6 @@
     "allowJs": true, // astro: required, and included with all Astro templates
     "baseUrl": ".",
     "paths": {
-      "@queries": ["src/sanity.queries.ts"],
       "@/*": ["./src/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
