@@ -122,7 +122,7 @@
       "path": "[[workspace]]/src/data/projects"
     }
   ],
-  "frontMatter.content.publicFolder": "public",
+  "frontMatter.content.publicFolder": "src/data",
   "frontMatter.git.enabled": true,
   "frontMatter.taxonomy.fieldGroups": [
     {

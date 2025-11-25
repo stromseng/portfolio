@@ -17,20 +17,21 @@ const blog = defineCollection({
 
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/data/projects" }),
-  schema: z.object({
-    title: z.string(),
-    slug: z.string(),
-    shortDescription: z.string().optional(),
-    projectType: z.enum(["personal", "client", "school"]).optional(),
-    tags: z.array(z.string()).optional(),
-    hostedLink: z.string().url().optional(),
-    githubLink: z.string().url().optional(),
-    newIndicator: z.boolean().optional(),
-    newIndicatorText: z.string().optional(),
-    sortOrder: z.number().optional(),
-    mainImage: z.string().optional(),
-    images: z.array(z.string()).optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      slug: z.string(),
+      shortDescription: z.string().optional(),
+      projectType: z.enum(["personal", "client", "school"]).optional(),
+      tags: z.array(z.string()).optional(),
+      hostedLink: z.string().url().optional(),
+      githubLink: z.string().url().optional(),
+      newIndicator: z.boolean().optional(),
+      newIndicatorText: z.string().optional(),
+      sortOrder: z.number().optional(),
+      mainImage: image().optional(),
+      images: z.array(image()).optional(),
+    }),
 });
 
 // 4. Export a single `collections` object to register your collection(s)

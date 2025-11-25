@@ -5,46 +5,22 @@ import { cn } from "@/lib/utils";
 import PaperPanel from "./PaperPanel.astro";
 
 interface Props {
-  src: string;
+  src: ImageMetadata;
   alt?: string;
   class?: string;
   loading?: "lazy" | "eager";
 }
 
 const { src, alt = "", class: className, loading = "lazy" } = Astro.props;
-
-// Glob import all project images from src/images/projects/
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  "/src/images/projects/**/*.{png,jpg,jpeg,gif,webp}",
-);
-
-// Convert public URL path to src path (e.g. "/projects/foo/main.png" -> "/src/images/projects/foo/main.png")
-const srcPath = src.startsWith("/projects/")
-  ? `/src/images${src}`
-  : `/src/images/projects${src}`;
-
-const imageModule = images[srcPath];
-const resolvedImage = imageModule ? (await imageModule()).default : null;
 ---
 
 <PaperPanel
   class={cn("flex items-center justify-center overflow-hidden p-4", className)}
 >
-  {
-    resolvedImage ? (
-      <Image
-        src={resolvedImage}
-        alt={alt}
-        loading={loading}
-        class="h-auto w-full rounded-[24px] object-contain"
-      />
-    ) : (
-      <img
-        src={src}
-        alt={alt}
-        loading={loading}
-        class="h-auto w-full rounded-[24px] object-contain"
-      />
-    )
-  }
+  <Image
+    src={src}
+    alt={alt}
+    loading={loading}
+    class="h-auto w-full rounded-[24px] object-contain"
+  />
 </PaperPanel>

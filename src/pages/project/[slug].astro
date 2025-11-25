@@ -42,8 +42,7 @@ const newBadgeText = projectData.newIndicator
   ? projectData.newIndicatorText?.trim() || "New"
   : null;
 
-const mainImageUrl = projectData.mainImage;
-
+const mainImage = projectData.mainImage;
 const galleryImages = projectData.images;
 
 const externalLinkClass =
@@ -136,9 +135,9 @@ const externalLinkClass =
           </div>
         </PaperPanel>
         {
-          mainImageUrl ? (
+          mainImage ? (
             <ImagePanel
-              src={mainImageUrl}
+              src={mainImage}
               alt={projectData.title ?? "Project image"}
               loading="eager"
               class="w-full md:w-auto md:max-w-xl"
@@ -177,8 +176,8 @@ const externalLinkClass =
                 Gallery
               </h2>
               <div class="grid gap-8 md:grid-cols-2">
-                {galleryImages.map((imageUrl) => (
-                  <ImagePanel src={imageUrl} />
+                {galleryImages.map((image) => (
+                  <ImagePanel src={image} />
                 ))}
               </div>
             </section>

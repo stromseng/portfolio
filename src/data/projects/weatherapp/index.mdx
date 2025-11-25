@@ -1,0 +1,32 @@
+---
+title: WeatherApp
+slug: weatherapp
+shortDescription: A project using OpenWeatherMap's REST API.
+projectType: school
+tags:
+  - React
+  - ReactRouter
+  - TanStack React Query
+  - REST API
+mainImage: ./main.png
+images:
+  - ./gallery-2.png
+  - ./gallery-3.png
+  - ./gallery-4.png
+fmContentType: projects
+lastmod: 2025-11-25T13:18:20.061Z
+---
+
+We fetch data from the [OpenWeatherMap ](https://openweathermap.org/)API, and use [TanStack Query](https://tanstack.com/query/latest) to fetch and cache the API requests.
+
+We use both the "Geocoding API", "Current weather data" and "Daily Forecast 16 Days" to fetch different data.
+
+React router is used to route between pages.
+
+LocalStorage stores the following:
+
+- Settings that are set in the app to determine what weather information should be displayed.
+
+- The locations that have been chosen as a favorite.
+
+- The users preference for Dark/Light mode.
