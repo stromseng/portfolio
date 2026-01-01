@@ -123,25 +123,19 @@ const externalLinkClass =
           }
         </div>
       </div>
-      <div class="mt-12 w-full">
-        {
-          mainImage ? (
+      {
+        mainImage && (
+          <div class="mt-12 w-full">
             <Image
               src={mainImage}
               alt={projectData.title ?? "Project image"}
               loading="eager"
               class="mx-auto h-auto w-full max-w-4xl rounded-lg object-contain"
             />
-          ) : (
-            <div class="flex w-full items-center justify-center py-10">
-              <span class="text-center text-base font-medium tracking-[0.2em] uppercase">
-                Image coming soon
-              </span>
-            </div>
-          )
-        }
-      </div>
-      <div class="my-16 flex w-full flex-col gap-16">
+          </div>
+        )
+      }
+      <div class="my-8 flex w-full flex-col gap-16">
         {
           hasBodyContent ? (
             <div class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black mx-auto max-w-prose text-black">

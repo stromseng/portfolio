@@ -32,18 +32,19 @@ const formatDate = (date: Date) =>
     <BackLink href="/blog" />
     <div class="mx-auto mt-8 w-full max-w-6xl px-4 pb-16">
       <div class="flex flex-col items-center gap-4">
-          <TypographyH1 className="text-center">{post.data.title}</TypographyH1>
-             <p class="max-w-2xl text-center text-lg leading-relaxed text-black/80">
-            {post.data.description}
-          </p>
-          <PillBadge
-            as="time"
-            dateTime={post.data.pubDate.toISOString()}
-            background="bg-[#e6f0ff]"
-          >
-            {formatDate(post.data.pubDate)}
-          </PillBadge>
-          {post.data.tags?.length ? (
+        <TypographyH1 className="text-center">{post.data.title}</TypographyH1>
+        <p class="max-w-2xl text-center text-lg leading-relaxed text-black/80">
+          {post.data.description}
+        </p>
+        <PillBadge
+          as="time"
+          dateTime={post.data.pubDate.toISOString()}
+          background="bg-[#e6f0ff]"
+        >
+          {formatDate(post.data.pubDate)}
+        </PillBadge>
+        {
+          post.data.tags?.length ? (
             <div class="flex flex-wrap justify-center gap-2">
               {post.data.tags.map((tag) => (
                 <PillBadge
@@ -54,12 +55,15 @@ const formatDate = (date: Date) =>
                 </PillBadge>
               ))}
             </div>
-          ) : null}
-       
-          <div class="prose prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black px-2 text-black">
-            <Content />
-          </div>
+          ) : null
+        }
+
+        <div
+          class="prose prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black px-2 text-black"
+        >
+          <Content />
         </div>
       </div>
+    </div>
   </HeaderFooter>
 </MetaLayout>
