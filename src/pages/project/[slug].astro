@@ -4,11 +4,9 @@ import MetaLayout from "@/layouts/MetaLayout.astro";
 import PageContent from "@/layouts/Content.astro";
 import Star from "@images/star.svg";
 import HeaderFooter from "@/layouts/HeaderFooter.astro";
-import PaperPanel from "@/components/PaperPanel.astro";
 import BackLink from "@/components/backlink.astro";
 import PillBadge from "@/components/PillBadge";
-import TapeStrip from "@/components/TapeStrip.astro";
-import ImagePanel from "@/components/ImagePanel.astro";
+import { Image } from "astro:assets";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
 type ProjectEntry = CollectionEntry<"projects">;
@@ -56,109 +54,101 @@ const externalLinkClass =
   <HeaderFooter headerClass="bg-paper">
     <BackLink href="/#projects" />
     <PageContent class="mx-auto flex min-h-screen flex-col items-center">
-      <div
-        class="flex w-full flex-col items-center gap-12 md:flex-row md:items-stretch md:justify-center md:gap-14"
-      >
-        <PaperPanel class="relative w-full space-y-8 px-12 py-10 md:px-12">
-          <TapeStrip class="-top-6 left-8 h-12 w-28 rotate-2" />
+      <div class="w-full space-y-6 text-center">
+        <h1
+          class="inline-flex items-center justify-center gap-3 text-4xl leading-tight font-semibold text-black md:text-5xl"
+        >
+          {projectData.title}
           {
             newBadgeText && (
               <img
                 src={Star.src}
                 alt={newBadgeText}
-                class="absolute top-4 right-4 z-0 h-16 w-16"
+                class="h-14 w-14 md:h-20 md:w-20"
               />
             )
           }
-          <div class="relative z-10 space-y-4">
-            <h1
-              class="text-4xl leading-tight font-semibold text-black md:text-5xl"
-            >
-              {projectData.title}
-            </h1>
-            {
-              projectData.shortDescription && (
-                <p class="text-lg leading-relaxed text-black">
-                  {projectData.shortDescription}
-                </p>
-              )
-            }
-          </div>
-          <div class="relative z-10 flex flex-wrap items-center gap-3">
-            {
-              projectData.projectType && (
-                <PillBadge
-                  background="bg-white"
-                  className="px-4 py-1.5 text-xs"
-                >
-                  {projectTypeLabel[projectData.projectType] ??
-                    projectData.projectType}
-                </PillBadge>
-              )
-            }
-            {
-              tags?.map((tag) => (
-                <PillBadge
-                  background="bg-[#e6f0ff]"
-                  className="px-4 py-1.5 text-xs"
-                >
-                  {tag}
-                </PillBadge>
-              ))
-            }
-          </div>
-          <div class="relative z-10 flex flex-wrap gap-4">
-            {
-              projectData.hostedLink && (
-                <a
-                  href={projectData.hostedLink}
-                  class={externalLinkClass}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Visit Live Site
-                </a>
-              )
-            }
-            {
-              projectData.githubLink && (
-                <a
-                  href={projectData.githubLink}
-                  class={externalLinkClass}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Source
-                </a>
-              )
-            }
-          </div>
-        </PaperPanel>
+        </h1>
+        {
+          projectData.shortDescription && (
+            <p class="mx-auto max-w-prose text-lg leading-relaxed text-black">
+              {projectData.shortDescription}
+            </p>
+          )
+        }
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          {
+            projectData.projectType && (
+              <PillBadge background="bg-white" className="px-4 py-1.5 text-xs">
+                {projectTypeLabel[projectData.projectType] ??
+                  projectData.projectType}
+              </PillBadge>
+            )
+          }
+          {
+            tags?.map((tag) => (
+              <PillBadge
+                background="bg-[#e6f0ff]"
+                className="px-4 py-1.5 text-xs"
+              >
+                {tag}
+              </PillBadge>
+            ))
+          }
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+          {
+            projectData.hostedLink && (
+              <a
+                href={projectData.hostedLink}
+                class={externalLinkClass}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit Live Site
+              </a>
+            )
+          }
+          {
+            projectData.githubLink && (
+              <a
+                href={projectData.githubLink}
+                class={externalLinkClass}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Source
+              </a>
+            )
+          }
+        </div>
+      </div>
+      <div class="mt-12 w-full">
         {
           mainImage ? (
-            <ImagePanel
+            <Image
               src={mainImage}
               alt={projectData.title ?? "Project image"}
               loading="eager"
-              class="w-full md:w-auto md:max-w-xl"
+              class="mx-auto h-auto w-full max-w-4xl rounded-lg object-contain"
             />
           ) : (
-            <PaperPanel class="flex w-full items-center justify-center px-8 py-10 md:w-auto md:max-w-md">
+            <div class="flex w-full items-center justify-center py-10">
               <span class="text-center text-base font-medium tracking-[0.2em] uppercase">
                 Image coming soon
               </span>
-            </PaperPanel>
+            </div>
           )
         }
       </div>
       <div class="my-16 flex w-full flex-col gap-16">
         {
           hasBodyContent ? (
-            <PaperPanel class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black max-w-none px-10 py-12 text-black">
+            <div class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black mx-auto max-w-prose text-black">
               <ProjectBody />
-            </PaperPanel>
+            </div>
           ) : (
-            <PaperPanel class="px-10 py-12 text-center">
+            <div class="text-center">
               <h2 class="text-2xl font-semibold tracking-[0.2em] uppercase">
                 Project write-up incoming
               </h2>
@@ -166,7 +156,7 @@ const externalLinkClass =
                 I'm still polishing the case study for this project—check back
                 soon for more insights.
               </p>
-            </PaperPanel>
+            </div>
           )
         }
         {
@@ -177,7 +167,11 @@ const externalLinkClass =
               </h2>
               <div class="grid gap-8 md:grid-cols-2">
                 {galleryImages.map((image) => (
-                  <ImagePanel src={image} />
+                  <Image
+                    src={image}
+                    alt=""
+                    class="h-auto w-full rounded-lg object-contain"
+                  />
                 ))}
               </div>
             </section>
