@@ -4,8 +4,6 @@ import MetaLayout from "@/layouts/MetaLayout.astro";
 import { getCollection, render } from "astro:content";
 import BackLink from "@/components/backlink.astro";
 import { TypographyH1 } from "@/components/ui/typography";
-import { Separator } from "@/components/ui/separator";
-import PaperPanel from "@/components/PaperPanel.astro";
 import PillBadge from "@/components/PillBadge";
 export const prerender = true;
 
@@ -32,9 +30,8 @@ const formatDate = (date: Date) =>
 <MetaLayout title="Blog" bodyClass="bg-paper">
   <HeaderFooter headerClass="bg-paper">
     <BackLink href="/blog" />
-    <div class="px-4">
-      <PaperPanel class="mx-auto mt-8 w-full max-w-6xl p-4 pt-4 sm:p-4 md:p-12">
-        <div class="flex flex-col items-center gap-4">
+    <div class="mx-auto mt-8 w-full max-w-6xl px-4 pb-16">
+      <div class="flex flex-col items-center gap-4">
           <TypographyH1 className="text-center">{post.data.title}</TypographyH1>
              <p class="max-w-2xl text-center text-lg leading-relaxed text-black/80">
             {post.data.description}
@@ -63,7 +60,6 @@ const formatDate = (date: Date) =>
             <Content />
           </div>
         </div>
-      </PaperPanel>
-    </div>
+      </div>
   </HeaderFooter>
 </MetaLayout>

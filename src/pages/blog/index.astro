@@ -46,20 +46,19 @@ const decoratedPosts = posts.map((post, index) => ({
       {
         decoratedPosts.length ? (
           <div class="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center px-4 pt-4 pb-24 md:px-8">
-            <div class="relative w-full rounded-[44px] border-4 border-black bg-white px-6 pt-12 pb-16 shadow-[20px_20px_0_rgba(0,0,0,0.25)] md:px-12">
-              <header class="relative z-10 flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-                <div class="space-y-4">
-                  <h1 class="text-4xl leading-tight font-semibold md:text-5xl">
-                    Magnus' Blog
-                  </h1>
-                  <p class="text-lg leading-relaxed text-black/80 md:text-xl">
-                    My thoughts and experiences from the things I've done. It's
-                    kinda empty right now, but I'll add stuff here as I go. So
-                    enjoy the examples.
-                  </p>
-                </div>
-              </header>
-              <div class="relative z-10 mt-12 grid gap-12 sm:grid-cols-2">
+            <header class="relative z-10 flex flex-col items-center gap-6 text-center md:items-start md:text-left">
+              <div class="space-y-4">
+                <h1 class="text-4xl leading-tight font-semibold md:text-5xl">
+                  Magnus' Blog
+                </h1>
+                <p class="max-w-prose text-lg leading-relaxed text-black/80 md:text-xl">
+                  My thoughts and experiences from the things I've done. It's
+                  kinda empty right now, but I'll add stuff here as I go. So
+                  enjoy the examples.
+                </p>
+              </div>
+            </header>
+            <div class="relative z-10 mt-12 grid gap-12 sm:grid-cols-2">
                 {decoratedPosts.map(({ post, rotation, tapeRotation }) => (
                   <a
                     href={`/blog/${post.id}`}
@@ -107,8 +106,7 @@ const decoratedPosts = posts.map((post, index) => ({
                 ))}
               </div>
             </div>
-          </div>
-        ) : (
+          ) : (
           <div class="my-24 flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
             <PaperPanel class="relative max-w-xl border-dashed border-black/70 bg-white px-10 py-12 text-black shadow-[16px_16px_0_rgba(0,0,0,0.25)]">
               <TapeStrip
