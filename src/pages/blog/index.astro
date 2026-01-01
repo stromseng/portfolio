@@ -71,21 +71,23 @@ const decoratedPosts = posts.map((post, index) => ({
                       <TapeStrip
                         class={`-top-6 left-1/2 h-8 w-28 -translate-x-1/2 ${tapeRotation}`}
                       />
-                      <PillBadge
-                        as="time"
-                        dateTime={post.data.pubDate.toISOString()}
-                        background="bg-[#e6f0ff]"
-                      >
-                        {formatDate(post.data.pubDate)}
-                      </PillBadge>
-                      <h2 class="mt-5 text-2xl leading-snug font-semibold text-black">
+                      <h2 class="text-2xl leading-snug font-semibold text-black">
                         {post.data.title}
                       </h2>
                       <p class="mt-3 text-base leading-relaxed text-black/75">
                         {post.data.description}
                       </p>
+                      <PillBadge
+                        as="time"
+                        dateTime={post.data.pubDate.toISOString()}
+                        background="bg-[#e6f0ff]"
+                        className="mt-3"
+                      >
+                        {formatDate(post.data.pubDate)}
+                      </PillBadge>
+
                       {post.data.tags?.length ? (
-                        <div class="mt-6 flex flex-wrap gap-2">
+                        <div class="mt-3 flex flex-wrap gap-2">
                           {post.data.tags.map((tag) => (
                             <PillBadge
                               background="bg-[#fff0f0]"
