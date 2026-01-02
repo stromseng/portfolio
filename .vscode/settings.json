@@ -1,4 +1,5 @@
 {
   "svg.preview.background": "dark-transparent",
-  "frontMatter.panel.openOnSupportedFile": false
+  "frontMatter.panel.openOnSupportedFile": false,
+  "conventionalCommits.scopes": ["blog"]
 }
