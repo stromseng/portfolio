@@ -3,6 +3,6 @@
 <rect x="-6" width="1445" height="140" fill="#D9D9D9"/>
 </mask>
 <g mask="url(#mask0_4015_1069)">
-<path d="M1439 -307H0V16.4642C534.276 182.967 850.605 179.548 1439 15.9565V-307Z" fill="#FFADAD"/>
+<path d="M1439 -307H0V0C534.276 182.967 850.605 179.548 1439 0V-307Z" fill="#FFADAD"/>
 </g>
 </svg>
