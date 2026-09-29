@@ -1,0 +1,10 @@
+<svg width="1440" height="233" viewBox="0 0 1440 233" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- The swing tree (a hand-edited tree-2) and its empty swing. The seat follows
+     the pack's swinging.svg; the ropes are longer and hang from the branch.
+     Shares its placement with swing-kid.svg, who sits on the seat by day. -->
+<path d="M107.416 186.888C107.502 197.185 104.904 207.791 104.904 217.894" stroke="black" stroke-width="4.03056" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M101.135 189.732C108.534 201.678 112.028 190.37 124.5 188.5" stroke="black" stroke-width="4.03056" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M98.5 197.5C80.2614 201.727 79.5086 181.78 84.9201 179.756C85.8474 177.912 81.3687 173.544 81.3687 168.528C81.3687 164.459 81.9772 160.471 87.7621 157.019C93.5471 153.566 104.691 161.459 106.478 160.274C114.178 155.169 129.472 146.84 136.657 158.274C139.128 162.204 134.621 165.541 135.324 167.291C136.43 170.042 147.084 173.307 149.726 182.938C153.361 196.197 135.423 202.893 123.5 194" stroke="black" stroke-width="4.03056" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.2 192.4C114.1 198.4 113.9 204.2 113.9 210.1M124.6 189C124.8 196 124.9 203 125 210" stroke="black" stroke-opacity="0.9" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M113.775 210.2C117.888 210.814 120.6 210.725 125.1 210.2" stroke="black" stroke-opacity="0.9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

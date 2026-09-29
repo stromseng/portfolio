@@ -1,0 +1,762 @@
+/*
+  Homepage: every colour is a light-dark() pair, so the page follows the
+  system setting with no JS, and [data-theme] pins a choice once one is made.
+  --is-night (0/1) drives things that appear or vanish rather than recolour.
+*/
+
+:root {
+  color-scheme: light dark;
+  --is-night: 0;
+
+  /* Day values first, night second. */
+  --sky: light-dark(#fbfdff, #0e1830);
+  --text: light-dark(#172238, #eee8d8);
+  --text-soft: light-dark(#3a4660, #bcc6d8);
+  --line: light-dark(#172238, #e6dfc8);
+  --paper-fill: light-dark(#ffffff, #22324f);
+  --sea: light-dark(#d1ecff, #16365a);
+  --grass: light-dark(#b9fbc0, #1c3a2b);
+  --bramble: light-dark(#ffadad, #3a2135);
+  --sky-accent: light-dark(#a0c4ff, #5b7fb8);
+  --doodle-rose: light-dark(#ffdad6, #2c3a5c);
+  --doodle-peach: light-dark(#ffe3c7, #2f3a52);
+  --star: light-dark(#f2b705, #ffe7a3);
+  --sun: #ffe08a;
+  --lamp: #ffc56e;
+  --lamp-ink: light-dark(#a44a00, #ffc56e);
+  --focus: light-dark(#172238, #ffc56e);
+
+  --step--1: 0.9rem;
+  --step-0: 1.125rem;
+  --step-1: 1.4rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(1.9rem, 4vw, 2.6rem);
+  --step-5: clamp(3rem, 9vw, 4.6rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="day"]) {
+    --is-night: 1;
+  }
+}
+:root[data-theme="day"] {
+  color-scheme: light;
+  --is-night: 0;
+}
+:root[data-theme="night"] {
+  color-scheme: dark;
+  --is-night: 1;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  font-family: "Shantell Sans Variable", system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.55;
+  font-variation-settings: "INFM" 40;
+  color: var(--text);
+  background: var(--sky);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.1;
+  font-variation-settings:
+    "INFM" 70,
+    "BNCE" 25;
+}
+h2 {
+  font-size: var(--step-3);
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 3px dashed var(--focus);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 30;
+  padding: 0.5rem 1rem;
+  background: var(--paper-fill);
+  border: 2px solid var(--line);
+}
+.skip:focus {
+  top: 1rem;
+}
+
+/* The toggle swaps themes inside a view transition: one cross-fade of the
+   whole page, so nested text can't lag behind its parent's colour. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+}
+
+/* ---------- Header ---------- */
+
+/* Mirrors src/components/Header.astro: centred links, socials on the right.
+   The only addition is the day/night toggle after the socials. */
+.site-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 1rem;
+  padding: 0.5rem;
+  font-variation-settings: normal;
+}
+/* Holds the header's space for the day/night switch, which is fixed to the
+   same corner so it stays reachable anywhere on the page. */
+.toggle-slot {
+  width: 3rem;
+  height: 3rem;
+}
+@media (max-width: 47.99rem) {
+  .header-end {
+    justify-content: flex-end;
+  }
+}
+.header-spacer {
+  display: none;
+}
+.site-header nav {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 1rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+}
+.site-header nav a {
+  text-decoration: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+}
+.site-header nav a:hover,
+.site-header nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+.header-end {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+.social {
+  display: block;
+  width: 3rem;
+}
+.social svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (min-width: 48rem) {
+  .site-header {
+    justify-content: space-between;
+    gap: 0;
+  }
+  .header-spacer {
+    display: block;
+    flex: 1;
+  }
+  .site-header nav {
+    justify-content: center;
+  }
+  .header-end {
+    justify-content: flex-end;
+  }
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: 3rem;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 4rem clamp(1rem, 4vw, 2.5rem) 2rem;
+}
+@media (min-width: 64rem) {
+  .hero {
+    grid-template-columns: 1.2fr 1fr;
+    padding-block: 5rem 3rem;
+  }
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.mark {
+  position: absolute;
+  height: auto;
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mark-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  stroke: var(--star);
+  stroke-width: 2;
+  fill: color-mix(in srgb, var(--star) 35%, transparent);
+  opacity: var(--is-night);
+}
+.mark-bird {
+  stroke: var(--line);
+  stroke-width: 1.8;
+  opacity: calc((1 - var(--is-night)) * 0.7);
+}
+
+.shooting-star {
+  position: absolute;
+  left: 55%;
+  top: 5%;
+  width: clamp(64px, 8vw, 110px);
+  height: auto;
+  /* The icon heads up-right; this turns it into a star falling down-right,
+     its tails trailing up-left. `shoot` travels along the same line. */
+  rotate: 80deg;
+}
+.shooting-star path[opacity] {
+  stroke: var(--star);
+}
+
+.hero-card {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 36rem;
+  padding: clamp(2.5rem, 9vw, 5.5rem);
+}
+.hero-doodle {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+.hello {
+  margin: 0 0 0.75rem;
+  font-size: var(--step-1);
+}
+h1 {
+  margin-bottom: 1rem;
+  font-size: var(--step-5);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.intro {
+  max-width: 22rem;
+  margin: 0.5rem 0 1.5rem;
+  font-size: var(--step-1);
+  line-height: 1.35;
+  color: var(--text-soft);
+}
+
+/* By night the button is the warmest thing on the page: a lit lantern. */
+.hire {
+  --sea: light-dark(#d1ecff, #ffc56e);
+  --line: light-dark(#172238, #fff1cf);
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 8rem;
+  height: 3.4rem;
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: light-dark(#172238, #2a1c05);
+  text-decoration: none;
+}
+.hire svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(
+    0 0 calc(var(--is-night) * 14px)
+      color-mix(in srgb, var(--lamp) 60%, transparent)
+  );
+}
+.hire span {
+  position: relative;
+}
+.hire:hover {
+  rotate: -2deg;
+}
+
+/* At night the logo's pink and green get their own brighter shades, matching
+   the blue's contrast against the sky (about 4.5:1) instead of the dark bands. */
+.climber {
+  --bramble: light-dark(#ffadad, #b46f83);
+  --grass: light-dark(#b9fbc0, #4a9464);
+  position: relative;
+  width: min(100%, 26rem);
+}
+.climber svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Bands: a wave, a coloured body, a wave ---------- */
+
+.band {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sea > .band:first-child,
+.meadow > .band:first-child,
+.bramble > .band:first-child {
+  margin-bottom: -1px;
+}
+.band-body + .band {
+  margin-top: -1px;
+}
+.band-body {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 3rem clamp(1.25rem, 5vw, 3rem);
+}
+
+/* Lines in each band take on that band's night light. */
+.sea {
+  --line: light-dark(#172238, #cfe0f2);
+}
+.sea .band-body {
+  background: var(--sea);
+}
+.sea > .band:last-child {
+  --line: light-dark(#172238, #7f95ba);
+}
+.meadow {
+  --line: light-dark(#172238, #d8e4c0);
+  --text-soft: light-dark(#2e4a35, #c3d4b5);
+}
+.meadow .band-body {
+  background: var(--grass);
+  padding-block: 4rem;
+}
+.bramble {
+  --line: light-dark(#172238, #efd2d9);
+  --text-soft: light-dark(#4a2a33, #e0c4cd);
+}
+.bramble .band-body {
+  background: var(--bramble);
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  padding-block: 4rem 5rem;
+}
+
+/* ---------- Scenes (see scenes.ts) ---------- */
+
+.day-only {
+  opacity: calc(1 - var(--is-night));
+}
+.night-only,
+.lamp-reflection {
+  opacity: var(--is-night);
+}
+/* Lamp-lit details: at night the pack's faint secondary strokes (beams,
+   window ticks, tent flaps, lamp shades) turn into lamp light. */
+.lit path[opacity] {
+  stroke: light-dark(currentColor, var(--lamp));
+  opacity: calc(0.5 + var(--is-night) * 0.5);
+}
+/* The icon's own horizon line (4th path from the end) floats in the sky here. */
+.lighthouse path:nth-last-of-type(4) {
+  display: none;
+}
+/* Only the lighthouse's beams and lamp room (its last three paths) light up,
+   not the tower stripes or the horizon line. */
+.lighthouse path:nth-last-of-type(-n + 3) {
+  stroke: light-dark(currentColor, var(--lamp));
+  opacity: calc(0.5 + var(--is-night) * 0.5);
+}
+.fire path {
+  stroke: var(--lamp);
+}
+.fire path[opacity] {
+  stroke: #ff9a4d;
+}
+/* Some of the school's windows are still lit at night. */
+.soft-glow {
+  opacity: calc(var(--is-night) * 0.55);
+}
+.window-light {
+  fill: var(--lamp);
+  opacity: calc(var(--is-night) * 0.85);
+}
+/* The boat's waterline is painted in sea colour, like the original export. */
+.boat path[opacity] {
+  stroke: var(--sea);
+  opacity: 0.88;
+}
+
+/* ---------- Sea: lantern and moon ---------- */
+
+.lantern-body {
+  fill: light-dark(#fff8e6, var(--lamp));
+}
+/* A whale surfacing in the open water, up and left of the About text. */
+.whale {
+  position: absolute;
+  left: clamp(1rem, 4vw, 4rem);
+  top: 14%;
+  width: clamp(6rem, 9vw, 8.5rem);
+  height: auto;
+}
+@media (max-width: 72rem) {
+  .whale {
+    display: none;
+  }
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  max-width: 64rem;
+  text-align: center;
+}
+@media (min-width: 48rem) {
+  .about {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 6rem;
+    min-height: 26rem;
+    text-align: left;
+  }
+}
+.prose {
+  max-width: 34rem;
+}
+.prose p {
+  margin: 1rem 0 0;
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+.smiley {
+  width: clamp(7rem, 16vw, 11rem);
+  flex-shrink: 0;
+}
+.smiley svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Meadow: timelines and fireflies ---------- */
+
+.fireflies {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--is-night);
+}
+.fireflies span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff0b8;
+  box-shadow:
+    0 0 6px 2px var(--lamp),
+    0 0 18px 6px color-mix(in srgb, var(--lamp) 35%, transparent);
+}
+
+.timelines {
+  position: relative;
+  display: grid;
+  gap: 3.5rem;
+  width: 100%;
+  max-width: 72rem;
+}
+@media (min-width: 56rem) {
+  .timelines {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+}
+.timeline ol {
+  display: grid;
+  gap: 1.75rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.timeline li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.timeline-icon {
+  flex-shrink: 0;
+  width: 4rem;
+}
+.timeline-icon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.timeline-text {
+  display: flex;
+  flex-direction: column;
+}
+.period {
+  font-weight: 600;
+  color: var(--text-soft);
+}
+.place {
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* ---------- Bramble: project cards ---------- */
+
+.projects-head {
+  max-width: 40rem;
+  text-align: center;
+}
+.projects-head p {
+  margin: 0.75rem 0 0;
+  font-size: var(--step-1);
+  color: var(--text-soft);
+}
+
+/* Same cards as the live homepage by day. At night they turn to dusk paper:
+   a plum a shade lighter than the band, with cream text. */
+.cards {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+  text-align: left;
+  text-decoration: none;
+  background: light-dark(rgb(255 255 255 / 0.8), #4b2d45);
+  border-radius: 1.5rem;
+  box-shadow:
+    0 10px 15px -3px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.35)),
+    0 4px 6px -4px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.3));
+}
+.card:hover {
+  translate: 0 -0.25rem;
+  box-shadow:
+    0 20px 25px -5px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4)),
+    0 8px 10px -6px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.35));
+}
+.card-star {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 4rem;
+  height: 4rem;
+}
+.card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  color: light-dark(#111827, #f6ecd9);
+}
+.card-text {
+  margin: 0.75rem 0 0;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: light-dark(#374151, #e3cfd8);
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tags li {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: light-dark(#111827, #f6ecd9);
+  background: light-dark(hsl(205 100% 91%), #2c1a2a);
+  border-radius: 9999px;
+}
+
+/* ---------- Footer ---------- */
+
+/* Same layout as the footer on the live homepage. */
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 24rem;
+  margin-block: 6rem;
+}
+.cleaner svg {
+  display: block;
+  width: min(450px, 90vw);
+  height: auto;
+}
+.site-footer span {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.site-footer a {
+  font-weight: 700;
+}
+
+/* ---------- City: the blast lights up the skyline at night ---------- */
+
+.blast path {
+  stroke: light-dark(var(--bramble), var(--lamp));
+}
+/* Like `lit`, but only the faintest ticks (window crosses, door lines), for
+   icons whose other half-tone strokes are roofs and frames. */
+.lit-ticks path[opacity="0.503384"] {
+  stroke: light-dark(currentColor, var(--lamp));
+  opacity: calc(0.5 + var(--is-night) * 0.5);
+}
+
+/* ---------- Motion: one moment, when the lights go out ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hire {
+    transition:
+      rotate 0.2s ease,
+      translate 0.2s ease;
+  }
+  .card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  :root[data-theme="night"] .mark-star {
+    animation: star-in 0.6s calc(0.25s + var(--i) * 90ms) both;
+  }
+  :root[data-theme="night"] .shooting-star {
+    animation: shoot 1.2s 1.6s ease-out both;
+  }
+  :root[data-theme="night"] .lighthouse path:nth-last-of-type(-n + 3) {
+    animation: beam 2.6s ease-in-out infinite alternate;
+  }
+  :root[data-theme="night"] .glow {
+    animation: lamp-on 1.1s 0.2s both;
+  }
+  .fireflies span {
+    animation: drift 7s calc(var(--i) * -0.8s) ease-in-out infinite;
+  }
+}
+
+@keyframes shoot {
+  from {
+    translate: -90px -63px;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes beam {
+  from {
+    opacity: 0.35;
+  }
+}
+@keyframes star-in {
+  from {
+    opacity: 0;
+    scale: 0.3;
+  }
+}
+@keyframes lamp-on {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  55% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    translate: 0 0;
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+  50% {
+    translate: 14px -18px;
+  }
+  75% {
+    opacity: 0.4;
+  }
+}
