@@ -557,14 +557,14 @@ export const meadow = {
       show: "day",
     }),
     graduate,
-    // Just leaving the graduate's raised right hand: centred over the fingertips
-    // (icon point 271, 44). No rotation, since place() positions the unrotated
-    // outline and a rotation would swing it away from the hand.
+    // Just tossed: beside the graduate's raised right hand (the fingertips are
+    // icon point 271, 44), a small gap to its right with its middle a little
+    // above the fingertips, so it never covers the hand or the head. No
+    // rotation, since place() positions the unrotated outline and a rotation
+    // would swing it away from the hand.
     place(academicCap, {
-      left:
-        pointIn(graduate, [271, 44])[0] -
-        (pathBounds(academicCap).width * 0.08) / 2,
-      bottom: pointIn(graduate, [271, 44])[1] - 1.5,
+      left: pointIn(graduate, [271, 44])[0] + 2.5,
+      top: pointIn(graduate, [271, 44])[1] - 8,
       scale: 0.08,
       line: MEADOW_LINE.small,
       show: "day",
