@@ -1,0 +1,21 @@
+---
+// The <head> tags every page shares. Pages add their own through the slot:
+// MetaLayout adds the ClientRouter, the homepage adds its pre-paint theme script.
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Magnus Alexander Strømseng, a developer at Bekk in Oslo. Projects, work and education.",
+} = Astro.props;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content={description} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+<title>{title}</title>
+<slot />

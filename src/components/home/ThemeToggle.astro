@@ -1,0 +1,99 @@
+---
+// Day/night switch, shown as a bare sun or moon icon in the header. It's a
+// toggle button named "Night mode", pressed while night is on. The initial
+// theme is set by the inline script in the homepage's <head> (the stored
+// choice, else the system setting); this button flips it and remembers the
+// choice in localStorage under "theme", the key that script reads.
+//
+// Sized like the GitHub and LinkedIn icons next to it, and fixed to the
+// header's top-right corner so it stays in view while scrolling. Behind it is
+// a soft, borderless blur that keeps it readable over the scenes. Blur only,
+// no tint: over a solid colour it changes nothing, so it never shows as a
+// halo. The mask feathers its edge.
+---
+
+<button
+  type="button"
+  class="fixed top-2 right-2 z-20 block cursor-pointer duration-200 before:absolute before:-inset-2 before:-z-10 before:rounded-full before:mask-[radial-gradient(closest-side,#000_55%,transparent)] before:backdrop-blur-sm hover:-rotate-2 motion-safe:transition-transform"
+  aria-label="Night mode"
+  aria-pressed="false"
+  data-theme-toggle
+>
+  <svg
+    class="block size-12 fill-none stroke-line stroke-[2.4]"
+    viewBox="0 0 40 40"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    {/* Shows the current theme: a sun by day, a moon at night. */}
+    <g class="dark:opacity-0">
+      <path
+        class="fill-[#ffe08a]"
+        d="M20 12c4.6-.2 8 3.4 8 8 0 4.4-3.5 8-8.1 7.9C15.6 27.8 12 24.3 12 20c0-4.5 3.5-8 8.3-7.8"
+      ></path>
+      <path
+        d="M20 3v4M20 33v4M3 20h4M33 20h4M8 8l3 3M29 29l3 3M8 32l3-3M29 11l3-3"
+      ></path>
+    </g>
+    <path
+      class="fill-star opacity-0 dark:opacity-100"
+      d="M26 7c-7.5-1.8-15 3.3-15.6 11.4C9.8 26.6 16.7 33.5 25 32.7c3.2-.3 5.6-1.6 7.6-3.7-7.3.7-13-5.2-12.4-12.5.3-4.3 2.4-7.5 5.8-9.5Z"
+    ></path>
+  </svg>
+</button>
+
+<script>
+  const KEY = "theme";
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>(
+    "[data-theme-toggle]",
+  );
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+  type Theme = "day" | "night";
+
+  const current = (): Theme =>
+    root.dataset.theme === "night" ? "night" : "day";
+
+  function syncPressed() {
+    button?.setAttribute("aria-pressed", String(current() === "night"));
+  }
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Swaps the theme in one step, cross-fading the whole page where the
+  // browser supports view transitions. Never runs on load.
+  function apply(theme: Theme) {
+    const swap = () => {
+      root.dataset.theme = theme;
+      syncPressed();
+    };
+    if (!("startViewTransition" in document) || reducedMotion.matches) {
+      swap();
+      return;
+    }
+    document.startViewTransition(swap);
+  }
+
+  button?.addEventListener("click", () => {
+    const theme = current() === "night" ? "day" : "night";
+    try {
+      localStorage.setItem(KEY, theme);
+    } catch {
+      // Private mode: the switch still works for this visit.
+    }
+    apply(theme);
+  });
+
+  systemDark.addEventListener("change", (event) => {
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem(KEY);
+    } catch {}
+    if (!stored) apply(event.matches ? "night" : "day");
+  });
+
+  syncPressed();
+</script>

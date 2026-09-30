@@ -1,0 +1,10 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- The empty bench of the pack's couple-sitting-on-bench.svg, in the same
+     400-unit drawing: its legs and seat as they are, and the back rails drawn
+     through where the couple sat. -->
+<path d="M33.2803 158.651C31.3612 195.622 29.874 258.794 29.874 284.684" stroke="black" stroke-opacity="0.5" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M373.955 155.244C369.325 200.546 373.766 245.979 369.575 291.175" stroke="black" stroke-opacity="0.5" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18 243.808C136.519 244.281 267.543 244.804 381.417 245.258" stroke="black" stroke-opacity="0.5" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18 172.304C139.5 172.9 262 171.8 381.423 172.275" stroke="black" stroke-opacity="0.5" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18 207.43C139.5 206.8 262 208 381.428 207.401" stroke="black" stroke-opacity="0.5" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

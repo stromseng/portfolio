@@ -1,310 +1,353 @@
 ---
-import { Content as Readme } from "@/../README.md";
-import Content from "@/layouts/Content.astro";
-import SelfTypingCode from "@/components/SelfTypingCode.svelte";
-import SelfDrawingLogoSVG from "@/components/SelfDrawingLogoSVG.svelte";
-import SelfTypingText from "@/components/SelfTypingText.svelte";
-import TimelineColumn from "@/components/TimelineColumn.astro";
-import type { TimelineItemProps } from "@/components/TimelineItem.astro";
-import DoodleBackground from "@images/DoodleBackground.svg";
-import GrassBot from "@images/grass-bot.svg";
-import GrassTop from "@images/grass-top.svg";
-import HireButton from "@images/hire-button.svg";
-import LogoClimber from "@images/logo-climber.svg";
-import ProjectBot from "@images/project-bot.svg";
-import ProjectTop from "@images/project-top.svg";
-import SeaBot from "@images/sea-bot.svg";
-import SeaTopBoat from "@images/sea-top-boat.svg";
+// The homepage: a hand-drawn landscape that works by day and after dark.
+// Scenes live in src/components/home/scenes/, the palette in
+// src/styles/globals.css and the CSS for scene internals in src/styles/scenes.css.
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import "@fontsource-variable/shantell-sans/full.css";
+import "@/styles/globals.css";
+import "@/styles/scenes.css";
+import { getCollection } from "astro:content";
+import shootingStar from "@images/doodles/shootingstar.svg?raw";
+import whale from "@images/doodles/whale.svg?raw";
+import doodleBackground from "@images/DoodleBackground.svg?raw";
+import grassBot from "@images/grass-bot.svg?raw";
+import hireButton from "@images/hire-button.svg?raw";
+import logoClimber from "@images/logo-climber.svg?raw";
+import projectBot from "@images/project-bot.svg?raw";
+import smiley from "@images/smiley.svg?raw";
 import Star from "@images/star.svg";
-import BusDot from "@images/bus-dot.svg";
-import Smiley from "@images/smiley.svg";
-import CleaningMan from "@images/cleaning-man.svg";
-import UniDot from "@images/uni-dot.svg";
-import WorkDot from "@images/work-dot.svg";
-import StandingDot from "@images/standing-dot.svg";
-import RunningDot from "@images/running-dot.svg";
-import { getCollection, type CollectionEntry } from "astro:content";
-import MetaLayout from "@/layouts/MetaLayout.astro";
-import HeaderFooter from "@/layouts/HeaderFooter.astro";
+import BaseHead from "@/components/BaseHead.astro";
+import Header from "@/components/Header.astro";
+import { fireflies, skyMarks } from "@/components/home/sky";
+import ThemeToggle from "@/components/home/ThemeToggle.astro";
+import TypingTagline from "@/components/home/TypingTagline.svelte";
+import { ageOn, education, taglines, work } from "@/components/home/content";
+import { sceneSvg } from "@/lib/scene/scene";
+import { city } from "@/components/home/scenes/city";
+import { footer } from "@/components/home/scenes/footer";
+import { meadow } from "@/components/home/scenes/meadow";
+import { seaBottom, seaTop } from "@/components/home/scenes/sea";
+import { themeSvg } from "@/lib/scene/themeSvg";
 
-type ProjectEntry = CollectionEntry<"projects"> & {
-  badgeText: string | null;
-};
+const projects = (await getCollection("projects")).sort(
+  (a, b) =>
+    (a.data.sortOrder ?? Number.MAX_SAFE_INTEGER) -
+    (b.data.sortOrder ?? Number.MAX_SAFE_INTEGER),
+);
 
-const projectEntries: ProjectEntry[] = (await getCollection("projects"))
-  .map((project) => ({
-    ...project,
-    badgeText: project.data.newIndicator
-      ? project.data.newIndicatorText?.trim() || "New"
-      : null,
-  }))
-  .sort(
-    (a, b) =>
-      (a.data.sortOrder ?? Number.MAX_SAFE_INTEGER) -
-      (b.data.sortOrder ?? Number.MAX_SAFE_INTEGER),
-  );
-
-const educationItems: TimelineItemProps[] = [
-  {
-    icon: UniDot,
-    alt: "University timeline marker",
-    period: "2024-2026",
-    title: "Norwegian Institute of Technology and Science",
-    text: "Master in Informatics",
-  },
-  {
-    icon: UniDot,
-    alt: "University timeline marker",
-    period: "2025",
-    title: "Seoul National University",
-    text: "Exchange Student",
-  },
-  {
-    icon: UniDot,
-    alt: "University timeline marker",
-    period: "2021-2024",
-    title: "Norwegian Institute of Technology and Science",
-    text: "Bachelor in Informatics",
-  },
-  {
-    icon: BusDot,
-    alt: "Bus timeline marker",
-    period: "2017-2020",
-    title: "Nydalen VGS",
-    text: "General Studies",
-  },
+const timelines = [
+  { title: "Education", items: education },
+  { title: "Work", items: work },
 ];
 
-const workItems: TimelineItemProps[] = [
-  {
-    icon: WorkDot,
-    alt: "Work timeline marker",
-    period: "2026-Present",
-    title: "Bekk",
-    text: "Developer",
-  },
-  {
-    icon: WorkDot,
-    alt: "Work timeline marker",
-    period: "2025",
-    title: "Bekk",
-    text: "Summer Internship",
-  },
-  {
-    icon: WorkDot,
-    alt: "Work timeline marker",
-    period: "2024",
-    title: "Thales Norway",
-    text: "Summer Internship",
-  },
-  {
-    icon: StandingDot,
-    alt: "Standing figure timeline marker",
-    period: "2021-2023",
-    title: "Linderud IL, Camp Linderud",
-    text: "Team Leader",
-  },
-  {
-    icon: RunningDot,
-    alt: "Running figure timeline marker",
-    period: "2017-2020",
-    title: "Linderud IL, Camp Linderud",
-    text: "Camp Staff",
-  },
-];
+const age = ageOn(new Date());
 
-// Calculate age based on birthdate (April 19, 2002)
-const birthDate = new Date(2002, 3, 19); // Month is 0-indexed (3 = April)
-const today = new Date();
-let age = today.getFullYear() - birthDate.getFullYear();
-const monthDiff = today.getMonth() - birthDate.getMonth();
-if (
-  monthDiff < 0 ||
-  (monthDiff === 0 && today.getDate() < birthDate.getDate())
-) {
-  age--;
-}
+// Each band is a wave scene, a coloured body and a wave scene. The body
+// overlaps the waves by a pixel, so no hairline shows at the seams.
+const bandBody = "relative -my-px flex justify-center px-5 sm:px-8 lg:px-12";
+const heading = "text-3xl font-bold lg:text-4xl";
 ---
 
-<MetaLayout title="Magnus A. Strømseng">
-  <HeaderFooter>
-    <div class="flex max-w-lvw flex-col overflow-x-hidden">
-      <div class="flex w-full flex-col items-center">
-        <div
-          class="mt-24 mb-24 flex flex-col items-center justify-between gap-12 md:mb-24 md:px-5 lg:w-full lg:max-w-7xl lg:grow lg:flex-row"
-        >
-          <div
-            class="xs:p-12 inline-block w-full max-w-sm bg-contain bg-no-repeat p-10 sm:max-w-md sm:p-16 lg:max-w-xl lg:p-24"
-            style={`background-image: url(${DoodleBackground.src});`}
+<!doctype html>
+<html
+  lang="en"
+  data-themed
+  class="scheme-light-dark data-[theme=day]:scheme-light data-[theme=night]:scheme-dark"
+>
+  <head>
+    <BaseHead title="Magnus A. Strømseng">
+      <meta name="color-scheme" content="light dark" />
+      <script is:inline>
+        // Runs before paint so a returning night visitor never sees a day flash.
+        // "theme" is the key ThemeToggle.astro stores the visitor's choice under.
+        (() => {
+          let stored = null;
+          try {
+            stored = localStorage.getItem("theme");
+          } catch {}
+          const night =
+            stored === "night" ||
+            (stored !== "day" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.dataset.theme = night ? "night" : "day";
+        })();
+      </script>
+    </BaseHead>
+  </head>
+  <body class="overflow-x-hidden bg-page text-lg text-ink">
+    <a
+      class="absolute -top-16 left-4 z-30 border-2 border-line bg-paper-fill px-4 py-2 underline decoration-2 underline-offset-4 focus:top-4"
+      href="#main">Skip to content</a
+    >
+
+    <Header>
+      <span class="size-12"><ThemeToggle /></span>
+    </Header>
+
+    <main id="main">
+      <section
+        class="relative mx-auto grid max-w-7xl grid-cols-1 items-center justify-items-center gap-12 px-4 pt-16 pb-8 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:px-10 lg:pt-20 lg:pb-12"
+        aria-labelledby="hero-name"
+      >
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+          {
+            /* The icon heads up-right; the rotation turns it into a star
+              falling down-right, its tails trailing up-left. */
+          }
+          <Fragment
+            set:html={themeSvg(shootingStar, {
+              id: "shooting-star",
+              className:
+                "shooting-star night-only absolute top-[5%] left-[55%] w-16 rotate-80 lg:w-28",
+            })}
+          />
+          {/* Gulls by day; every mark is a star at night. */}
+          {
+            skyMarks.map((mark, i) => (
+              <svg
+                class="absolute h-auto overflow-visible"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style={`left:${mark.x}%;top:${mark.y}%;width:${mark.size}px;--i:${i}`}
+              >
+                <path
+                  class="mark-star fill-star/35 stroke-star stroke-2 opacity-0 dark:opacity-100"
+                  d="M12 3c.5 5 1 7.5 8 9-6.5 1-7.4 3-8 9-.6-6-1.5-8-8-9 6.5-1 7.5-3.5 8-9"
+                />
+                {mark.bird && (
+                  <path
+                    class="stroke-line stroke-[1.8] opacity-70 dark:opacity-0"
+                    d="M2 13c3-4 7-4 10 0 3-4 7-4 10 0"
+                  />
+                )}
+              </svg>
+            ))
+          }
+        </div>
+
+        <div class="relative isolate w-full max-w-xl p-10 sm:p-14 lg:p-22">
+          <Fragment
+            set:html={themeSvg(doodleBackground, {
+              id: "hero-doodle",
+              className: "absolute inset-0 -z-10 size-full",
+            })}
+          />
+          <p class="mb-3 text-xl">Hi there, I'm</p>
+          <h1
+            id="hero-name"
+            class="mb-4 text-5xl leading-[1.1] font-extrabold tracking-tight sm:text-6xl md:text-7xl"
           >
-            <div class="">
-              <div class="prose mb-4"><p class="">Hi there 👋 I'm</p></div>
-              <h1 class="h1 text-6xl sm:text-7xl">
-                <span class="bg-p-blue rounded-lg">Magnus</span>
-                <br />
-                <span class="|">Alexander</span>
-                <br /> Strømseng
-              </h1>
-            </div>
-            <SelfTypingText
-              client:load
-              text={[
-                "Fullstack developer",
-                "Informatics student",
-                "Tech enthusiast",
-                "E-Sports player",
-                "Keyboard builder",
-                "Loves animals, allergic to most 🥲",
-                "I use Nix btw",
-                "Can bench press 100kg",
-                "Can not do a backflip",
-                "Waiting for AI to write this bio",
-              ]}
+            Magnus<br />Alexander<br />Strømseng
+          </h1>
+          <TypingTagline client:load phrases={taglines} />
+          <p class="mt-2 mb-6 max-w-88 text-xl leading-snug text-ink-soft">
+            A full-time developer at Bekk, based in Oslo.
+          </p>
+          {
+            /* By night the button is the warmest thing on the page: a lit lantern. */
+          }
+          <a
+            class="relative inline-grid h-14 w-32 place-items-center font-bold text-ink duration-200 hover:-rotate-2 motion-safe:transition-transform dark:text-[#2a1c05] dark:[--color-line:#fff1cf] dark:[--color-sea:var(--color-lamp)]"
+            href="mailto:hireme@stromseng.dev"
+          >
+            <Fragment
+              set:html={themeSvg(hireButton, {
+                id: "hire",
+                className:
+                  "absolute inset-0 size-full dark:drop-shadow-[0_0_14px_rgb(255_197_110/0.6)]",
+              })}
             />
-            <div class="">
-              <p class="my-2 max-w-xs text-xl">
-                A full-time developer at Bekk, based in Norway.
-              </p>
-            </div>
-            <a
-              href="mailto: hireme@stromseng.dev"
-              class="relative inline-flex h-[54px] w-[127px] shrink items-center justify-center"
-            >
-              <img
-                src={HireButton.src}
-                class="absolute inset-0 h-full w-full"
-                alt=""
-              />
-              <span class="relative z-10">Hire me</span>
-            </a>
-          </div>
-          <div
-            class="w-full max-w-xs content-normal justify-normal sm:max-w-sm md:max-w-md lg:max-w-[440px]"
-          >
-            <img src={LogoClimber.src} alt="" class="h-auto w-full" />
-          </div>
+            <span class="relative">Hire me</span>
+          </a>
         </div>
-      </div>
-      <!-- About me section -->
-      <div>
-        <img src={SeaTopBoat.src} class="-mb-px w-full object-cover" alt="" />
-        <div class="bg-p-blue flex w-full justify-center">
+
+        {
+          /* At night the logo's pink and green get brighter shades, matching the
+            blue's contrast against the sky (about 4.5:1). */
+        }
+        <div
+          class="relative w-full max-w-104 *:w-full dark:[--color-bramble:#b46f83] dark:[--color-grass:#4a9464]"
+        >
+          <Fragment set:html={themeSvg(logoClimber, { id: "climber" })} />
+        </div>
+      </section>
+
+      {/* Lines in each band take on that band's night light. */}
+      <section
+        class="dark:[--color-line:#cfe0f2]"
+        aria-labelledby="about-title"
+      >
+        <Fragment set:html={sceneSvg(seaTop, "w-full")} />
+        <div class:list={[bandBody, "bg-sea py-12"]}>
+          <Fragment
+            set:html={themeSvg(whale, {
+              id: "whale",
+              className: "absolute top-[14%] left-14 hidden w-32 xl:block",
+            })}
+          />
           <div
-            class="flex flex-col items-center justify-center gap-24 px-6 py-12 text-center md:h-[500px] md:flex-row md:flex-nowrap md:justify-evenly md:gap-32 md:px-12 md:text-left lg:gap-64"
+            class="flex max-w-5xl flex-col items-center gap-12 text-center md:min-h-104 md:flex-row md:justify-between md:gap-24 md:text-left"
           >
-            <div class="prose gap-2 md:max-w-lg">
-              <h2 class="text-4xl">About Me</h2>
-              <p class="text-l">
+            <div class="max-w-136">
+              <h2 id="about-title" class={heading}>About me</h2>
+              <p class="mt-4 text-xl leading-normal">
                 I'm a {age} year old developer from Oslo, Norway. I work full-time
-                at Bekk and hold a master's degree in Informatics and Artificial Intelligence. I'm passionate
-                about technology, love learning new things, and am a big fan of
-                open source software.
+                at Bekk and hold a master's degree in Informatics and Artificial
+                Intelligence from NTNU, with an exchange semester at Seoul National
+                University along the way. I'm passionate about technology, love learning
+                new things, and am a big fan of open source software.
               </p>
             </div>
-            <div class="flex shrink-0 justify-center">
-              <img
-                src={Smiley.src}
-                alt=""
-                class="h-32 w-32 md:h-auto md:w-auto"
-              />
+            <div class="w-28 shrink-0 *:w-full lg:w-44">
+              <Fragment set:html={themeSvg(smiley, { id: "smiley" })} />
             </div>
           </div>
         </div>
-        <img src={SeaBot.src} class="-mt-px w-full object-cover" alt="" />
-      </div>
-      <!-- Work and Education -->
-      <div>
-        <img src={GrassTop.src} class="-mb-px w-full object-cover" alt="" />
-        <div class="bg-p-green flex w-full justify-center">
+        <Fragment
+          set:html={sceneSvg(seaBottom, "w-full dark:[--color-line:#7f95ba]")}
+        />
+      </section>
+
+      <section
+        class="dark:[--color-line:#d8e4c0]"
+        aria-label="Education and work"
+      >
+        <Fragment set:html={sceneSvg(meadow, "w-full")} />
+        <div class:list={[bandBody, "bg-grass py-16"]}>
           <div
-            class="flex w-full max-w-6xl flex-row flex-wrap items-start justify-between gap-12 px-6 py-16"
+            class="pointer-events-none absolute inset-0 opacity-0 dark:opacity-100"
+            aria-hidden="true"
           >
-            <TimelineColumn title="Education" items={educationItems} />
-            <TimelineColumn title="Work" items={workItems} />
-          </div>
-        </div>
-        <img src={GrassBot.src} class="-mt-px w-full object-cover" alt="" />
-      </div>
-      <!-- Projects section -->
-      <div>
-        <img src={ProjectTop.src} class="-mb-px w-full object-cover" alt="" />
-        <div class="bg-p-red flex w-full justify-center">
-          <div
-            class="flex w-full max-w-6xl flex-col items-center gap-12 px-6 py-24 text-center"
-          >
-            <div class="flex flex-col items-center gap-4" id="projects">
-              <h2 class="text-4xl font-bold">Projects</h2>
-              <p class="max-w-3xl text-lg">
-                A snapshot of the products and experiments I have built along
-                the way.
-              </p>
-            </div>
             {
-              projectEntries.length ? (
-                <div
-                  class="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3"
-                  role="list"
-                >
-                  {projectEntries.map((project) => {
-                    const tags = project.data.tags?.filter(
-                      (tag): tag is string => Boolean(tag?.trim()),
-                    );
-                    return (
-                      <a
-                        role="listitem"
-                        href={`/project/${project.data.slug}`}
-                        class="group relative flex h-full flex-col rounded-3xl bg-white/80 p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                      >
-                        {project.badgeText && (
-                          <img
-                            src={Star.src}
-                            alt="New project"
-                            class="absolute top-4 right-4 h-16 w-16"
-                          />
-                        )}
-                        <div class="flex items-start justify-between gap-3">
-                          <h3 class="text-2xl font-semibold text-gray-900">
-                            {project.data.title}
-                          </h3>
-                        </div>
-                        <p class="mt-3 text-base text-gray-700">
-                          {project.data.shortDescription ??
-                            "Dive in to explore what went into this project."}
-                        </p>
-                        {tags?.length ? (
-                          <ul class="mt-6 flex flex-wrap gap-2">
-                            {tags.map((tag) => (
-                              <li class="bg-p-blue rounded-full px-3 py-1 text-xs font-medium tracking-wide text-gray-900 uppercase">
-                                {tag}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </a>
-                    );
-                  })}
+              fireflies.map((fly, i) => (
+                <span
+                  class="firefly absolute size-2 rounded-full bg-[#fff0b8] shadow-[0_0_6px_2px_var(--color-lamp),0_0_18px_6px_rgb(255_197_110/0.35)]"
+                  style={`left:${fly.x}%;top:${fly.y}%;--i:${i}`}
+                />
+              ))
+            }
+          </div>
+          <div
+            class="relative grid w-full max-w-6xl gap-14 lg:grid-cols-2 lg:gap-16"
+          >
+            {
+              timelines.map((timeline) => (
+                <div>
+                  <h2 class={heading}>{timeline.title}</h2>
+                  <ol class="mt-7 grid gap-7">
+                    {timeline.items.map((item) => (
+                      <li class="flex items-start gap-4">
+                        <span class="w-16 shrink-0 *:w-full">
+                          <Fragment set:html={item.icon} />
+                        </span>
+                        <span class="flex flex-col">
+                          <span class="font-semibold text-grass-ink">
+                            {item.period}
+                          </span>
+                          <span class="text-xl leading-tight font-bold">
+                            {item.title}
+                          </span>
+                          <span>{item.text}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-              ) : (
-                <p class="text-lg text-gray-800">
-                  I'm polishing the write-ups—check back soon for fresh
-                  projects!
-                </p>
-              )
+              ))
             }
           </div>
         </div>
-        <img src={ProjectBot.src} class="-mt-px w-full object-cover" alt="" />
-      </div>
-      <div class="my-24 flex min-h-96 flex-col items-center justify-center">
-        <CleaningMan height={300} />
-        <span class="text-lg text-wrap">
-          Nothing more to see here...<br />
-          Check out my <a
-            href="/blog"
-            class="font-bold underline transition-colors">blog</a
-          > instead
-        </span>
-      </div>
-    </div>
-  </HeaderFooter>
-</MetaLayout>
+        <Fragment
+          set:html={themeSvg(grassBot, {
+            id: "grass-bot",
+            className: "w-full",
+          })}
+        />
+      </section>
+
+      <section class="dark:[--color-line:#efd2d9]" aria-labelledby="projects">
+        <Fragment set:html={sceneSvg(city, "w-full")} />
+        <div
+          class:list={[
+            bandBody,
+            "flex-col items-center gap-12 bg-bramble pt-16 pb-20",
+          ]}
+        >
+          <div class="max-w-2xl text-center">
+            <h2 id="projects" class={heading}>Projects</h2>
+            <p class="mt-3 text-xl text-bramble-ink">
+              A snapshot of the products and experiments I have built along the
+              way.
+            </p>
+          </div>
+          {
+            /* Frosted white cards by day. At night they turn to dusk paper, a plum
+              a shade lighter than the band, with cream text. */
+          }
+          <ul class="grid w-full max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {
+              projects.map(({ data }) => {
+                const tags = data.tags?.filter((tag) => tag.trim());
+                return (
+                  <li>
+                    <a
+                      class="relative flex h-full flex-col rounded-3xl bg-white/80 p-6 shadow-lg duration-300 hover:-translate-y-1 hover:shadow-xl motion-safe:transition-[translate,box-shadow] dark:bg-[#4b2d45] dark:shadow-black/35"
+                      href={`/project/${data.slug}`}
+                    >
+                      {data.newIndicator && (
+                        <img
+                          class="absolute top-4 right-4 size-16"
+                          src={Star.src}
+                          alt="New project"
+                        />
+                      )}
+                      <h3 class="text-2xl font-semibold text-gray-900 dark:text-[#f6ecd9]">
+                        {data.title}
+                      </h3>
+                      <p class="mt-3 text-base text-gray-700 dark:text-[#e3cfd8]">
+                        {data.shortDescription ??
+                          "Dive in to explore what went into this project."}
+                      </p>
+                      {tags?.length ? (
+                        <ul class="mt-6 flex flex-wrap gap-2">
+                          {tags.map((tag) => (
+                            <li class="rounded-full bg-sea px-3 py-1 text-xs font-medium tracking-wide text-gray-900 uppercase dark:bg-[#2c1a2a] dark:text-[#f6ecd9]">
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+        <Fragment
+          set:html={themeSvg(projectBot, {
+            id: "project-bot",
+            className: "w-full",
+          })}
+        />
+      </section>
+    </main>
+
+    {/* The cleaning man (by day) or the sleeper (at night) above a note. */}
+    <footer class="my-24 flex min-h-96 flex-col items-center justify-center">
+      <Fragment set:html={sceneSvg(footer, "w-[90vw] max-w-md")} />
+      <span>
+        Nothing more to see here...<br />
+        Check out my <a
+          class="font-bold underline decoration-2 underline-offset-4"
+          href="/blog">blog</a
+        > instead
+      </span>
+    </footer>
+    <Analytics />
+    <SpeedInsights />
+  </body>
+</html>
