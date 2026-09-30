@@ -91,6 +91,18 @@
     border: 0;
     cursor: pointer;
   }
+  /* A soft, borderless blur behind the icon, so it stays readable over the
+     scenes while scrolling. The mask feathers its edge into the page. */
+  .toggle::before {
+    content: "";
+    position: absolute;
+    inset: -0.5rem;
+    z-index: -1;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sky) 55%, transparent);
+    backdrop-filter: blur(6px);
+    mask-image: radial-gradient(closest-side, #000 55%, transparent);
+  }
   .toggle:hover {
     rotate: -2deg;
   }
