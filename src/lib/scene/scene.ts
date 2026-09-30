@@ -24,6 +24,9 @@ export interface Placement {
   show?: "day" | "night";
   // CSS hook for per-icon styling (glows, lit windows, animation).
   className?: string;
+  // 1-based numbers of the icon's <path> elements that turn into lamp light at
+  // night (styled by `.light`), e.g. just the window ticks of a building.
+  lights?: readonly number[];
 }
 
 export interface Scene {
@@ -35,10 +38,15 @@ export interface Scene {
   items: readonly Placement[];
 }
 
-function innerMarkup({ svg, strokeScale = 1 }: Placement) {
+function innerMarkup({ svg, strokeScale = 1, lights = [] }: Placement) {
+  let path = 0;
   const body = themeColors(svg, "currentColor")
     .replace(/^[\s\S]*?<svg[^>]*>/, "")
-    .replace(/<\/svg>\s*$/, "");
+    .replace(/<\/svg>\s*$/, "")
+    // Pack icons' paths carry no class, so adding one can't clash.
+    .replace(/<path\b/g, (tag) =>
+      lights.includes(++path) ? `${tag} class="light"` : tag,
+    );
   return strokeScale === 1
     ? body
     : body.replace(

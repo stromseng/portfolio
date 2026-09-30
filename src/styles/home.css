@@ -419,6 +419,10 @@ h1 {
   fill: var(--lamp);
   opacity: calc(var(--is-night) * 0.85);
 }
+/* Seagulls fly by day only, as soft as the hero's birds. */
+.gull {
+  opacity: calc((1 - var(--is-night)) * 0.7);
+}
 /* The boat's waterline is painted in sea colour, like the original export. */
 .boat path[opacity] {
   stroke: var(--sea);
@@ -668,9 +672,9 @@ h1 {
 .blast path {
   stroke: light-dark(var(--bramble), var(--lamp));
 }
-/* Like `lit`, but only the faintest ticks (window crosses, door lines), for
-   icons whose other half-tone strokes are roofs and frames. */
-.lit-ticks path[opacity="0.503384"] {
+/* Paths picked by a placement's `lights` list, for icons where only some of
+   the faint strokes are windows (see scene.ts). */
+.light {
   stroke: light-dark(currentColor, var(--lamp));
   opacity: calc(0.5 + var(--is-night) * 0.5);
 }

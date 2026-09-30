@@ -66,6 +66,7 @@ import swingKid from "@images/scenes/meadow/swing-kid.svg?raw";
 import swing from "@images/scenes/meadow/swing.svg?raw";
 import bottomWave from "@images/scenes/sea/bottom-wave.svg?raw";
 import cloud from "@images/scenes/sea/cloud.svg?raw";
+import gullSvg from "@images/scenes/sea/gull.svg?raw";
 import lantern from "@images/scenes/sea/lantern.svg?raw";
 import topWave from "@images/scenes/sea/top-wave.svg?raw";
 
@@ -99,6 +100,17 @@ const litWindows = [
   [1168, 135],
 ] as const;
 
+// A seagull like the hero's day birds: a 24-unit stroke, kept at the same
+// line weight whatever its size, and gone at night (see `.gull`).
+const gull = (x: number, y: number, scale: number): Placement => ({
+  svg: gullSvg,
+  x,
+  y,
+  scale,
+  strokeScale: 1 / scale,
+  className: "gull",
+});
+
 // Shoreline under the hero: the sailboat with its lantern, heading for the lighthouse.
 export const seaTop = {
   id: "sea-top",
@@ -127,6 +139,14 @@ export const seaTop = {
       className: "boat solid",
     },
     { svg: lantern },
+    // Seagulls over the water, clear of the boat and the lighthouse.
+    gull(300, 38, 1.1),
+    gull(352, 62, 0.8),
+    gull(548, 54, 1),
+    gull(972, 92, 1.2),
+    gull(1026, 122, 0.85),
+    gull(1192, 58, 1),
+    gull(1150, 168, 0.75),
   ],
 } satisfies Scene;
 
@@ -229,7 +249,8 @@ const townhouses = [
     left,
     scale,
     line: LINE.building,
-    className: "lit-ticks",
+    // The window crosses; not the door lines (19, 20) or the step (27).
+    lights: [23, 24, 25, 26, 28, 29],
   }),
 );
 // Traffic heads left: the icons face right and are flipped.
@@ -250,7 +271,6 @@ const doubledecker = place(bus, {
   scale: 0.19,
   line: LINE.small,
   flip: true,
-  className: "lit",
 });
 
 // The skyline above the projects: Oslo's cathedral and a row of townhouses,
@@ -292,7 +312,14 @@ export const city = {
       flip: true,
       className: "lit",
     },
-    { svg: building2, x: 415, y: 269, scale: 0.4526, className: "lit" },
+    {
+      svg: building2,
+      x: 415,
+      y: 269,
+      scale: 0.4526,
+      // The window ticks; not the rooftop water tower (4, 6).
+      lights: [7, 8, 9, 10, 11, 12, 13],
+    },
     { svg: apartments, x: 551.5, y: 269, scale: 0.465, className: "lit" },
     // Light from the cathedral's open door and rose window.
     glow(...pointIn(cathedral, [262, 285]), [14, 16]),
