@@ -229,6 +229,31 @@ function pointIn(
   return [x + (flip ? -scale : scale) * u, y + scale * v] as const;
 }
 
+// Places a pack icon so the centre of its drawing lands on a point, rotated
+// around that centre. place() rotates around the icon's (0, 0) corner, which
+// swings a rotated drawing away from where it was aimed.
+function centredAt(
+  svg: string,
+  [cx, cy]: readonly [number, number],
+  { scale, line, rotate = 0, ...rest }: Omit<Spot, "left" | "bottom" | "top">,
+) {
+  const box = pathBounds(svg);
+  const [u, v] = [
+    (box.x + box.width / 2) * scale,
+    (box.y + box.height / 2) * scale,
+  ];
+  const r = (rotate * Math.PI) / 180;
+  return {
+    svg,
+    x: cx - (u * Math.cos(r) - v * Math.sin(r)),
+    y: cy - (u * Math.sin(r) + v * Math.cos(r)),
+    scale,
+    rotate,
+    strokeScale: line / (PACK_STROKE * scale),
+    ...rest,
+  } satisfies Placement;
+}
+
 const cathedral = place(church, {
   left: 740,
   scale: 0.75,
@@ -557,16 +582,13 @@ export const meadow = {
       show: "day",
     }),
     graduate,
-    // Just tossed: beside the graduate's raised right hand (the fingertips are
-    // icon point 271, 44), a small gap to its right with its middle a little
-    // above the fingertips, so it never covers the hand or the head. No
-    // rotation, since place() positions the unrotated outline and a rotation
-    // would swing it away from the hand.
-    place(academicCap, {
-      left: pointIn(graduate, [271, 44])[0] + 2.5,
-      top: pointIn(graduate, [271, 44])[1] - 8,
+    // Thrown up to celebrate: centred between the raised hands (icon x 200)
+    // and about one head-height above the fingertips (icon y 44), tilted as
+    // if mid-flight.
+    centredAt(academicCap, pointIn(graduate, [200, -80]), {
       scale: 0.08,
       line: MEADOW_LINE.small,
+      rotate: -12,
       show: "day",
     }),
     place(bat, {
