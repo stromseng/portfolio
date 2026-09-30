@@ -1,7 +1,8 @@
 /*
-  Homepage: every colour is a light-dark() pair, so the page follows the
-  system setting with no JS, and [data-theme] pins a choice once one is made.
-  --is-night (0/1) drives things that appear or vanish rather than recolour.
+  Homepage: colours that differ by theme are light-dark() pairs (day first),
+  so the page follows the system setting with no JS, and [data-theme] pins a
+  choice once one is made. --is-night (0/1) drives things that appear or
+  vanish rather than recolour.
 */
 
 :root {
@@ -21,15 +22,12 @@
   --doodle-rose: light-dark(#ffdad6, #2c3a5c);
   --doodle-peach: light-dark(#ffe3c7, #2f3a52);
   --star: light-dark(#f2b705, #ffe7a3);
-  --sun: #ffe08a;
   --lamp: #ffc56e;
   --lamp-ink: light-dark(#a44a00, #ffc56e);
   --focus: light-dark(#172238, #ffc56e);
 
-  --step--1: 0.9rem;
   --step-0: 1.125rem;
   --step-1: 1.4rem;
-  --step-2: 1.75rem;
   --step-3: clamp(1.9rem, 4vw, 2.6rem);
   --step-5: clamp(3rem, 9vw, 4.6rem);
 }
@@ -41,7 +39,6 @@
 }
 :root[data-theme="day"] {
   color-scheme: light;
-  --is-night: 0;
 }
 :root[data-theme="night"] {
   color-scheme: dark;
@@ -111,83 +108,13 @@ a {
   animation-duration: 0.6s;
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header (src/components/Header.astro) ---------- */
 
-/* Mirrors src/components/Header.astro: centred links, socials on the right.
-   The only addition is the day/night toggle after the socials. */
-.site-header {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-evenly;
-  gap: 1rem;
-  padding: 0.5rem;
-  font-variation-settings: normal;
-}
 /* Holds the header's space for the day/night switch, which is fixed to the
    same corner so it stays reachable anywhere on the page. */
 .toggle-slot {
   width: 3rem;
   height: 3rem;
-}
-@media (max-width: 47.99rem) {
-  .header-end {
-    justify-content: flex-end;
-  }
-}
-.header-spacer {
-  display: none;
-}
-.site-header nav {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-evenly;
-  gap: 1rem;
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 600;
-}
-.site-header nav a {
-  text-decoration: none;
-  text-decoration-thickness: auto;
-  text-underline-offset: auto;
-}
-.site-header nav a:hover,
-.site-header nav a[aria-current="page"] {
-  text-decoration: underline;
-}
-.header-end {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-evenly;
-  gap: 1rem;
-}
-.social {
-  display: block;
-  width: 3rem;
-}
-.social svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-@media (min-width: 48rem) {
-  .site-header {
-    justify-content: space-between;
-    gap: 0;
-  }
-  .header-spacer {
-    display: block;
-    flex: 1;
-  }
-  .site-header nav {
-    justify-content: center;
-  }
-  .header-end {
-    justify-content: flex-end;
-  }
 }
 
 /* ---------- Hero ---------- */
@@ -335,15 +262,9 @@ h1 {
   width: 100%;
   height: auto;
 }
-.sea > .band:first-child,
-.meadow > .band:first-child,
-.bramble > .band:first-child {
-  margin-bottom: -1px;
-}
-.band-body + .band {
-  margin-top: -1px;
-}
 .band-body {
+  /* Overlaps the waves by a pixel, so no hairline shows at the seams. */
+  margin-block: -1px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -380,30 +301,25 @@ h1 {
   padding-block: 4rem 5rem;
 }
 
-/* ---------- Scenes (see scenes.ts) ---------- */
+/* ---------- Scenes (see components/home/scenes/) ---------- */
 
 .day-only {
   opacity: calc(1 - var(--is-night));
 }
-.night-only,
-.lamp-reflection {
+.night-only {
   opacity: var(--is-night);
 }
-/* Lamp-lit details: at night the pack's faint secondary strokes (beams,
-   window ticks, tent flaps, lamp shades) turn into lamp light. */
-.lit path[opacity] {
-  stroke: light-dark(currentColor, var(--lamp));
+/* Lamp light at night: the faint secondary strokes of `.lit` icons (the
+   street lamp, the apartments' windows, the flame) and the paths a
+   placement's `lights` picks (see scene.ts). */
+.lit path[opacity],
+.light {
+  stroke: light-dark(var(--line), var(--lamp));
   opacity: calc(0.5 + var(--is-night) * 0.5);
 }
-/* The icon's own horizon line (4th path from the end) floats in the sky here. */
+/* The lighthouse's own horizon line (4th path from the end) floats in the sky here. */
 .lighthouse path:nth-last-of-type(4) {
   display: none;
-}
-/* Only the lighthouse's beams and lamp room (its last three paths) light up,
-   not the tower stripes or the horizon line. */
-.lighthouse path:nth-last-of-type(-n + 3) {
-  stroke: light-dark(currentColor, var(--lamp));
-  opacity: calc(0.5 + var(--is-night) * 0.5);
 }
 .fire path {
   stroke: var(--lamp);
@@ -411,10 +327,12 @@ h1 {
 .fire path[opacity] {
   stroke: #ff9a4d;
 }
-/* Some of the school's windows are still lit at night. */
-.soft-glow {
-  opacity: calc(var(--is-night) * 0.55);
+/* Soft glows are dimmer. The dimming sits on the glow's circle, so the group
+   itself can still run `lamp-on`, which ends at full opacity. */
+.soft-glow circle {
+  opacity: 0.55;
 }
+/* Some of the school's windows are still lit at night. */
 .window-light {
   fill: var(--lamp);
   opacity: calc(var(--is-night) * 0.85);
@@ -429,7 +347,7 @@ h1 {
   opacity: 0.88;
 }
 
-/* ---------- Sea: lantern and moon ---------- */
+/* ---------- Sea ---------- */
 
 .lantern-body {
   fill: light-dark(#fff8e6, var(--lamp));
@@ -562,8 +480,9 @@ h1 {
   color: var(--text-soft);
 }
 
-/* Same cards as the live homepage by day. At night they turn to dusk paper:
-   a plum a shade lighter than the band, with cream text. */
+/* Project cards: frosted white by day, as they have always looked. At night
+   they turn to dusk paper, a plum a shade lighter than the band, with cream
+   text. */
 .cards {
   display: grid;
   gap: 1.5rem;
@@ -639,13 +558,13 @@ h1 {
   letter-spacing: 0.025em;
   text-transform: uppercase;
   color: light-dark(#111827, #f6ecd9);
-  background: light-dark(hsl(205 100% 91%), #2c1a2a);
+  background: light-dark(#d1ecff, #2c1a2a);
   border-radius: 9999px;
 }
 
 /* ---------- Footer ---------- */
 
-/* Same layout as the footer on the live homepage. */
+/* The cleaning man (by day) or the sleeper (at night) above a note. */
 .site-footer {
   display: flex;
   flex-direction: column;
@@ -672,14 +591,10 @@ h1 {
 .blast path {
   stroke: light-dark(var(--bramble), var(--lamp));
 }
-/* Paths picked by a placement's `lights` list, for icons where only some of
-   the faint strokes are windows (see scene.ts). */
-.light {
-  stroke: light-dark(currentColor, var(--lamp));
-  opacity: calc(0.5 + var(--is-night) * 0.5);
-}
 
-/* ---------- Motion: one moment, when the lights go out ---------- */
+/* ---------- Motion ----------
+   Hover responses, plus the night's arrival: stars, glows and the shooting
+   star play when night starts, on load or on toggling. */
 
 @media (prefers-reduced-motion: no-preference) {
   .hire {
@@ -687,8 +602,12 @@ h1 {
       rotate 0.2s ease,
       translate 0.2s ease;
   }
+  /* Only the hover lift animates: colours swap instantly inside the
+     theme's view transition instead of fading on their own. */
   .card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      translate 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   :root[data-theme="night"] .mark-star {
@@ -697,7 +616,7 @@ h1 {
   :root[data-theme="night"] .shooting-star {
     animation: shoot 1.2s 1.6s ease-out both;
   }
-  :root[data-theme="night"] .lighthouse path:nth-last-of-type(-n + 3) {
+  :root[data-theme="night"] .lighthouse .light {
     animation: beam 2.6s ease-in-out infinite alternate;
   }
   :root[data-theme="night"] .glow {

@@ -1,6 +1,6 @@
 ---
 // The homepage: a hand-drawn landscape that works by day and after dark.
-// Scenes live in src/components/home/scenes.ts, colours in src/styles/home.css.
+// Scenes live in src/components/home/scenes/, colours in src/styles/home.css.
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import "@fontsource-variable/shantell-sans/full.css";
@@ -9,25 +9,23 @@ import { getCollection } from "astro:content";
 import shootingStar from "@images/doodles/shootingstar.svg?raw";
 import whale from "@images/doodles/whale.svg?raw";
 import doodleBackground from "@images/DoodleBackground.svg?raw";
-import github from "@images/github.svg?raw";
 import grassBot from "@images/grass-bot.svg?raw";
 import hireButton from "@images/hire-button.svg?raw";
-import linkedin from "@images/linkedin.svg?raw";
 import logoClimber from "@images/logo-climber.svg?raw";
 import projectBot from "@images/project-bot.svg?raw";
 import smiley from "@images/smiley.svg?raw";
 import Star from "@images/star.svg";
+import BaseHead from "@/components/BaseHead.astro";
+import Header from "@/components/Header.astro";
+import { fireflies, skyMarks } from "@/components/home/sky";
 import ThemeToggle from "@/components/home/ThemeToggle.astro";
 import TypingTagline from "@/components/home/TypingTagline.svelte";
 import { ageOn, education, taglines, work } from "@/components/home/content";
 import { sceneSvg } from "@/lib/scene/scene";
-import {
-  city,
-  footer,
-  meadow,
-  seaBottom,
-  seaTop,
-} from "@/components/home/scenes";
+import { city } from "@/components/home/scenes/city";
+import { footer } from "@/components/home/scenes/footer";
+import { meadow } from "@/components/home/scenes/meadow";
+import { seaBottom, seaTop } from "@/components/home/scenes/sea";
 import { themeSvg } from "@/lib/scene/themeSvg";
 
 const projects = (await getCollection("projects")).sort(
@@ -41,92 +39,37 @@ const timelines = [
   { title: "Work", items: work },
 ];
 
-// Sky marks in the hero, as % of its box. Birds fly by day; every mark is a
-// star at night. `i` staggers the stars when the lights go out.
-const skyMarks = [
-  { x: 6, y: 12, size: 22, bird: true },
-  { x: 18, y: 4, size: 14, bird: false },
-  { x: 31, y: 9, size: 18, bird: false },
-  { x: 44, y: 3, size: 26, bird: true },
-  { x: 52, y: 16, size: 12, bird: false },
-  { x: 63, y: 6, size: 16, bird: false },
-  { x: 73, y: 22, size: 20, bird: true },
-  { x: 90, y: 30, size: 14, bird: false },
-  { x: 3, y: 58, size: 14, bird: false },
-  { x: 48, y: 74, size: 18, bird: false },
-  { x: 94, y: 70, size: 16, bird: false },
-  { x: 58, y: 44, size: 12, bird: false },
-].map((mark, i) => ({ ...mark, i }));
-
-// Fireflies over the meadow, as % of the section box.
-const fireflies = [
-  [8, 20],
-  [15, 64],
-  [27, 38],
-  [39, 82],
-  [47, 14],
-  [58, 56],
-  [66, 30],
-  [74, 76],
-  [84, 18],
-  [92, 52],
-].map(([x, y], i) => ({ x, y, i }));
-
 const age = ageOn(new Date());
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Magnus Alexander Strømseng, a developer at Bekk in Oslo. Projects, work and education."
-    />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="color-scheme" content="light dark" />
-    <title>Magnus A. Strømseng</title>
-    <script is:inline>
-      // Runs before paint so a returning night visitor never sees a day flash.
-      (() => {
-        let stored = null;
-        try {
-          stored = localStorage.getItem("theme");
-        } catch {}
-        const night =
-          stored === "night" ||
-          (stored !== "day" &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches);
-        document.documentElement.dataset.theme = night ? "night" : "day";
-      })();
-    </script>
+    <BaseHead title="Magnus A. Strømseng">
+      <meta name="color-scheme" content="light dark" />
+      <script is:inline>
+        // Runs before paint so a returning night visitor never sees a day flash.
+        // "theme" is the key ThemeToggle.astro stores the visitor's choice under.
+        (() => {
+          let stored = null;
+          try {
+            stored = localStorage.getItem("theme");
+          } catch {}
+          const night =
+            stored === "night" ||
+            (stored !== "day" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.dataset.theme = night ? "night" : "day";
+        })();
+      </script>
+    </BaseHead>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
 
-    <header class="site-header">
-      <div class="header-spacer"></div>
-      <nav aria-label="Main">
-        <a href="/" aria-current="page">Home</a>
-        <a href="/blog">Blog</a>
-      </nav>
-      <div class="header-end">
-        <a
-          class="social"
-          href="https://github.com/stromseng"
-          aria-label="GitHub"
-          ><Fragment set:html={themeSvg(github, { id: "gh-head" })} /></a
-        >
-        <a
-          class="social"
-          href="https://www.linkedin.com/in/stromseng/"
-          aria-label="LinkedIn"
-          ><Fragment set:html={themeSvg(linkedin, { id: "li-head" })} /></a
-        >
-        <span class="toggle-slot"><ThemeToggle /></span>
-      </div>
-    </header>
+    <Header>
+      <span class="toggle-slot"><ThemeToggle /></span>
+    </Header>
 
     <main id="main">
       <section class="hero" aria-labelledby="hero-name">
@@ -138,11 +81,11 @@ const age = ageOn(new Date());
             })}
           />
           {
-            skyMarks.map((mark) => (
+            skyMarks.map((mark, i) => (
               <svg
                 class="mark"
                 viewBox="0 0 24 24"
-                style={`left:${mark.x}%;top:${mark.y}%;width:${mark.size}px;--i:${mark.i}`}
+                style={`left:${mark.x}%;top:${mark.y}%;width:${mark.size}px;--i:${i}`}
               >
                 <path
                   class="mark-star"
@@ -208,8 +151,8 @@ const age = ageOn(new Date());
         <div class="band-body">
           <div class="fireflies" aria-hidden="true">
             {
-              fireflies.map((fly) => (
-                <span style={`left:${fly.x}%;top:${fly.y}%;--i:${fly.i}`} />
+              fireflies.map((fly, i) => (
+                <span style={`left:${fly.x}%;top:${fly.y}%;--i:${i}`} />
               ))
             }
           </div>
@@ -219,14 +162,10 @@ const age = ageOn(new Date());
                 <div class="timeline">
                   <h2>{timeline.title}</h2>
                   <ol>
-                    {timeline.items.map((item, index) => (
+                    {timeline.items.map((item) => (
                       <li>
                         <span class="timeline-icon">
-                          <Fragment
-                            set:html={themeSvg(item.icon, {
-                              id: `${timeline.title}-${index}`,
-                            })}
-                          />
+                          <Fragment set:html={item.icon} />
                         </span>
                         <span class="timeline-text">
                           <span class="period">{item.period}</span>

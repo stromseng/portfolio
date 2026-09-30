@@ -25,3 +25,5 @@ pnpm-debug.log*
 
 
 .vercel
+# Playwright MCP output, if it ever writes into the repo
+.playwright-mcp/

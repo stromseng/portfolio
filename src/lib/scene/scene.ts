@@ -1,6 +1,11 @@
-// A Scene is one inline SVG band composed from individual doodles, so each
-// icon can be moved, tinted or swapped by editing data instead of a Figma export.
-// Placements use the scene's viewBox units. Usage:
+// A Scene is one inline SVG band composed from individual doodles: verbatim
+// pack icons (src/data/images/doodles) and custom shapes
+// (src/data/images/scenes). Each icon can be moved, tinted or swapped by
+// editing data instead of a Figma export. Placements use the scene's viewBox
+// units; place() (see place.ts) positions pack icons by their drawn edges.
+// Day and night share one scene: `show` keeps an icon to one theme, and at
+// night the `lit` class turns all of an icon's faint strokes into lamp light,
+// `lights` just the chosen paths (both styled in home.css). Usage:
 //   <Fragment set:html={sceneSvg(meadow)} />
 import { scopeIds, themeColors } from "./themeSvg";
 
@@ -16,10 +21,9 @@ export interface Placement {
   // Degrees around the icon's (0, 0).
   rotate?: number;
   flip?: boolean;
-  // Multiplies stroke widths, for icons that were drawn thinner or bolder.
-  strokeScale?: number;
-  // Ink colour as a CSS custom property name. Defaults to the section's "line".
-  ink?: string;
+  // Width of the icon's widest stroke in scene units; its other strokes keep
+  // their proportions. Omit to keep the drawing's own widths, scaled along.
+  line?: number;
   // Omit to show in both themes.
   show?: "day" | "night";
   // CSS hook for per-icon styling (glows, lit windows, animation).
@@ -38,23 +42,40 @@ export interface Scene {
   items: readonly Placement[];
 }
 
-function innerMarkup({ svg, strokeScale = 1, lights = [] }: Placement) {
+const STROKE_WIDTH = /stroke-width="([\d.]+)"/g;
+
+function innerMarkup({ svg, scale = 1, line, lights = [] }: Placement) {
+  const paths = svg.match(/<path\b/g)?.length ?? 0;
+  const missing = lights.find((n) => n > paths);
+  if (missing !== undefined) {
+    throw new Error(
+      `lights: path ${missing} is past the icon's ${paths} paths`,
+    );
+  }
+
   let path = 0;
-  const body = themeColors(svg, "currentColor")
+  const body = themeColors(svg)
     .replace(/^[\s\S]*?<svg[^>]*>/, "")
     .replace(/<\/svg>\s*$/, "")
     // Pack icons' paths carry no class, so adding one can't clash.
     .replace(/<path\b/g, (tag) =>
       lights.includes(++path) ? `${tag} class="light"` : tag,
     );
-  return strokeScale === 1
-    ? body
-    : body.replace(
-        /stroke-width="([\d.]+)"/g,
-        (_, width: string) => `stroke-width="${Number(width) * strokeScale}"`,
-      );
+  if (line === undefined) return body;
+
+  const widest = Math.max(
+    ...Array.from(svg.matchAll(STROKE_WIDTH), ([, width]) => Number(width)),
+  );
+  // Stroke widths are drawn in the icon's units, so undo its scale.
+  const factor =
+    line / (widest * (typeof scale === "number" ? scale : scale[0]));
+  return body.replace(
+    STROKE_WIDTH,
+    (_, width: string) => `stroke-width="${Number(width) * factor}"`,
+  );
 }
 
+// Leaves out identity parts, so a placement at (0, 0) gets no transform.
 function transformOf({
   x = 0,
   y = 0,
@@ -63,20 +84,32 @@ function transformOf({
   flip = false,
 }: Placement) {
   const [sx, sy] = typeof scale === "number" ? [scale, scale] : scale;
-  return `translate(${x} ${y}) rotate(${rotate}) scale(${flip ? -sx : sx} ${sy})`;
+  return [
+    (x || y) && `translate(${x} ${y})`,
+    rotate && `rotate(${rotate})`,
+    (sx !== 1 || sy !== 1 || flip) && `scale(${flip ? -sx : sx} ${sy})`,
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
-function classOf({ show, className }: Placement) {
-  return [show && `${show}-only`, className].filter(Boolean).join(" ");
-}
+// Renders `name="value"` pairs, leaving out empty values.
+const attrs = (pairs: Record<string, string>) =>
+  Object.entries(pairs)
+    .filter(([, value]) => value)
+    .map(([name, value]) => ` ${name}="${value}"`)
+    .join("");
 
 export function sceneSvg(scene: Scene, className = "band") {
   const items = scene.items
     .map((item, i) => {
-      const style = `color: var(--${item.ink ?? "line"})`;
       const body = scopeIds(innerMarkup(item), `${scene.id}-${i}`);
-      return `<g transform="${transformOf(item)}" style="${style}" class="${classOf(item)}">${body}</g>`;
+      const classes = [item.show && `${item.show}-only`, item.className];
+      return `<g${attrs({
+        transform: transformOf(item),
+        class: classes.filter(Boolean).join(" "),
+      })}>${body}</g>`;
     })
     .join("");
-  return `<svg viewBox="0 0 ${scene.width} ${scene.height}" fill="none" class="${className}" aria-hidden="true" focusable="false">${items}</svg>`;
+  return `<svg viewBox="0 0 ${scene.width} ${scene.height}" fill="none"${attrs({ class: className })} aria-hidden="true" focusable="false">${items}</svg>`;
 }

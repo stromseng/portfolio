@@ -1,11 +1,18 @@
 ---
-// Day/night switch, shown as a bare sun or moon icon in the header. The
-// initial theme is set by the inline script in the page <head> (stored choice,
-// else the system setting); this button flips it and remembers the choice in
-// localStorage under "theme".
+// Day/night switch, shown as a bare sun or moon icon in the header. It's a
+// toggle button named "Night mode", pressed while night is on. The initial
+// theme is set by the inline script in the homepage's <head> (the stored
+// choice, else the system setting); this button flips it and remembers the
+// choice in localStorage under "theme", the key that script reads.
 ---
 
-<button type="button" class="toggle" data-theme-toggle>
+<button
+  type="button"
+  class="toggle"
+  aria-label="Night mode"
+  aria-pressed="false"
+  data-theme-toggle
+>
   <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false">
     <g class="toggle-sun">
       <path
@@ -35,9 +42,8 @@
   const current = (): Theme =>
     root.dataset.theme === "night" ? "night" : "day";
 
-  function render() {
-    const next = current() === "night" ? "day" : "night";
-    button?.setAttribute("aria-label", `Switch to ${next} mode`);
+  function syncPressed() {
+    button?.setAttribute("aria-pressed", String(current() === "night"));
   }
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -47,7 +53,7 @@
   function apply(theme: Theme) {
     const swap = () => {
       root.dataset.theme = theme;
-      render();
+      syncPressed();
     };
     if (!("startViewTransition" in document) || reducedMotion.matches) {
       swap();
@@ -74,13 +80,14 @@
     if (!stored) apply(event.matches ? "night" : "day");
   });
 
-  render();
+  syncPressed();
 </script>
 
 <style>
   /* Sized like the GitHub and LinkedIn icons next to it, and fixed to the
      header's top-right corner so it stays in view while scrolling. */
   .toggle {
+    --sun: #ffe08a;
     position: fixed;
     top: 0.5rem;
     right: 0.5rem;

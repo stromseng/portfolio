@@ -1,47 +1,120 @@
 ---
-import GithubLogo from "@images/github.svg";
-import LinkedInLogo from "@images/linkedin.svg";
-import { cn } from "@/lib/utils";
+// The site header: Home/Blog centred, GitHub and LinkedIn on the right. Pages
+// can add controls after the socials through the slot (the homepage's theme
+// toggle). Styled with plain CSS so it also works on the homepage, which
+// doesn't load Tailwind. Icons draw in `--line`, the page's line colour.
+import github from "@images/github.svg?raw";
+import linkedin from "@images/linkedin.svg?raw";
+import { themeSvg } from "@/lib/scene/themeSvg";
 
 interface Props {
   class?: string;
 }
 
 const { class: className } = Astro.props;
+const { pathname } = Astro.url;
 
-const pathname = Astro.url.pathname;
-const isHome = pathname === "/";
-const isBlog = pathname === "/blog";
-const linkClass = (isActive: boolean) =>
-  cn(
-    "decoration-black hover:underline hover:decoration-black hover:duration-500",
-    { underline: isActive },
-  );
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+];
+const socials = [
+  { href: "https://github.com/stromseng", label: "GitHub", icon: github },
+  {
+    href: "https://www.linkedin.com/in/stromseng/",
+    label: "LinkedIn",
+    icon: linkedin,
+  },
+];
 ---
 
-<header
-  class={cn(
-    "flex w-full items-center justify-evenly gap-4 p-2 md:justify-between md:gap-0",
-    className,
-  )}
->
-  <div class="hidden md:block md:flex-1"></div>
-  <!-- Centered Links -->
-  <div
-    class={`ShantellSans flex flex-1 items-center justify-evenly gap-4 text-2xl font-semibold md:flex-1 md:justify-center`}
-  >
-    <a href="/" class={linkClass(isHome)}>Home</a>
-    <a href="/blog" class={linkClass(isBlog)}>Blog</a>
-  </div>
-  <!-- Socials -->
-  <div
-    class="flex flex-1 items-center justify-evenly gap-4 md:flex-1 md:justify-end"
-  >
-    <a href="https://github.com/stromseng"
-      ><img src={GithubLogo.src} alt="Github Logo" class="size-12" /></a
-    >
-    <a href="https://www.linkedin.com/in/stromseng/"
-      ><img src={LinkedInLogo.src} alt="LinkedIn Logo" class="size-12" /></a
-    >
+<header class:list={["site-header", className]}>
+  <div class="spacer"></div>
+  <nav aria-label="Main">
+    {
+      links.map(({ href, label }) => (
+        <a href={href} aria-current={pathname === href ? "page" : undefined}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
+  <div class:list={["end", { "has-extra": Astro.slots.has("default") }]}>
+    {
+      socials.map(({ href, label, icon }) => (
+        <a class="social" href={href} aria-label={label}>
+          <Fragment set:html={themeSvg(icon, { id: `${label}-head` })} />
+        </a>
+      ))
+    }
+    <slot />
   </div>
 </header>
+
+<style>
+  .site-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 1rem;
+    padding: 0.5rem;
+    font-variation-settings: normal;
+  }
+  .spacer {
+    display: none;
+  }
+  nav,
+  .end {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 1rem;
+  }
+  nav {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 600;
+  }
+  nav a {
+    color: inherit;
+    text-decoration: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+  }
+  nav a:hover,
+  nav a[aria-current="page"] {
+    text-decoration: underline;
+  }
+  /* Extra controls (the homepage's fixed theme toggle) sit at the right edge,
+     so the socials pack against them instead of spreading out. */
+  .end.has-extra {
+    justify-content: flex-end;
+  }
+  .social {
+    display: block;
+    width: 3rem;
+  }
+  .social :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (min-width: 48rem) {
+    .site-header {
+      justify-content: space-between;
+      gap: 0;
+    }
+    .spacer {
+      display: block;
+      flex: 1;
+    }
+    nav {
+      justify-content: center;
+    }
+    .end {
+      justify-content: flex-end;
+    }
+  }
+</style>

@@ -10,7 +10,7 @@
   import { onMount } from "svelte";
 
   interface Props {
-    phrases: string[];
+    phrases: readonly string[];
   }
 
   const { phrases }: Props = $props();
@@ -24,18 +24,20 @@
     let alive = true;
 
     (async () => {
-      for (let i = 0; alive; i = (i + 1) % phrases.length) {
-        const phrase = phrases[i];
-        for (let n = 1; alive && n <= phrase.length; n++) {
-          shown = phrase.slice(0, n);
-          await wait(110);
-        }
+      // The server already rendered the first phrase in full, so each round
+      // holds and erases the current phrase, then types the next one.
+      for (let i = 0; alive; ) {
         await wait(1800);
-        for (let n = phrase.length; alive && n >= 0; n--) {
-          shown = phrase.slice(0, n);
+        for (let n = phrases[i].length; alive && n >= 0; n--) {
+          shown = phrases[i].slice(0, n);
           await wait(45);
         }
         await wait(300);
+        i = (i + 1) % phrases.length;
+        for (let n = 1; alive && n <= phrases[i].length; n++) {
+          shown = phrases[i].slice(0, n);
+          await wait(110);
+        }
       }
     })();
 

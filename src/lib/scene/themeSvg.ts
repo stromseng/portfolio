@@ -20,8 +20,8 @@ const isToken = (color: string): color is keyof typeof colorTokens =>
   color in colorTokens;
 
 // Strips export noise and swaps palette colours for tokens. Black ink becomes
-// `ink`, so scenes can tint a whole icon through `currentColor`.
-export function themeColors(raw: string, ink = "var(--line)") {
+// the section's line colour.
+export function themeColors(raw: string) {
   return raw
     .replace(/<\?xml[^>]*\?>/, "")
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -30,7 +30,7 @@ export function themeColors(raw: string, ink = "var(--line)") {
       /\s(fill|stroke)="([^"]+)"/g,
       (match, attr: string, color: string) =>
         inkColors.has(color)
-          ? ` ${attr}="${ink}"`
+          ? ` ${attr}="var(--line)"`
           : isToken(color)
             ? ` ${attr}="${colorTokens[color]}"`
             : match,
@@ -55,13 +55,13 @@ interface ThemeSvgOptions {
   className?: string;
 }
 
-export function themeSvg(raw: string, { id, className = "" }: ThemeSvgOptions) {
+export function themeSvg(raw: string, { id, className }: ThemeSvgOptions) {
   const svg = themeColors(raw)
     // Drop fixed pixel sizes on the root so CSS controls the width.
     .replace(
       /<svg([^>]*)>/,
       (_, attrs: string) =>
-        `<svg${attrs.replace(/\s(width|height)="[^"]*"/g, "")} class="${className}" aria-hidden="true" focusable="false">`,
+        `<svg${attrs.replace(/\s(width|height)="[^"]*"/g, "")}${className ? ` class="${className}"` : ""} aria-hidden="true" focusable="false">`,
     );
   return scopeIds(svg, id);
 }

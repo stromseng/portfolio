@@ -188,3 +188,9 @@
 body {
   font-family: "Shantell Sans Variable", system-ui;
 }
+
+/* The line colour the shared doodles (the header's icons) draw in. The
+   homepage doesn't load this file and sets its own per theme. */
+:root {
+  --line: currentColor;
+}
