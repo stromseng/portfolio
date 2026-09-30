@@ -27,25 +27,22 @@ const [, , ringWidth, ringHeight] = ringViewBox.split(" ").map(Number);
 // A timeline marker: the site's hand-drawn ring around a pack icon.
 function marker(id: string, icon: string) {
   const box = pathBounds(icon);
-  return sceneSvg(
-    {
-      id: `marker-${id}`,
-      width: ringWidth,
-      height: ringHeight,
-      items: [
-        { svg: ring },
-        place(icon, {
-          centre: {
-            x: ringBox.x + ringBox.width / 2,
-            y: ringBox.y + ringBox.height / 2,
-          },
-          scale: MARKER_ICON_DIAMETER / Math.hypot(box.width, box.height),
-          line: MARKER_LINE,
-        }),
-      ],
-    },
-    "",
-  );
+  return sceneSvg({
+    id: `marker-${id}`,
+    width: ringWidth,
+    height: ringHeight,
+    items: [
+      { svg: ring },
+      place(icon, {
+        centre: {
+          x: ringBox.x + ringBox.width / 2,
+          y: ringBox.y + ringBox.height / 2,
+        },
+        scale: MARKER_ICON_DIAMETER / Math.hypot(box.width, box.height),
+        line: MARKER_LINE,
+      }),
+    ],
+  });
 }
 
 export interface TimelineEntry {

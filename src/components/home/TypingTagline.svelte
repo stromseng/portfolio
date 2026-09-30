@@ -17,6 +17,12 @@
 
   let shown = $state(phrases[0] ?? "");
 
+  // The typed text and the invisible phrases share one grid cell.
+  const cell = "col-start-1 row-start-1";
+  // `blink` is in scenes.css.
+  const caret =
+    "ms-0.5 text-lamp-ink motion-safe:animate-[blink_1s_steps(1)_infinite]";
+
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
   onMount(() => {
@@ -47,52 +53,14 @@
   });
 </script>
 
-<p class="tagline">
+<p class="grid text-xl font-bold text-ink">
   <span class="sr-only">{phrases.join(". ")}</span>
   {#each phrases as phrase}
-    <span class="ghost" aria-hidden="true"
-      >{phrase}<span class="caret">|</span></span
+    <span class="invisible {cell}" aria-hidden="true"
+      >{phrase}<span class={caret}>|</span></span
     >
   {/each}
-  <span aria-hidden="true">{shown}<span class="caret">|</span></span>
+  <span class={cell} aria-hidden="true"
+    >{shown}<span class={caret}>|</span></span
+  >
 </p>
-
-<style>
-  .tagline {
-    display: grid;
-    margin: 0;
-    font-size: var(--step-1);
-    font-weight: 700;
-    color: var(--text);
-  }
-  /* Typed text and the invisible phrases share one cell. */
-  .tagline > :not(.sr-only) {
-    grid-area: 1 / 1;
-  }
-  .ghost {
-    visibility: hidden;
-  }
-  .caret {
-    margin-inline-start: 0.1em;
-    color: var(--lamp-ink);
-    animation: blink 1s steps(1) infinite;
-  }
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .caret {
-      animation: none;
-    }
-  }
-</style>

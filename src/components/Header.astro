@@ -1,11 +1,13 @@
 ---
 // The site header: Home/Blog centred, GitHub and LinkedIn on the right. Pages
 // can add controls after the socials through the slot (the homepage's theme
-// toggle). Styled with plain CSS so it also works on the homepage, which
-// doesn't load Tailwind. Icons draw in `--line`, the page's line colour.
+// toggle). Icons draw in `--color-line`, which follows the text colour except
+// on the homepage at night. It resets the homepage's body font variation, so
+// it looks the same on every page.
 import github from "@images/github.svg?raw";
 import linkedin from "@images/linkedin.svg?raw";
 import { themeSvg } from "@/lib/scene/themeSvg";
+import { cn } from "@/lib/utils";
 
 interface Props {
   class?: string;
@@ -28,93 +30,51 @@ const socials = [
 ];
 ---
 
-<header class:list={["site-header", className]}>
-  <div class="spacer"></div>
-  <nav aria-label="Main">
+<header
+  class={cn(
+    "flex w-full items-center justify-evenly gap-4 p-2 [font-variation-settings:normal] md:justify-between md:gap-0",
+    className,
+  )}
+>
+  <div class="hidden flex-1 md:block"></div>
+  <nav
+    aria-label="Main"
+    class="flex flex-1 items-center justify-evenly gap-4 text-2xl font-semibold md:justify-center"
+  >
     {
       links.map(({ href, label }) => (
-        <a href={href} aria-current={pathname === href ? "page" : undefined}>
+        <a
+          href={href}
+          class="hover:underline aria-[current=page]:underline"
+          aria-current={pathname === href ? "page" : undefined}
+        >
           {label}
         </a>
       ))
     }
   </nav>
-  <div class:list={["end", { "has-extra": Astro.slots.has("default") }]}>
+  {
+    /* Extra controls (the homepage's fixed theme toggle) sit at the right
+      edge, so the socials pack against them instead of spreading out. */
+  }
+  <div
+    class={cn(
+      "flex flex-1 items-center gap-4 md:justify-end",
+      Astro.slots.has("default") ? "justify-end" : "justify-evenly",
+    )}
+  >
     {
       socials.map(({ href, label, icon }) => (
-        <a class="social" href={href} aria-label={label}>
-          <Fragment set:html={themeSvg(icon, { id: `${label}-head` })} />
+        <a class="w-12" href={href} aria-label={label}>
+          <Fragment
+            set:html={themeSvg(icon, {
+              id: `${label}-head`,
+              className: "w-full",
+            })}
+          />
         </a>
       ))
     }
     <slot />
   </div>
 </header>
-
-<style>
-  .site-header {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 1rem;
-    padding: 0.5rem;
-    font-variation-settings: normal;
-  }
-  .spacer {
-    display: none;
-  }
-  nav,
-  .end {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 1rem;
-  }
-  nav {
-    font-size: 1.5rem;
-    line-height: 2rem;
-    font-weight: 600;
-  }
-  nav a {
-    color: inherit;
-    text-decoration: none;
-    text-decoration-thickness: auto;
-    text-underline-offset: auto;
-  }
-  nav a:hover,
-  nav a[aria-current="page"] {
-    text-decoration: underline;
-  }
-  /* Extra controls (the homepage's fixed theme toggle) sit at the right edge,
-     so the socials pack against them instead of spreading out. */
-  .end.has-extra {
-    justify-content: flex-end;
-  }
-  .social {
-    display: block;
-    width: 3rem;
-  }
-  .social :global(svg) {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  @media (min-width: 48rem) {
-    .site-header {
-      justify-content: space-between;
-      gap: 0;
-    }
-    .spacer {
-      display: block;
-      flex: 1;
-    }
-    nav {
-      justify-content: center;
-    }
-    .end {
-      justify-content: flex-end;
-    }
-  }
-</style>

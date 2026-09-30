@@ -1,0 +1,203 @@
+/*
+  The homepage's CSS that doesn't fit utilities: typography, rules for the
+  markup inside generated scene SVGs (see lib/scene/scene.ts and
+  components/home/scenes/), and the motion. Colours and the `dark` variant come
+  from globals.css, which the homepage loads first.
+*/
+@reference "./globals.css";
+
+@layer base {
+  body {
+    font-variation-settings: "INFM" 40;
+  }
+  h1,
+  h2,
+  h3 {
+    font-variation-settings:
+      "INFM" 70,
+      "BNCE" 25;
+  }
+
+  :focus-visible {
+    outline: 3px dashed var(--color-focus);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+
+  /* The toggle swaps themes inside a view transition: one cross-fade of the
+     whole page, so nested text can't lag behind its parent's colour. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.6s;
+  }
+}
+
+@layer components {
+  /* A placement's `show` (see scene.ts) keeps it to one theme. */
+  .day-only {
+    @variant dark {
+      opacity: 0;
+    }
+  }
+  .night-only {
+    opacity: 0;
+    @variant dark {
+      opacity: 1;
+    }
+  }
+
+  /* Lamp light at night: the faint secondary strokes of `.lit` icons (the
+     street lamp, the apartments' windows, the flame) and the paths a
+     placement's `lights` picks. */
+  .lit path[opacity],
+  .light {
+    stroke: var(--color-line);
+    opacity: 0.5;
+    @variant dark {
+      stroke: var(--color-lamp);
+      opacity: 1;
+    }
+  }
+  /* The lighthouse's own horizon line (4th path from the end) floats in the sky here. */
+  .lighthouse path:nth-last-of-type(4) {
+    display: none;
+  }
+  .fire path {
+    stroke: var(--color-lamp);
+  }
+  .fire path[opacity] {
+    stroke: #ff9a4d;
+  }
+  /* Soft glows are dimmer. The dimming sits on the glow's circle, so the group
+     itself can still run `lamp-on`, which ends at full opacity. */
+  .soft-glow circle {
+    opacity: 0.55;
+  }
+  /* Some of the school's windows (rects in school.svg) are still lit at night. */
+  .window-light {
+    fill: var(--color-lamp);
+    opacity: 0;
+    @variant dark {
+      opacity: 0.85;
+    }
+  }
+  /* The boat's waterline is painted in sea colour, like the original export. */
+  .boat path[opacity] {
+    stroke: var(--color-sea);
+    opacity: 0.88;
+  }
+  /* The stern light's glass (in lantern.svg), lit at night. */
+  .lantern-body {
+    fill: #fff8e6;
+    @variant dark {
+      fill: var(--color-lamp);
+    }
+  }
+  /* The blast lights up the skyline at night. */
+  .blast path {
+    stroke: var(--color-bramble);
+    @variant dark {
+      stroke: var(--color-lamp);
+    }
+  }
+  .shooting-star path[opacity] {
+    stroke: var(--color-star);
+  }
+  .mark-star {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}
+
+/* The night's arrival: stars, glows and the shooting star play when night
+   starts, on load or on toggling. `--i` staggers repeated marks. */
+@media (prefers-reduced-motion: no-preference) {
+  .mark-star {
+    @variant dark {
+      animation: star-in 0.6s calc(0.25s + var(--i) * 90ms) both;
+    }
+  }
+  .shooting-star {
+    @variant dark {
+      animation: shoot 1.2s 1.6s ease-out both;
+    }
+  }
+  .lighthouse .light {
+    @variant dark {
+      animation: beam 2.6s ease-in-out infinite alternate;
+    }
+  }
+  .glow {
+    @variant dark {
+      animation: lamp-on 1.1s 0.2s both;
+    }
+  }
+  .firefly {
+    animation: drift 7s calc(var(--i) * -0.8s) ease-in-out infinite;
+  }
+}
+
+/* The icon heads up-right and is rotated to fall down-right; this travels
+   along the same line. */
+@keyframes shoot {
+  from {
+    translate: -90px -63px;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes beam {
+  from {
+    opacity: 0.35;
+  }
+}
+@keyframes star-in {
+  from {
+    opacity: 0;
+    scale: 0.3;
+  }
+}
+@keyframes lamp-on {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  55% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    translate: 0 0;
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+  50% {
+    translate: 14px -18px;
+  }
+  75% {
+    opacity: 0.4;
+  }
+}
+/* The typing tagline's caret (TypingTagline.svelte). */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

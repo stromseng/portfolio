@@ -1,19 +1,20 @@
 // Turns one of the site's hard-coded doodle SVGs into a theme-aware inline SVG.
-// Every known palette colour is swapped for a CSS custom property, so the same
-// drawing recolours itself between day and night without a second asset.
-// Usage: <Fragment set:html={themeSvg(seaRaw, { id: "sea", className: "wave" })} />
+// Every known palette colour is swapped for a theme colour (the `--color-*`
+// tokens in globals.css), so the same drawing recolours itself between day and
+// night without a second asset.
+// Usage: <Fragment set:html={themeSvg(seaRaw, { id: "sea", className: "w-full" })} />
 
 const inkColors = new Set(["black", "#000000", "#1E1E1E"]);
 
 const colorTokens = {
-  white: "var(--paper-fill)",
-  "#D1ECFF": "var(--sea)",
-  "#B9FBC0": "var(--grass)",
-  "#FFADAD": "var(--bramble)",
-  "#A0C4FF": "var(--sky-accent)",
-  "#FACC15": "var(--star)",
-  "#FFDAD6": "var(--doodle-rose)",
-  "#FFE3C7": "var(--doodle-peach)",
+  white: "var(--color-paper-fill)",
+  "#D1ECFF": "var(--color-sea)",
+  "#B9FBC0": "var(--color-grass)",
+  "#FFADAD": "var(--color-bramble)",
+  "#A0C4FF": "var(--color-sky-accent)",
+  "#FACC15": "var(--color-star)",
+  "#FFDAD6": "var(--color-doodle-rose)",
+  "#FFE3C7": "var(--color-doodle-peach)",
 } as const satisfies Record<string, string>;
 
 const isToken = (color: string): color is keyof typeof colorTokens =>
@@ -30,7 +31,7 @@ export function themeColors(raw: string) {
       /\s(fill|stroke)="([^"]+)"/g,
       (match, attr: string, color: string) =>
         inkColors.has(color)
-          ? ` ${attr}="var(--line)"`
+          ? ` ${attr}="var(--color-line)"`
           : isToken(color)
             ? ` ${attr}="${colorTokens[color]}"`
             : match,

@@ -3,7 +3,24 @@
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+/* Night, the homepage's dark theme: pinned by data-theme="night" on <html>,
+   or following the system on pages that opt in with data-themed, unless
+   data-theme="day" pins day. This matches when the light-dark() colours below
+   turn dark. Other pages have no night theme, so `dark:` never matches there
+   and it's safe in shared components. */
+@custom-variant dark {
+  &:where([data-theme="night"], [data-theme="night"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(
+      :root[data-themed]:not([data-theme="day"]),
+      :root[data-themed]:not([data-theme="day"]) *
+    ) {
+      @slot;
+    }
+  }
+}
 
 @utility container {
   margin-inline: auto;
@@ -189,8 +206,31 @@ body {
   font-family: "Shantell Sans Variable", system-ui;
 }
 
-/* The line colour the shared doodles (the header's icons) draw in. The
-   homepage doesn't load this file and sets its own per theme. */
-:root {
-  --line: currentColor;
+/*
+  The homepage palette. Colours that differ by theme are light-dark() pairs
+  (day first): they turn dark only where color-scheme allows it, which only
+  the homepage sets, so the other pages always get the day value. Static,
+  because inline SVGs (see lib/scene/themeSvg.ts) and scenes.css use them
+  without a utility.
+*/
+@theme static {
+  --color-page: light-dark(#fbfdff, #0e1830);
+  --color-ink: light-dark(#172238, #eee8d8);
+  --color-ink-soft: light-dark(#3a4660, #bcc6d8);
+  --color-grass-ink: light-dark(#2e4a35, #c3d4b5);
+  --color-bramble-ink: light-dark(#4a2a33, #e0c4cd);
+  /* What doodles draw in: the text colour by day, so the shared header's
+     icons match any page's text, and cream at night. */
+  --color-line: light-dark(currentColor, #e6dfc8);
+  --color-paper-fill: light-dark(#ffffff, #22324f);
+  --color-sea: light-dark(#d1ecff, #16365a);
+  --color-grass: light-dark(#b9fbc0, #1c3a2b);
+  --color-bramble: light-dark(#ffadad, #3a2135);
+  --color-sky-accent: light-dark(#a0c4ff, #5b7fb8);
+  --color-doodle-rose: light-dark(#ffdad6, #2c3a5c);
+  --color-doodle-peach: light-dark(#ffe3c7, #2f3a52);
+  --color-star: light-dark(#f2b705, #ffe7a3);
+  --color-lamp: #ffc56e;
+  --color-lamp-ink: light-dark(#a44a00, #ffc56e);
+  --color-focus: light-dark(#172238, #ffc56e);
 }

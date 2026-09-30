@@ -15,12 +15,12 @@ import type { Placement, Scene } from "@/lib/scene/scene";
 import { glow } from "./glow";
 
 // A seagull like the hero's day birds: the same 24-unit drawing and 1.8
-// stroke whatever its size, and gone at night (see `.gull`).
+// stroke whatever its size, as soft, and gone at night.
 const gull = (at: Point & { scale: number }): Placement => ({
   svg: gullSvg,
   ...at,
   line: 1.8,
-  className: "gull",
+  className: "opacity-70 dark:opacity-0",
 });
 
 // The boat heels over, and its stern light with it.
@@ -57,7 +57,7 @@ export const seaTop = {
       scale: 0.375,
       flip: true,
       className: "lighthouse",
-      // The beams and the lamp room. Its horizon line (17) is hidden in home.css.
+      // The beams and the lamp room. Its horizon line (17) is hidden in scenes.css.
       lights: [18, 19, 20],
     }),
     sailboat,

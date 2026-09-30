@@ -1,5 +1,5 @@
 // A night-only pool of lamp light centred on a point, shared by the scenes.
-// It flickers on when night falls (`lamp-on` in home.css); `soft` ones stay
+// It flickers on when night falls (`lamp-on` in scenes.css); `soft` ones stay
 // dimmer. An [x, y] radius flattens it into an ellipse, which keeps light near
 // a band's edge from being cut off.
 import glowSvg from "@images/scenes/glow.svg?raw";

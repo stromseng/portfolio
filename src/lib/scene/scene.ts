@@ -5,8 +5,8 @@
 // units; place() (see place.ts) positions pack icons by their drawn edges.
 // Day and night share one scene: `show` keeps an icon to one theme, and at
 // night the `lit` class turns all of an icon's faint strokes into lamp light,
-// `lights` just the chosen paths (both styled in home.css). Usage:
-//   <Fragment set:html={sceneSvg(meadow)} />
+// `lights` just the chosen paths (both styled in scenes.css). Usage:
+//   <Fragment set:html={sceneSvg(meadow, "w-full")} />
 import { scopeIds, themeColors } from "./themeSvg";
 
 export interface Placement {
@@ -26,7 +26,8 @@ export interface Placement {
   line?: number;
   // Omit to show in both themes.
   show?: "day" | "night";
-  // CSS hook for per-icon styling (glows, lit windows, animation).
+  // Classes for per-icon styling: hooks styled in scenes.css (glows, lit
+  // windows, animation) or plain utilities.
   className?: string;
   // 1-based numbers of the icon's <path> elements that turn into lamp light at
   // night (styled by `.light`), e.g. just the window ticks of a building.
@@ -100,7 +101,7 @@ const attrs = (pairs: Record<string, string>) =>
     .map(([name, value]) => ` ${name}="${value}"`)
     .join("");
 
-export function sceneSvg(scene: Scene, className = "band") {
+export function sceneSvg(scene: Scene, className = "") {
   const items = scene.items
     .map((item, i) => {
       const body = scopeIds(innerMarkup(item), `${scene.id}-${i}`);
