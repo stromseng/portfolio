@@ -1,0 +1,31 @@
+---
+// The day/night bootstrap, in every page's <head> through BaseHead.astro. It
+// sets `data-theme` on <html> (see the `dark` variant in globals.css) before
+// paint, so a returning night visitor never sees a day flash: the choice
+// ThemeToggle.astro stores under "theme" wins, else the system setting.
+//
+// With the ClientRouter (the blog and project pages), the next page's <html>
+// attributes replace the current ones and carry no theme, so each swap sets it
+// again. The router runs this script only once, since it's the same on
+// every page. Without the router the hook never fires.
+---
+
+<script is:inline>
+  (() => {
+    const theme = () => {
+      let stored = null;
+      try {
+        stored = localStorage.getItem("theme");
+      } catch {}
+      const night =
+        stored === "night" ||
+        (stored !== "day" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+      return night ? "night" : "day";
+    };
+    document.documentElement.dataset.theme = theme();
+    document.addEventListener("astro:before-swap", (event) => {
+      event.newDocument.documentElement.dataset.theme = theme();
+    });
+  })();
+</script>

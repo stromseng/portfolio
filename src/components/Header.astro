@@ -1,19 +1,13 @@
 ---
-// The site header: Home/Blog centred, GitHub and LinkedIn on the right. Pages
-// can add controls after the socials through the slot (the homepage's theme
-// toggle). Icons draw in `--color-line`, which follows the text colour except
-// on the homepage at night. It resets the homepage's body font variation, so
-// it looks the same on every page.
+// The site header: Home/Blog centred, GitHub, LinkedIn and the theme toggle on
+// the right. Icons draw in `--color-line`, which follows the text colour except
+// at night. It resets the illustrated pages' body font variation (scenes.css),
+// so it looks the same on every page.
 import github from "@images/github.svg?raw";
 import linkedin from "@images/linkedin.svg?raw";
+import ThemeToggle from "@/components/ThemeToggle.astro";
 import { themeSvg } from "@/lib/scene/themeSvg";
-import { cn } from "@/lib/utils";
 
-interface Props {
-  class?: string;
-}
-
-const { class: className } = Astro.props;
 const { pathname } = Astro.url;
 
 const links = [
@@ -31,10 +25,7 @@ const socials = [
 ---
 
 <header
-  class={cn(
-    "flex w-full items-center justify-evenly gap-4 p-2 [font-variation-settings:normal] md:justify-between md:gap-0",
-    className,
-  )}
+  class="flex w-full items-center justify-evenly gap-4 p-2 [font-variation-settings:normal] md:justify-between md:gap-0"
 >
   <div class="hidden flex-1 md:block"></div>
   <nav
@@ -53,16 +44,7 @@ const socials = [
       ))
     }
   </nav>
-  {
-    /* Extra controls (the homepage's fixed theme toggle) sit at the right
-      edge, so the socials pack against them instead of spreading out. */
-  }
-  <div
-    class={cn(
-      "flex flex-1 items-center gap-4 md:justify-end",
-      Astro.slots.has("default") ? "justify-end" : "justify-evenly",
-    )}
-  >
+  <div class="flex flex-1 items-center justify-end gap-4">
     {
       socials.map(({ href, label, icon }) => (
         <a class="w-12" href={href} aria-label={label}>
@@ -75,6 +57,10 @@ const socials = [
         </a>
       ))
     }
-    <slot />
+    {
+      /* The toggle is fixed to the viewport's top-right corner, so it stays in
+        view while scrolling. This box holds its place in the row. */
+    }
+    <span class="size-12"><ThemeToggle /></span>
   </div>
 </header>

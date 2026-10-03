@@ -3,22 +3,31 @@
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
-/* Night, the homepage's dark theme: pinned by data-theme="night" on <html>,
-   or following the system on pages that opt in with data-themed, unless
-   data-theme="day" pins day. This matches when the light-dark() colours below
-   turn dark. Other pages have no night theme, so `dark:` never matches there
-   and it's safe in shared components. */
+/* Night, the site's dark theme: pinned by data-theme="night" on <html> (set
+   by components/ThemeScript.astro), else following the system unless
+   data-theme="day" pins day. The system fallback only matters without
+   JavaScript, since the script always sets one. This matches when the
+   light-dark() colours below turn dark. */
 @custom-variant dark {
   &:where([data-theme="night"], [data-theme="night"] *) {
     @slot;
   }
   @media (prefers-color-scheme: dark) {
-    &:where(
-      :root[data-themed]:not([data-theme="day"]),
-      :root[data-themed]:not([data-theme="day"]) *
-    ) {
+    &:where(:root:not([data-theme="day"]), :root:not([data-theme="day"]) *) {
       @slot;
     }
+  }
+}
+
+/* The same choice for the browser: light-dark() colours, form controls and
+   scrollbars. */
+:root {
+  color-scheme: light dark;
+  &[data-theme="day"] {
+    color-scheme: light;
+  }
+  &[data-theme="night"] {
+    color-scheme: dark;
   }
 }
 
@@ -207,11 +216,10 @@ body {
 }
 
 /*
-  The homepage palette. Colours that differ by theme are light-dark() pairs
-  (day first): they turn dark only where color-scheme allows it, which only
-  the homepage sets, so the other pages always get the day value. Static,
-  because inline SVGs (see lib/scene/themeSvg.ts) and scenes.css use them
-  without a utility.
+  The homepage palette, which the blog and the project pages share. Colours
+  that differ by theme are light-dark() pairs (day first), following the
+  color-scheme above. Static, because inline SVGs (see lib/scene/themeSvg.ts)
+  and scenes.css use them without a utility.
 */
 @theme static {
   --color-page: light-dark(#fbfdff, #0e1830);

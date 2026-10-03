@@ -8,7 +8,6 @@ import "@fontsource-variable/shantell-sans/full.css";
 import "@/styles/globals.css";
 import "@/styles/scenes.css";
 import { getCollection } from "astro:content";
-import shootingStar from "@images/doodles/shootingstar.svg?raw";
 import whale from "@images/doodles/whale.svg?raw";
 import doodleBackground from "@images/DoodleBackground.svg?raw";
 import grassBot from "@images/grass-bot.svg?raw";
@@ -20,7 +19,6 @@ import Star from "@images/star.svg";
 import BaseHead from "@/components/BaseHead.astro";
 import Header from "@/components/Header.astro";
 import { fireflies, skyMarks } from "@/components/home/sky";
-import ThemeToggle from "@/components/home/ThemeToggle.astro";
 import TypingTagline from "@/components/home/TypingTagline.svelte";
 import { ageOn, education, taglines, work } from "@/components/home/content";
 import { sceneSvg } from "@/lib/scene/scene";
@@ -50,30 +48,9 @@ const heading = "text-3xl font-bold lg:text-4xl";
 ---
 
 <!doctype html>
-<html
-  lang="en"
-  data-themed
-  class="scheme-light-dark data-[theme=day]:scheme-light data-[theme=night]:scheme-dark"
->
+<html lang="en">
   <head>
-    <BaseHead title="Magnus A. Strømseng">
-      <meta name="color-scheme" content="light dark" />
-      <script is:inline>
-        // Runs before paint so a returning night visitor never sees a day flash.
-        // "theme" is the key ThemeToggle.astro stores the visitor's choice under.
-        (() => {
-          let stored = null;
-          try {
-            stored = localStorage.getItem("theme");
-          } catch {}
-          const night =
-            stored === "night" ||
-            (stored !== "day" &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches);
-          document.documentElement.dataset.theme = night ? "night" : "day";
-        })();
-      </script>
-    </BaseHead>
+    <BaseHead title="Magnus A. Strømseng" />
   </head>
   <body class="overflow-x-hidden bg-page text-lg text-ink">
     <a
@@ -81,9 +58,7 @@ const heading = "text-3xl font-bold lg:text-4xl";
       href="#main">Skip to content</a
     >
 
-    <Header>
-      <span class="size-12"><ThemeToggle /></span>
-    </Header>
+    <Header />
 
     <main id="main">
       <section
@@ -91,17 +66,6 @@ const heading = "text-3xl font-bold lg:text-4xl";
         aria-labelledby="hero-name"
       >
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          {
-            /* The icon heads up-right; the rotation turns it into a star
-              falling down-right, its tails trailing up-left. */
-          }
-          <Fragment
-            set:html={themeSvg(shootingStar, {
-              id: "shooting-star",
-              className:
-                "shooting-star night-only absolute top-[5%] left-[55%] w-16 rotate-80 lg:w-28",
-            })}
-          />
           {/* Gulls by day; every mark is a star at night. */}
           {
             skyMarks.map((mark, i) => (

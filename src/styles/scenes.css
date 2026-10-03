@@ -1,8 +1,9 @@
 /*
-  The homepage's CSS that doesn't fit utilities: typography, rules for the
-  markup inside generated scene SVGs (see lib/scene/scene.ts and
-  components/home/scenes/), and the motion. Colours and the `dark` variant come
-  from globals.css, which the homepage loads first.
+  The CSS of the illustrated pages (the homepage and the blog) that doesn't
+  fit utilities: typography, rules for the markup inside generated scene SVGs
+  (see lib/scene/scene.ts, components/home/scenes/ and components/blog/scenes/),
+  and the motion. Colours and the `dark` variant come from globals.css, which
+  those pages load first.
 */
 @reference "./globals.css";
 
@@ -100,26 +101,18 @@
       stroke: var(--color-lamp);
     }
   }
-  .shooting-star path[opacity] {
-    stroke: var(--color-star);
-  }
   .mark-star {
     transform-box: fill-box;
     transform-origin: center;
   }
 }
 
-/* The night's arrival: stars, glows and the shooting star play when night
+/* The night's arrival: stars and glows play when night
    starts, on load or on toggling. `--i` staggers repeated marks. */
 @media (prefers-reduced-motion: no-preference) {
   .mark-star {
     @variant dark {
       animation: star-in 0.6s calc(0.25s + var(--i) * 90ms) both;
-    }
-  }
-  .shooting-star {
-    @variant dark {
-      animation: shoot 1.2s 1.6s ease-out both;
     }
   }
   .lighthouse .light {
@@ -137,17 +130,6 @@
   }
 }
 
-/* The icon heads up-right and is rotated to fall down-right; this travels
-   along the same line. */
-@keyframes shoot {
-  from {
-    translate: -90px -63px;
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
 @keyframes beam {
   from {
     opacity: 0.35;

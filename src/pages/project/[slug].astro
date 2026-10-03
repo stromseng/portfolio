@@ -1,11 +1,14 @@
 ---
+// One project's page. It has no scene, so night only swaps the colours: the
+// homepage's night sky, cream ink and paper-fill pills and buttons.
 export const prerender = true;
 import MetaLayout from "@/layouts/MetaLayout.astro";
 import PageContent from "@/layouts/Content.astro";
 import Star from "@images/star.svg";
-import HeaderFooter from "@/layouts/HeaderFooter.astro";
+import Header from "@/components/Header.astro";
 import BackLink from "@/components/backlink.astro";
 import PillBadge from "@/components/PillBadge";
+import { prose } from "@/components/prose";
 import { Image } from "astro:assets";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
@@ -44,134 +47,143 @@ const mainImage = projectData.mainImage;
 const galleryImages = projectData.images;
 
 const externalLinkClass =
-  "inline-flex items-center gap-3 rounded-[9999px] border-[3px] border-black bg-white px-5 py-2 text-sm font-semibold text-black shadow-[6px_6px_0_rgba(0,0,0,0.4)] transition hover:-translate-y-0.5 hover:shadow-[10px_10px_0_rgba(0,0,0,0.4)]";
+  "inline-flex items-center gap-3 rounded-[9999px] border-[3px] border-black bg-white px-5 py-2 text-sm font-semibold text-black shadow-[6px_6px_0_rgba(0,0,0,0.4)] transition hover:-translate-y-0.5 hover:shadow-[10px_10px_0_rgba(0,0,0,0.4)] dark:border-ink/70 dark:bg-paper-fill dark:text-ink dark:shadow-[6px_6px_0_#070d1d] dark:hover:shadow-[10px_10px_0_#070d1d]";
+
+// Pill backgrounds: white and blue by day, paper fill and sea at night.
+const pill = {
+  type: "bg-white dark:bg-paper-fill",
+  tag: "bg-[#e6f0ff] dark:bg-sea",
+  border: "dark:border-ink/80",
+} as const;
 ---
 
 <MetaLayout
   title={`${projectData.title ?? "Project"} • Magnus A. Strømseng`}
-  bodyClass="bg-paper"
+  bodyClass="bg-paper text-black dark:bg-page dark:text-ink"
 >
-  <HeaderFooter headerClass="bg-paper">
-    <BackLink href="/#projects" />
-    <PageContent class="mx-auto flex min-h-screen flex-col items-center">
-      <div class="w-full space-y-6 text-center">
-        <h1
-          class="inline-flex items-center justify-center gap-3 text-4xl leading-tight font-semibold text-black md:text-5xl"
-        >
-          {projectData.title}
-          {
-            newBadgeText && (
-              <img
-                src={Star.src}
-                alt={newBadgeText}
-                class="h-14 w-14 md:h-20 md:w-20"
-              />
-            )
-          }
-        </h1>
+  <Header />
+  <BackLink href="/#projects" />
+  <PageContent class="mx-auto flex min-h-screen flex-col items-center">
+    <div class="w-full space-y-6 text-center">
+      <h1
+        class="inline-flex items-center justify-center gap-3 text-4xl leading-tight font-semibold md:text-5xl"
+      >
+        {projectData.title}
         {
-          projectData.shortDescription && (
-            <p class="mx-auto max-w-prose text-lg leading-relaxed text-black">
-              {projectData.shortDescription}
-            </p>
+          newBadgeText && (
+            <img
+              src={Star.src}
+              alt={newBadgeText}
+              class="h-14 w-14 md:h-20 md:w-20"
+            />
           )
         }
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          {
-            projectData.projectType && (
-              <PillBadge background="bg-white" className="px-4 py-1.5 text-xs">
-                {projectTypeLabel[projectData.projectType] ??
-                  projectData.projectType}
-              </PillBadge>
-            )
-          }
-          {
-            tags?.map((tag) => (
-              <PillBadge
-                background="bg-[#e6f0ff]"
-                className="px-4 py-1.5 text-xs"
-              >
-                {tag}
-              </PillBadge>
-            ))
-          }
-        </div>
-        <div class="flex flex-wrap justify-center gap-4">
-          {
-            projectData.hostedLink && (
-              <a
-                href={projectData.hostedLink}
-                class={externalLinkClass}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Visit Live Site
-              </a>
-            )
-          }
-          {
-            projectData.githubLink && (
-              <a
-                href={projectData.githubLink}
-                class={externalLinkClass}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Source
-              </a>
-            )
-          }
-        </div>
-      </div>
+      </h1>
       {
-        mainImage && (
-          <div class="mt-12 w-full">
-            <Image
-              src={mainImage}
-              alt={projectData.title ?? "Project image"}
-              loading="eager"
-              class="mx-auto h-auto w-full max-w-4xl rounded-lg object-contain"
-            />
+        projectData.shortDescription && (
+          <p class="mx-auto max-w-prose text-lg leading-relaxed">
+            {projectData.shortDescription}
+          </p>
+        )
+      }
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        {
+          projectData.projectType && (
+            <PillBadge
+              background={pill.type}
+              className={`px-4 py-1.5 text-xs ${pill.border}`}
+            >
+              {projectTypeLabel[projectData.projectType] ??
+                projectData.projectType}
+            </PillBadge>
+          )
+        }
+        {
+          tags?.map((tag) => (
+            <PillBadge
+              background={pill.tag}
+              className={`px-4 py-1.5 text-xs ${pill.border}`}
+            >
+              {tag}
+            </PillBadge>
+          ))
+        }
+      </div>
+      <div class="flex flex-wrap justify-center gap-4">
+        {
+          projectData.hostedLink && (
+            <a
+              href={projectData.hostedLink}
+              class={externalLinkClass}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit Live Site
+            </a>
+          )
+        }
+        {
+          projectData.githubLink && (
+            <a
+              href={projectData.githubLink}
+              class={externalLinkClass}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Source
+            </a>
+          )
+        }
+      </div>
+    </div>
+    {
+      mainImage && (
+        <div class="mt-12 w-full">
+          <Image
+            src={mainImage}
+            alt={projectData.title ?? "Project image"}
+            loading="eager"
+            class="mx-auto h-auto w-full max-w-4xl rounded-lg object-contain"
+          />
+        </div>
+      )
+    }
+    <div class="my-8 flex w-full flex-col gap-16">
+      {
+        hasBodyContent ? (
+          <div class:list={["mx-auto prose-lg max-w-prose", prose]}>
+            <ProjectBody />
+          </div>
+        ) : (
+          <div class="text-center">
+            <h2 class="text-2xl font-semibold tracking-[0.2em] uppercase">
+              Project write-up incoming
+            </h2>
+            <p class="mt-4 text-base">
+              I'm still polishing the case study for this project—check back
+              soon for more insights.
+            </p>
           </div>
         )
       }
-      <div class="my-8 flex w-full flex-col gap-16">
-        {
-          hasBodyContent ? (
-            <div class="prose prose-lg prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black mx-auto max-w-prose text-black">
-              <ProjectBody />
+      {
+        galleryImages && galleryImages.length ? (
+          <section class="flex flex-col gap-6">
+            <h2 class="text-3xl font-semibold tracking-[0.3em] uppercase">
+              Gallery
+            </h2>
+            <div class="grid gap-8 md:grid-cols-2">
+              {galleryImages.map((image) => (
+                <Image
+                  src={image}
+                  alt=""
+                  class="h-auto w-full rounded-lg object-contain"
+                />
+              ))}
             </div>
-          ) : (
-            <div class="text-center">
-              <h2 class="text-2xl font-semibold tracking-[0.2em] uppercase">
-                Project write-up incoming
-              </h2>
-              <p class="mt-4 text-base">
-                I'm still polishing the case study for this project—check back
-                soon for more insights.
-              </p>
-            </div>
-          )
-        }
-        {
-          galleryImages && galleryImages.length ? (
-            <section class="flex flex-col gap-6">
-              <h2 class="text-3xl font-semibold tracking-[0.3em] uppercase">
-                Gallery
-              </h2>
-              <div class="grid gap-8 md:grid-cols-2">
-                {galleryImages.map((image) => (
-                  <Image
-                    src={image}
-                    alt=""
-                    class="h-auto w-full rounded-lg object-contain"
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null
-        }
-      </div>
-    </PageContent>
-  </HeaderFooter>
+          </section>
+        ) : null
+      }
+    </div>
+  </PageContent>
 </MetaLayout>

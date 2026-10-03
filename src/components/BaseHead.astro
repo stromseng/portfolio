@@ -1,6 +1,9 @@
 ---
-// The <head> tags every page shares. Pages add their own through the slot:
-// MetaLayout adds the ClientRouter, the homepage adds its pre-paint theme script.
+// The <head> tags every page shares, including the day/night bootstrap. Pages
+// add their own through the slot: the blog (components/blog/BlogLayout.astro)
+// and the project pages (MetaLayout) add the ClientRouter.
+import ThemeScript from "@/components/ThemeScript.astro";
+
 interface Props {
   title: string;
   description?: string;
@@ -18,4 +21,6 @@ const {
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 <title>{title}</title>
+<meta name="color-scheme" content="light dark" />
+<ThemeScript />
 <slot />
