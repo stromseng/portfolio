@@ -1,9 +1,11 @@
 ---
-// Day/night switch, shown as a bare sun or moon icon in the header. It's a
+// Day/night switch, shown as a bare sun or moon icon in Header.astro. It's a
 // toggle button named "Night mode", pressed while night is on. The initial
-// theme is set by the inline script in the homepage's <head> (the stored
-// choice, else the system setting); this button flips it and remembers the
-// choice in localStorage under "theme", the key that script reads.
+// theme is set by ThemeScript.astro in the page's <head> (the stored choice,
+// else the system setting); this button flips it and remembers the choice in
+// localStorage under "theme", the key that script reads. On pages with the
+// ClientRouter (the blog and project pages) each swap brings a new button,
+// which gets bound on `astro:page-load`.
 //
 // Sized like the GitHub and LinkedIn icons next to it, and fixed to the
 // header's top-right corner so it stays in view while scrolling. Behind it is
@@ -47,9 +49,9 @@
 <script>
   const KEY = "theme";
   const root = document.documentElement;
-  const button = document.querySelector<HTMLButtonElement>(
-    "[data-theme-toggle]",
-  );
+  // Looked up each time: the ClientRouter swaps the button out on navigation.
+  const button = () =>
+    document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
   const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
 
   type Theme = "day" | "night";
@@ -58,7 +60,7 @@
     root.dataset.theme === "night" ? "night" : "day";
 
   function syncPressed() {
-    button?.setAttribute("aria-pressed", String(current() === "night"));
+    button()?.setAttribute("aria-pressed", String(current() === "night"));
   }
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -77,7 +79,7 @@
     document.startViewTransition(swap);
   }
 
-  button?.addEventListener("click", () => {
+  function toggle() {
     const theme = current() === "night" ? "day" : "night";
     try {
       localStorage.setItem(KEY, theme);
@@ -85,7 +87,19 @@
       // Private mode: the switch still works for this visit.
     }
     apply(theme);
-  });
+  }
+
+  // Wires up the page's button once. `astro:page-load` fires on the first
+  // load and after each ClientRouter swap, and never on pages without it.
+  const bound = new WeakSet<HTMLButtonElement>();
+  function bind() {
+    const el = button();
+    if (el && !bound.has(el)) {
+      bound.add(el);
+      el.addEventListener("click", toggle);
+    }
+    syncPressed();
+  }
 
   systemDark.addEventListener("change", (event) => {
     let stored: string | null = null;
@@ -95,5 +109,6 @@
     if (!stored) apply(event.matches ? "night" : "day");
   });
 
-  syncPressed();
+  bind();
+  document.addEventListener("astro:page-load", bind);
 </script>

@@ -1,123 +1,113 @@
 ---
+// The blog's post list under the rooftop band (components/blog/). Taped,
+// tilted paper panels by day; at night they're lamplit paper on the
+// homepage's night sky.
 import Construction from "@images/construction.svg";
-import "@/styles/globals.css";
-import MetaLayout from "@/layouts/MetaLayout.astro";
-import HeaderFooter from "@/layouts/HeaderFooter.astro";
+import { getCollection } from "astro:content";
 import PaperPanel from "@/components/PaperPanel.astro";
 import PillBadge from "@/components/PillBadge";
 import TapeStrip from "@/components/TapeStrip.astro";
-import { getCollection } from "astro:content";
+import BlogLayout from "@/components/blog/BlogLayout.astro";
+import { formatDate, pill } from "@/components/blog/post";
 import { TypographyH1 } from "@/components/ui/typography";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-const formatDate = (date: Date) =>
-  new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(date);
-
-const rotationClasses = [
-  "-rotate-1",
-  "rotate-1",
-  "rotate-2",
-  "-rotate-2",
+const tilts = [
+  { panel: "-rotate-1", tape: "rotate-4" },
+  { panel: "rotate-1", tape: "-rotate-4" },
+  { panel: "rotate-2", tape: "-rotate-6" },
+  { panel: "-rotate-2", tape: "rotate-6" },
 ] as const;
 
-const tapeRotationClasses = [
-  "rotate-4",
-  "-rotate-4",
-  "-rotate-6",
-  "rotate-6",
-] as const;
-
-const decoratedPosts = posts.map((post, index) => ({
-  post,
-  rotation: rotationClasses[index % rotationClasses.length],
-  tapeRotation: tapeRotationClasses[index % tapeRotationClasses.length],
-}));
+const panel =
+  "relative border-dashed border-black/70 bg-white dark:border-ink/50 dark:bg-paper-fill dark:shadow-[12px_12px_0_#070d1d]";
+const tape = {
+  colorClass: "bg-[#ffd84d] dark:bg-[#e0ad4c]",
+  shadowClass:
+    "shadow-[3px_3px_0_rgba(0,0,0,0.2)] dark:shadow-[3px_3px_0_rgba(0,0,0,0.45)]",
+};
 ---
 
-<MetaLayout title="Blog • Magnus A. Strømseng" bodyClass="bg-paper">
-  <HeaderFooter headerClass="bg-paper">
-    <main class="bg-paper text-black">
-      {
-        decoratedPosts.length ? (
-          <div class="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center px-4 pt-4 pb-24 md:px-8">
-            <header class="relative z-10 flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-              <div class="space-y-4">
-                <TypographyH1 className="font-bold">Magnus' Blog</TypographyH1>
-                <p class="max-w-prose text-lg leading-relaxed text-black/80 md:text-xl">
-                  My thoughts and experiences from the things I've done. It's
-                  kinda empty right now, but I'll add stuff here as I go. So
-                  enjoy the examples.
-                </p>
-              </div>
-            </header>
-            <div class="relative z-10 mt-12 grid gap-12 sm:grid-cols-2">
-              {decoratedPosts.map(({ post, rotation, tapeRotation }) => (
+<BlogLayout title="Blog • Magnus A. Strømseng">
+  {
+    posts.length ? (
+      <div class="mx-auto flex w-full max-w-6xl flex-col items-center px-4 pt-6 pb-24 md:px-8">
+        <header class="flex w-full flex-col gap-4 text-center md:text-left">
+          <TypographyH1 className="font-bold">Magnus' Blog</TypographyH1>
+          <p class="max-w-prose text-lg leading-relaxed text-black/80 md:text-xl dark:text-ink-soft">
+            My thoughts and experiences from the things I've done. It's kinda
+            empty right now, but I'll add stuff here as I go. So enjoy the
+            examples.
+          </p>
+        </header>
+        <ul class="mt-12 grid w-full gap-12 sm:grid-cols-2">
+          {posts.map((post, i) => {
+            const tilt = tilts[i % tilts.length];
+            return (
+              <li>
                 <a
                   href={`/blog/${post.id}`}
-                  class="group relative block text-black no-underline"
+                  class="group relative block h-full text-black no-underline dark:text-ink"
                 >
                   <PaperPanel
-                    class={`relative flex h-full flex-col border-dashed border-black/70 bg-white px-8 py-9 transition-all duration-200 ${rotation} group-hover:-translate-y-2 group-hover:rotate-0 group-hover:shadow-[18px_18px_0_rgba(0,0,0,0.35)]`}
+                    class:list={[
+                      panel,
+                      "flex h-full flex-col px-8 py-9 duration-200 group-hover:-translate-y-2 group-hover:rotate-0 group-hover:shadow-[18px_18px_0_rgba(0,0,0,0.35)] motion-safe:transition-all dark:group-hover:shadow-[18px_18px_0_#070d1d]",
+                      tilt.panel,
+                    ]}
                   >
                     <TapeStrip
-                      class={`-top-6 left-1/2 h-8 w-28 -translate-x-1/2 ${tapeRotation}`}
+                      class={`-top-6 left-1/2 h-8 w-28 -translate-x-1/2 ${tilt.tape}`}
+                      {...tape}
                     />
-                    <h2 class="text-2xl leading-snug font-semibold text-black">
+                    <h2 class="text-2xl leading-snug font-semibold">
                       {post.data.title}
                     </h2>
-                    <p class="mt-3 text-base leading-relaxed text-black/75">
+                    <p class="mt-3 text-base leading-relaxed text-black/75 dark:text-ink-soft">
                       {post.data.description}
                     </p>
                     <PillBadge
                       as="time"
                       dateTime={post.data.pubDate.toISOString()}
-                      background="bg-[#e6f0ff]"
-                      className="mt-3"
+                      background={pill.date}
+                      className={`mt-3 ${pill.border}`}
                     >
                       {formatDate(post.data.pubDate)}
                     </PillBadge>
-
                     {post.data.tags?.length ? (
                       <div class="mt-3 flex flex-wrap gap-2">
                         {post.data.tags.map((tag) => (
                           <PillBadge
-                            background="bg-[#fff0f0]"
-                            className="px-3 py-1 text-[11px] tracking-[0.35em]"
+                            background={pill.tag}
+                            className={`px-3 py-1 text-[11px] tracking-[0.35em] ${pill.border}`}
                           >
                             #{tag}
                           </PillBadge>
                         ))}
                       </div>
                     ) : null}
-                    <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold tracking-[0.3em] text-black/80 uppercase transition-transform duration-200 group-hover:translate-x-1">
-                      Read Post
-                      <span class="h-0.5 w-6 bg-black transition-all duration-200 group-hover:w-10" />
+                    <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold tracking-[0.3em] text-black/80 uppercase duration-200 group-hover:translate-x-1 motion-safe:transition-transform dark:text-lamp">
+                      Read post
+                      <span class="h-0.5 w-6 bg-current duration-200 group-hover:w-10 motion-safe:transition-all" />
                     </span>
                   </PaperPanel>
                 </a>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div class="my-24 flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
-            <PaperPanel class="relative max-w-xl border-dashed border-black/70 bg-white px-10 py-12 text-black shadow-[16px_16px_0_rgba(0,0,0,0.25)]">
-              <TapeStrip
-                class="-top-6 left-12 h-8 w-24 rotate-[-8deg]"
-                colorClass="bg-[#ffe28a]"
-              />
-              <Construction class="mx-auto mb-6 h-auto w-60" />
-              <h2 class="text-3xl font-semibold">Still sketching…</h2>
-            </PaperPanel>
-          </div>
-        )
-      }
-    </main>
-  </HeaderFooter>
-</MetaLayout>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ) : (
+      <div class="my-24 flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
+        <PaperPanel class:list={[panel, "max-w-xl px-10 py-12"]}>
+          <TapeStrip class="-top-6 left-12 h-8 w-24 rotate-[-8deg]" {...tape} />
+          <Construction class="mx-auto mb-6 h-auto w-60 dark:invert" />
+          <h2 class="text-3xl font-semibold">Still sketching…</h2>
+        </PaperPanel>
+      </div>
+    )
+  }
+</BlogLayout>

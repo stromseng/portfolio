@@ -1,0 +1,68 @@
+---
+// The blog's page shell: the day/night theme, the shared header with the
+// theme toggle, and the rooftop band (scenes/rooftop.ts) under it. Pages fill
+// the slot, which sits in <main>. By day it's the paper scrapbook under a
+// pastel sky; at night it takes the homepage's palette (page, ink and lamp in
+// globals.css). The ClientRouter cross-fades between the list and posts.
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import "@fontsource-variable/shantell-sans/full.css";
+import "@/styles/globals.css";
+import "@/styles/scenes.css";
+import { ClientRouter } from "astro:transitions";
+import BaseHead from "@/components/BaseHead.astro";
+import Header from "@/components/Header.astro";
+import { sceneSvg } from "@/lib/scene/scene";
+import { roofBase, rooftop } from "./scenes/rooftop";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+// Wide screens see the whole roof; below 780px it keeps that width and is
+// cropped from both sides, leaving the reader in the middle. The green roof
+// under it crops alike.
+const band = "block w-full max-w-400 min-w-195 shrink-0";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description}>
+      <ClientRouter />
+    </BaseHead>
+  </head>
+  <body
+    class="overflow-x-hidden bg-paper text-black dark:bg-page dark:text-ink"
+  >
+    <a
+      class="absolute -top-16 left-4 z-30 border-2 border-black bg-white px-4 py-2 underline decoration-2 underline-offset-4 focus:top-4 dark:border-ink dark:bg-paper-fill"
+      href="#main">Skip to content</a
+    >
+
+    {
+      /* By day the homepage's sea blue is the sky, from behind the header down
+        to the roofs, where it fades into the paper. At night the page's own
+        navy is the sky. */
+    }
+    <div
+      class="bg-linear-to-b from-sea from-40% via-sea/75 via-65% to-transparent to-92% dark:bg-none"
+    >
+      <Header />
+      <div class="flex flex-col items-center overflow-hidden">
+        <Fragment set:html={sceneSvg(rooftop, band)} />
+        <Fragment
+          set:html={sceneSvg(roofBase, `${band} -mt-px dark:invisible`)}
+        />
+      </div>
+    </div>
+
+    <main id="main">
+      <slot />
+    </main>
+    <Analytics />
+    <SpeedInsights />
+  </body>
+</html>

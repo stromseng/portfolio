@@ -1,13 +1,17 @@
 ---
-import HeaderFooter from "@/layouts/HeaderFooter.astro";
-import MetaLayout from "@/layouts/MetaLayout.astro";
+// One blog post under the rooftop band (components/blog/). The article sits
+// straight on the page: paper by day, the homepage's night sky with cream
+// text at night.
 import { getCollection, render } from "astro:content";
 import BackLink from "@/components/backlink.astro";
-import { TypographyH1 } from "@/components/ui/typography";
+import BlogLayout from "@/components/blog/BlogLayout.astro";
+import { formatDate, pill } from "@/components/blog/post";
 import PillBadge from "@/components/PillBadge";
+import { prose } from "@/components/prose";
+import { TypographyH1 } from "@/components/ui/typography";
+
 export const prerender = true;
 
-// 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
@@ -15,57 +19,53 @@ export async function getStaticPaths() {
     props: { post },
   }));
 }
-// 2. For your template, you can get the entry directly from the prop
+
 const { post } = Astro.props;
 const { Content } = await render(post);
-
-const formatDate = (date: Date) =>
-  new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(date);
 ---
 
-<MetaLayout title="Blog" bodyClass="bg-paper">
-  <HeaderFooter headerClass="bg-paper">
+<BlogLayout
+  title={`${post.data.title} • Magnus A. Strømseng`}
+  description={post.data.description}
+>
+  <div class="pt-6">
     <BackLink href="/blog" />
-    <div class="mx-auto mt-8 w-full max-w-6xl px-4 pb-16">
-      <div class="flex flex-col items-center gap-4">
-        <TypographyH1 className="text-center font-bold"
-          >{post.data.title}</TypographyH1
-        >
-        <p class="max-w-2xl text-center text-lg leading-relaxed text-black/80">
-          {post.data.description}
-        </p>
-        <PillBadge
-          as="time"
-          dateTime={post.data.pubDate.toISOString()}
-          background="bg-[#e6f0ff]"
-        >
-          {formatDate(post.data.pubDate)}
-        </PillBadge>
-        {
-          post.data.tags?.length ? (
-            <div class="flex flex-wrap justify-center gap-2">
-              {post.data.tags.map((tag) => (
-                <PillBadge
-                  background="bg-[#fff0f0]"
-                  className="px-3 py-1 text-[11px] tracking-[0.35em]"
-                >
-                  #{tag}
-                </PillBadge>
-              ))}
-            </div>
-          ) : null
-        }
-
-        <div
-          class="prose prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-a:text-black px-2 text-black"
-        >
-          <Content />
+  </div>
+  <article
+    class="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-4 pb-16"
+  >
+    <TypographyH1 className="text-center font-bold">
+      {post.data.title}
+    </TypographyH1>
+    <p
+      class="max-w-2xl text-center text-lg leading-relaxed text-black/80 dark:text-ink-soft"
+    >
+      {post.data.description}
+    </p>
+    <PillBadge
+      as="time"
+      dateTime={post.data.pubDate.toISOString()}
+      background={pill.date}
+      className={pill.border}
+    >
+      {formatDate(post.data.pubDate)}
+    </PillBadge>
+    {
+      post.data.tags?.length ? (
+        <div class="flex flex-wrap justify-center gap-2">
+          {post.data.tags.map((tag) => (
+            <PillBadge
+              background={pill.tag}
+              className={`px-3 py-1 text-[11px] tracking-[0.35em] ${pill.border}`}
+            >
+              #{tag}
+            </PillBadge>
+          ))}
         </div>
-      </div>
+      ) : null
+    }
+    <div class:list={["px-2", prose]}>
+      <Content />
     </div>
-  </HeaderFooter>
-</MetaLayout>
+  </article>
+</BlogLayout>
